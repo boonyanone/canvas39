@@ -607,6 +607,52 @@
             }
         }
         
+        // ฟังก์ชันดึงข้อมูล AQI จริงจาก API
+        async function fetchRealAQIData() {
+            try {
+                // ใช้ API ที่เรามีอยู่แล้ว
+                const response = await fetch('api/lift-display-data.php', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('🔄 AQI API Response:', data);
+
+                if (data.success && data.data && data.data.aqi) {
+                    const aqiData = data.data.aqi;
+                    
+                    return {
+                        indoor: {
+                            aqi: aqiData.indoor.value,
+                            level: aqiData.indoor.status,
+                            pollutant: aqiData.indoor.pollutant,
+                            concentration: parseFloat(aqiData.indoor.concentration.replace(/[^0-9.]/g, ''))
+                        },
+                        outdoor: {
+                            aqi: aqiData.outdoor.value,
+                            level: aqiData.outdoor.status,
+                            pollutant: aqiData.outdoor.pollutant,
+                            concentration: parseFloat(aqiData.outdoor.concentration.replace(/[^0-9.]/g, ''))
+                        }
+                    };
+                }
+
+                return null;
+
+            } catch (error) {
+                console.error('❌ ข้อผิดพลาด AQI API:', error);
+                return null;
+            }
+        }
+
         // แปลง weather code ของ wttr.in เป็นสภาพอากาศ
         function mapWttrWeatherCondition(weatherCode) {
             const conditionMap = {
@@ -869,10 +915,20 @@
             
             const weather = realWeatherData ? realWeatherData.weather : mockData.weather;
             
-            // ใช้ Mock AQI data ชั่วคราว เพื่อให้แสดงผลเร็ว
-            // TODO: เพิ่ม AQI scraping ในระบบหลังบ้าน
+            // ลองดึงข้อมูล AQI จริงจาก API
             let airQuality = mockData.airQuality;
-            console.log('📊 ใช้ Mock AQI Data ชั่วคราว (เพื่อให้แสดงผลเร็ว)');
+            try {
+                const realAQIData = await fetchRealAQIData();
+                if (realAQIData) {
+                    airQuality = realAQIData;
+                    console.log('✅ ใช้ข้อมูล AQI จริงจาก API');
+                } else {
+                    console.log('⚠️ ใช้ Mock AQI Data เนื่องจาก API ไม่พร้อมใช้งาน');
+                }
+            } catch (error) {
+                console.log('❌ AQI API Error:', error.message);
+                console.log('📊 ใช้ Mock AQI Data แทน');
+            }
             
             if (realWeatherData) {
                 console.log('🎯 ใช้ข้อมูลอากาศจริงจาก Weather API');
