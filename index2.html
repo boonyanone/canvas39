@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IQAir AirVisual Pro - Monitor v2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* IQAir Device Colors */
+            --device-bg: #1a1a1a;
+            --device-frame: #2d2d2d;
+            --screen-bg: #000000;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            
+            /* AQI Colors */
+            --aqi-good: #00e400;
+            --aqi-moderate: #ffff00;
+            --aqi-unhealthy-sensitive: #ff7e00;
+            --aqi-unhealthy: #ff0000;
+            --aqi-very-unhealthy: #8f3f97;
+            --aqi-hazardous: #7e0023;
+            
+            /* Device Dimensions */
+            --device-width: 500px;
+            --device-height: 700px;
+            --screen-padding: 24px;
+            --border-radius: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        /* IQAir Device Frame */
+        .device-frame {
+            width: var(--device-width);
+            height: var(--device-height);
+            background: linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.8),
+                0 0 0 2px rgba(255,255,255,0.1),
+                inset 0 2px 4px rgba(255,255,255,0.1),
+                inset 0 -2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .device-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+
+        /* Device Screen */
+        .device-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--screen-bg);
+            border-radius: calc(var(--border-radius) - 16px);
+            padding: var(--screen-padding);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .device-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .device-brand {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .device-time {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* AirVisual Pro Device Style */
+        .device-content {
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+            flex: 1;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            overflow: hidden;
+        }
+
+        .aqi-main-section {
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            min-height: 0;
+            overflow: auto;
+            flex: 1;
+        }
+
+        .details-section {
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 0;
+            overflow: auto;
+            flex: 1;
+        }
+
+        /* AQI Display - Device Style */
+        .aqi-label-small {
+            font-size: 24px;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        }
+
+        /* AQI Circular Progress */
+        .aqi-circle-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .aqi-circle {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #3a3a3a 0%, #2d2d2d 40%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.6),
+                0 0 0 6px rgba(255,255,255,0.1),
+                inset 0 4px 8px rgba(255,255,255,0.1),
+                inset 0 -4px 8px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .aqi-circle::before {
+            content: '';
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, #1a1a1a 0%, #2d2d2d 100%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .aqi-circle-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .aqi-number-large {
+            font-size: 72px;
+            font-weight: 400;
+            line-height: 1;
+            margin-bottom: 8px;
+            text-shadow: 
+                0 0 20px rgba(255,255,255,0.4),
+                0 2px 4px rgba(0,0,0,0.3);
+            color: #ffffff;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
+        }
+
+        .aqi-circle-label {
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* AQI Progress Ring */
+        .aqi-progress-ring {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: calc(100% - 12px);
+            height: calc(100% - 12px);
+            transform: rotate(-90deg);
+            overflow: visible;
+        }
+
+        .aqi-progress-circle {
+            fill: none;
+            stroke-width: 10;
+            stroke-linecap: butt;
+            transition: all 0.8s ease-in-out;
+        }
+
+        .aqi-progress-bg {
+            stroke: rgba(255,255,255,0.08);
+            stroke-width: 8;
+        }
+
+        .aqi-progress-fill {
+            stroke: #68e143;
+            stroke-dasharray: 842;
+            stroke-dashoffset: 842;
+            filter: drop-shadow(0 0 8px currentColor);
+            stroke-width: 10;
+        }
+
+        .aqi-status-text {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ffffff;
+            text-shadow: 
+                0 0 16px rgba(255,255,255,0.5),
+                0 2px 4px rgba(0,0,0,0.6),
+                0 0 8px currentColor;
+        }
+
+        /* Face Icon Container - positioned below AQI */
+        .face-container {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .face-icon {
+            width: 80px;
+            height: 80px;
+            filter: drop-shadow(0 1px 3px rgba(0,0,0,0.2));
+            transition: all 0.8s ease-in-out;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .face-svg {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pm25-info {
+            font-size: 18px;
+            color: #ffffff;
+            background: rgba(255,255,255,0.25);
+            padding: 12px 24px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            font-weight: 700;
+            text-shadow: 
+                0 0 12px rgba(255,255,255,0.4),
+                0 1px 3px rgba(0,0,0,0.5),
+                0 0 6px rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.35);
+            box-shadow: 
+                0 4px 12px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+
+        /* Details Section - Device Style */
+        .data-group {
+            margin-bottom: 32px;
+            flex-shrink: 0;
+        }
+
+        .data-group-title {
+            font-size: 18px;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding: 8px 0;
+        }
+
+        .data-label {
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+            font-weight: 500;
+        }
+
+        .data-value {
+            font-size: 22px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .data-unit {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+            margin-left: 4px;
+        }
+
+        /* AQI Color Classes */
+        .aqi-good {
+            color: var(--aqi-good);
+        }
+
+        .aqi-moderate {
+            color: var(--aqi-moderate);
+        }
+
+        .aqi-unhealthy-sensitive {
+            color: var(--aqi-unhealthy-sensitive);
+        }
+
+        .aqi-unhealthy {
+            color: var(--aqi-unhealthy);
+        }
+
+        .aqi-very-unhealthy {
+            color: var(--aqi-very-unhealthy);
+        }
+
+        .aqi-hazardous {
+            color: var(--aqi-hazardous);
+        }
+
+        /* Loading State */
+        .loading {
+            opacity: 0.5;
+        }
+
+        .loading .face-icon {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .device-header {
+            background: rgba(255,255,255,0.05);
+            padding: 24px 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .device-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .device-time {
+            font-size: 24px;
+            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+        }
+
+        /* Fullscreen Button */
+        .fullscreen-btn {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.9);
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+        }
+
+        .fullscreen-icon {
+            font-size: 18px;
+            font-weight: normal;
+            display: block;
+            line-height: 1;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255,255,255,0.25);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .fullscreen-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        /* เด่นขึ้นใน tablet mode */
+        @media (max-width: 1024px) and (min-width: 768px) {
+            .fullscreen-btn {
+                background: rgba(39, 113, 174, 0.9);
+                color: #ffffff;
+                animation: pulse 2s infinite;
+                width: 32px;
+                height: 32px;
+                padding: 6px;
+            }
+            
+            .fullscreen-icon {
+                font-size: 16px;
+            }
+        }
+
+        @keyframes pulse {
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(39, 113, 174, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 6px rgba(39, 113, 174, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(39, 113, 174, 0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .device-frame {
+                width: 100%;
+                max-width: 450px;
+                height: 90vh;
+                --device-width: 100%;
+                --device-height: 90vh;
+            }
+            
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .aqi-main-section {
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                padding-right: 0;
+                padding-bottom: 15px;
+            }
+            
+            .details-section {
+                padding-left: 0;
+                padding-top: 15px;
+            }
+            
+            .aqi-value {
+                font-size: 72px;
+            }
+            
+            .face-icon {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .face-container {
+                width: 120px;
+                height: 120px;
+                margin-bottom: 16px;
+            }
+            
+            .data-value {
+                font-size: 16px;
+            }
+            
+            .data-label {
+                font-size: 12px;
+            }
+            
+            .data-unit {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-height: 700px) {
+            .device-frame {
+                height: 95vh;
+                max-height: 600px;
+            }
+            
+            .face-container {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 16px;
+            }
+            
+            .face-icon {
+                font-size: 60px;
+            }
+            
+            .aqi-value {
+                font-size: 60px;
+            }
+        }
+
+        /* Fullscreen Mode */
+        .device-frame:-webkit-full-screen,
+        .device-frame:-moz-full-screen,
+        .device-frame:fullscreen {
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+            padding: 20px;
+        }
+
+        .device-frame:-webkit-full-screen .device-screen,
+        .device-frame:-moz-full-screen .device-screen,
+        .device-frame:fullscreen .device-screen {
+            border-radius: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="device-frame" id="deviceFrame">
+        <div class="device-screen">
+            <!-- Device Header -->
+            <div class="device-header">
+                <div class="device-title">Canvas 39 - Bangkok</div>
+                <div class="header-right">
+                    <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">
+                        <span class="fullscreen-icon">⛶</span>
+                    </button>
+                    <div class="device-time" id="currentTime">--:--</div>
+                </div>
+            </div>
+
+            <!-- Device Content -->
+            <div class="device-content">
+                <!-- Left Section - Main AQI -->
+                <div class="aqi-main-section" id="aqiMainSection">
+                    <div class="aqi-label-small">US AQI</div>
+                    
+                    <!-- AQI Circular Progress -->
+                    <div class="aqi-circle-container">
+                        <div class="aqi-circle">
+                            <!-- SVG Progress Ring -->
+                            <svg class="aqi-progress-ring" viewBox="0 0 268 268" preserveAspectRatio="xMidYMid meet">
+                                <circle class="aqi-progress-circle aqi-progress-bg" 
+                                        cx="134" cy="134" r="129" />
+                                <circle class="aqi-progress-circle aqi-progress-fill" 
+                                        id="aqiProgressRing"
+                                        cx="134" cy="134" r="129" />
+                            </svg>
+                            
+                            <!-- Circle Content -->
+                            <div class="aqi-circle-content">
+                                <div class="aqi-number-large" id="aqiValue">--</div>
+                                <div class="aqi-circle-label">AQI</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="aqi-status-text" id="aqiStatus">Loading...</div>
+                    
+                    <!-- Face Icon below AQI -->
+                    <div class="face-container">
+                        <div class="face-icon" id="faceIcon"></div>
+                    </div>
+                    
+                    <div class="pm25-info" id="aqiPm25">PM2.5: -- μg/m³</div>
+                </div>
+
+                <!-- Right Section - Details -->
+                <div class="details-section">
+                    <!-- Weather Data -->
+                    <div class="data-group">
+                        <div class="data-group-title">Weather</div>
+                        <div class="data-row">
+                            <span class="data-label">Temperature</span>
+                            <span class="data-value" id="temperature">--<span class="data-unit">°C</span></span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Humidity</span>
+                            <span class="data-value" id="humidity">--<span class="data-unit">%</span></span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Pressure</span>
+                            <span class="data-value" id="pressure">--<span class="data-unit">hPa</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Pollutants -->
+                    <div class="data-group">
+                        <div class="data-group-title">Pollutants</div>
+                        <div class="data-row">
+                            <span class="data-label">PM2.5</span>
+                            <span class="data-value" id="pm25">--<span class="data-unit">μg/m³</span></span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">PM10</span>
+                            <span class="data-value" id="pm10">--<span class="data-unit">μg/m³</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Device Info -->
+                    <div class="data-group">
+                        <div class="data-group-title">Device</div>
+                        <div class="data-row">
+                            <span class="data-label">Source</span>
+                            <span class="data-value" id="sourceBadge">--</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="data-label">Last Update</span>
+                            <span class="data-value" id="lastUpdate" style="font-size: 14px;">--:--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // === CONFIGURATION ===
+        let CONFIG = {
+            API_ENDPOINT: './api/air-quality-multi.php',
+            FALLBACK_API: './api/air-quality-dual.php',
+            UPDATE_INTERVAL: 5 * 60 * 1000,
+            RETRY_INTERVAL: 30 * 1000,
+            MAX_RETRIES: 3,
+            SOURCES: [
+                {
+                    type: 'station_api',
+                    url: 'https://device.iqair.com/v2/6790850e7307e18fb3e0c815/validated-data',
+                    priority: 1
+                }
+            ]
+        };
+
+        let retryCount = 0;
+        let updateTimer = null;
+        let lastUpdateTime = null;
+
+        // === FACE SVG ICONS BY AQI LEVEL (Flat Design) ===
+        const FACE_SVG = {
+            good: `<svg viewBox="0 0 80 80" class="face-svg">
+                <circle cx="40" cy="40" r="38" fill="#68e143" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                <circle cx="30" cy="32" r="3" fill="rgba(255,255,255,0.9)"/>
+                <circle cx="50" cy="32" r="3" fill="rgba(255,255,255,0.9)"/>
+                <path d="M 25 50 Q 40 60 55 50" stroke="rgba(255,255,255,0.9)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </svg>`,
+            moderate: `<svg viewBox="0 0 80 80" class="face-svg">
+                <circle cx="40" cy="40" r="38" fill="#ffff55" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                <circle cx="30" cy="32" r="3" fill="rgba(255,255,255,0.9)"/>
+                <circle cx="50" cy="32" r="3" fill="rgba(255,255,255,0.9)"/>
+                <line x1="28" y1="50" x2="52" y2="50" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linecap="round"/>
+            </svg>`,
+            unhealthy_sensitive: `<svg viewBox="0 0 80 80" class="face-svg">
+                <circle cx="40" cy="40" r="38" fill="#ef8533" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                <circle cx="30" cy="34" r="3" fill="rgba(255,255,255,0.9)"/>
+                <circle cx="50" cy="34" r="3" fill="rgba(255,255,255,0.9)"/>
+                <path d="M 25 55 Q 40 45 55 55" stroke="rgba(255,255,255,0.9)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </svg>`,
+            unhealthy: `<svg viewBox="0 0 80 80" class="face-svg">
+                <circle cx="40" cy="40" r="38" fill="#ea3324" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                <path d="M 25 30 L 30 25 L 35 30 M 25 30 L 30 35 L 35 30" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 45 30 L 50 25 L 55 30 M 45 30 L 50 35 L 55 30" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 25 55 Q 40 45 55 55" stroke="rgba(255,255,255,0.9)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </svg>`,
+            very_unhealthy: `<svg viewBox="0 0 80 80" class="face-svg">
+                <circle cx="40" cy="40" r="38" fill="#8c1a4b" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                <path d="M 22 32 L 28 26 L 34 32" stroke="rgba(255,255,255,0.9)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <path d="M 46 32 L 52 26 L 58 32" stroke="rgba(255,255,255,0.9)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <path d="M 25 58 Q 40 48 55 58" stroke="rgba(255,255,255,0.9)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </svg>`,
+            hazardous: `<svg viewBox="0 0 80 80" class="face-svg">
+                <circle cx="40" cy="40" r="38" fill="#7e0023" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+                <path d="M 25 28 L 35 38 M 25 38 L 35 28" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linecap="round"/>
+                <path d="M 45 28 L 55 38 M 45 38 L 55 28" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-linecap="round"/>
+                <rect x="22" y="50" width="36" height="8" rx="4" fill="rgba(255,255,255,0.9)"/>
+            </svg>`
+        };
+
+        // === AQI STATUS FUNCTIONS ===
+        function getAQIStatus(aqi) {
+            if (aqi <= 50) return { 
+                text: 'Good', 
+                class: 'aqi-good',
+                face: FACE_SVG.good,
+                color: 'var(--aqi-good)'
+            };
+            if (aqi <= 100) return { 
+                text: 'Moderate', 
+                class: 'aqi-moderate',
+                face: FACE_SVG.moderate,
+                color: 'var(--aqi-moderate)'
+            };
+            if (aqi <= 150) return { 
+                text: 'Unhealthy for Sensitive Groups', 
+                class: 'aqi-unhealthy-sensitive',
+                face: FACE_SVG.unhealthy_sensitive,
+                color: 'var(--aqi-unhealthy-sensitive)'
+            };
+            if (aqi <= 200) return { 
+                text: 'Unhealthy', 
+                class: 'aqi-unhealthy',
+                face: FACE_SVG.unhealthy,
+                color: 'var(--aqi-unhealthy)'
+            };
+            if (aqi <= 300) return { 
+                text: 'Very Unhealthy', 
+                class: 'aqi-very-unhealthy',
+                face: FACE_SVG.very_unhealthy,
+                color: 'var(--aqi-very-unhealthy)'
+            };
+            return { 
+                text: 'Hazardous', 
+                class: 'aqi-hazardous',
+                face: FACE_SVG.hazardous,
+                color: 'var(--aqi-hazardous)'
+            };
+        }
+
+        function updateAQICircle(aqi) {
+            const status = getAQIStatus(aqi);
+            const progressRing = document.getElementById('aqiProgressRing');
+            const aqiMainSection = document.getElementById('aqiMainSection');
+            
+            if (progressRing) {
+                // ใช้ radius ใหม่ 129
+                const radius = 129;
+                const circumference = 2 * Math.PI * radius;
+                
+                // คำนวณ percentage ให้ถูกต้อง (0-100%)
+                let percentage;
+                if (aqi <= 300) {
+                    percentage = Math.min((aqi / 300) * 100, 100);
+                } else {
+                    percentage = 100;
+                }
+                
+                const offset = circumference - (percentage / 100) * circumference;
+                
+                // อัปเดต progress ring
+                progressRing.style.strokeDasharray = circumference.toFixed(2);
+                progressRing.style.strokeDashoffset = offset.toFixed(2);
+                progressRing.style.stroke = status.color;
+                
+                console.log(`🎯 AQI Circle: ${aqi} → ${percentage.toFixed(1)}% (${status.text}) Color: ${status.color}`);
+            }
+            
+            // เปลี่ยนสีพื้นหลังของ section ตาม AQI
+            if (aqiMainSection) {
+                aqiMainSection.className = `aqi-main-section ${status.class}`;
+            }
+            
+            return status;
+        }
+
+        // === DATA FETCHING ===
+        async function fetchAirQualityData() {
+            console.log('📡 Fetching air quality data from:', CONFIG.API_ENDPOINT);
+            console.log('📋 Using sources:', CONFIG.SOURCES);
+
+            try {
+                // Send sources config to multi-source API
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 20000);
+                
+                console.log('📤 Sending request...');
+                let response = await fetch(CONFIG.API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
+                    body: JSON.stringify({
+                        sources: CONFIG.SOURCES
+                    }),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+                console.log('📡 Response status:', response.status, response.statusText);
+
+                if (!response.ok) {
+                    console.warn('Multi-source API failed, trying fallback...');
+                    const fallbackController = new AbortController();
+                    const fallbackTimeoutId = setTimeout(() => fallbackController.abort(), 15000);
+                    
+                    response = await fetch(CONFIG.FALLBACK_API, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Cache-Control': 'no-cache'
+                        },
+                        signal: fallbackController.signal
+                    });
+                    
+                    clearTimeout(fallbackTimeoutId);
+                }
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                console.log('📥 Multi-source API Response received:', {
+                    success: result.success,
+                    source: result.source,
+                    data_source: result.data_source_detail,
+                    aqi: result.data?.current?.pollution?.aqius
+                });
+
+                if (result.success && result.data) {
+                    retryCount = 0; // Reset retry count on success
+                    return result;
+                }
+
+                throw new Error(result.message || 'No valid data received');
+                
+            } catch (error) {
+                console.error('❌ API Error:', error);
+                
+                if (retryCount < CONFIG.MAX_RETRIES) {
+                    retryCount++;
+                    console.log(`🔄 Retrying... (${retryCount}/${CONFIG.MAX_RETRIES})`);
+                    
+                    await new Promise(resolve => setTimeout(resolve, CONFIG.RETRY_INTERVAL));
+                    return await fetchAirQualityData();
+                }
+                
+                throw error;
+            }
+        }
+
+        // === UI UPDATE FUNCTIONS ===
+        function updateDisplay(data) {
+            try {
+                const current = data.data.current;
+                const pollution = current.pollution;
+                const weather = current.weather;
+
+                // AQI Values
+                const aqi = pollution.aqius || 0;
+                const pm25 = pollution.pm25?.v || 0;
+                const pm10 = pollution.pm10?.v || 0;
+                const temp = weather.tp || 0;
+                const humidity = weather.hu || 0;
+
+                // Get AQI status
+                const status = getAQIStatus(aqi);
+
+                // Update main display
+                document.getElementById('aqiValue').textContent = aqi;
+                document.getElementById('aqiStatus').textContent = status.text;
+                document.getElementById('pm25Display').textContent = `PM2.5: ${pm25} μg/m³`;
+
+                // Update face icon
+                const faceIcon = document.getElementById('faceIcon');
+                faceIcon.innerHTML = status.face;
+                faceIcon.style.color = status.color;
+
+                // Update AQI circle and colors
+                updateAQICircle(aqi);
+                
+                const aqiValue = document.getElementById('aqiValue');
+                const aqiStatus = document.getElementById('aqiStatus');
+                aqiValue.className = status.class;
+                aqiStatus.className = status.class;
+                aqiValue.style.color = status.color;
+                aqiStatus.style.color = status.color;
+
+                // Update data sections
+                document.getElementById('temperature').innerHTML = `${temp}<span class="data-unit">°C</span>`;
+                document.getElementById('humidity').innerHTML = `${humidity}<span class="data-unit">%</span>`;
+                document.getElementById('pressure').innerHTML = `${weather.pr || '--'}<span class="data-unit">hPa</span>`;
+                document.getElementById('pm25').innerHTML = `${pm25}<span class="data-unit">μg/m³</span>`;
+                document.getElementById('pm10').innerHTML = `${pm10}<span class="data-unit">μg/m³</span>`;
+                document.getElementById('sourceBadge').textContent = data.source || 'Station API';
+                document.getElementById('lastUpdate').textContent = formatTime(new Date());
+
+                console.log(`✅ Display updated: AQI ${aqi} (${status.text}) ${status.face}`);
+
+            } catch (error) {
+                console.error('❌ Error updating display:', error);
+                loadDemoData();
+            }
+        }
+
+        function loadDemoData() {
+            console.log('🎭 Loading demo data from Canvas 39...');
+            
+            // ใช้ข้อมูลตัวอย่างที่เหมือนจริงจาก Canvas 39
+            const demoAqi = 66;  // ค่าจริงจาก Canvas 39
+            const status = getAQIStatus(demoAqi);
+            
+            document.getElementById('aqiValue').textContent = demoAqi;
+            document.getElementById('aqiStatus').textContent = status.text;
+            document.getElementById('pm25Display').textContent = 'PM2.5: 24.8 μg/m³';
+            
+            const faceIcon = document.getElementById('faceIcon');
+            faceIcon.innerHTML = status.face;
+            faceIcon.style.color = status.color;
+            
+            updateAQICircle(demoAqi);
+            
+            const aqiValue = document.getElementById('aqiValue');
+            const aqiStatus = document.getElementById('aqiStatus');
+            aqiValue.className = status.class;
+            aqiStatus.className = status.class;
+            aqiValue.style.color = status.color;
+            aqiStatus.style.color = status.color;
+            
+            document.getElementById('temperature').innerHTML = '31<span class="data-unit">°C</span>';
+            document.getElementById('humidity').innerHTML = '68<span class="data-unit">%</span>';
+            document.getElementById('pm25').innerHTML = '24.8<span class="data-unit">μg/m³</span>';
+            document.getElementById('pm10').innerHTML = '28<span class="data-unit">μg/m³</span>';
+            document.getElementById('sourceBadge').textContent = 'Station API';
+            document.getElementById('lastUpdate').textContent = formatTime(new Date());
+            
+            console.log('✅ Demo data loaded (Canvas 39 style)');
+        }
+
+        // === UTILITY FUNCTIONS ===
+        function formatTime(date) {
+            if (!date) return '--:--';
+            return date.toLocaleTimeString('th-TH', {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Asia/Bangkok',
+                hour12: false
+            });
+        }
+
+        function startClock() {
+            function updateClock() {
+                const now = new Date();
+                document.getElementById('currentTime').textContent = formatTime(now);
+            }
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+
+        // === DATA UPDATE SYSTEM ===
+        async function updateAirQualityData() {
+            try {
+                // Show loading state
+                document.querySelector('.main-content').classList.add('loading');
+                
+                const data = await fetchAirQualityData();
+                updateDisplay(data);
+                
+            } catch (error) {
+                console.error('❌ Update failed:', error);
+                loadDemoData();
+            } finally {
+                // Remove loading state
+                document.querySelector('.main-content').classList.remove('loading');
+            }
+        }
+
+        function startDataUpdates() {
+            console.log('🔄 Starting data update system');
+            
+            // Initial update
+            updateAirQualityData();
+            
+            // Set up recurring updates
+            if (updateTimer) clearInterval(updateTimer);
+            updateTimer = setInterval(updateAirQualityData, CONFIG.UPDATE_INTERVAL);
+            
+            console.log(`⏰ Auto-update every ${CONFIG.UPDATE_INTERVAL / 60000} minutes`);
+        }
+
+        // === FULLSCREEN FUNCTIONS ===
+        function toggleFullscreen() {
+            const device = document.getElementById('deviceFrame');
+            const btn = document.getElementById('fullscreenBtn');
+            
+            if (!document.fullscreenElement) {
+                if (device.requestFullscreen) {
+                    device.requestFullscreen();
+                } else if (device.webkitRequestFullscreen) {
+                    device.webkitRequestFullscreen();
+                } else if (device.msRequestFullscreen) {
+                    device.msRequestFullscreen();
+                }
+                btn.innerHTML = '<span class="fullscreen-icon">🔲</span>';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+                btn.innerHTML = '<span class="fullscreen-icon">⛶</span>';
+            }
+        }
+
+        // === KEYBOARD CONTROLS ===
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case ' ':
+                    e.preventDefault();
+                    updateAirQualityData();
+                    break;
+                case 'f':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        toggleFullscreen();
+                    }
+                    break;
+                case 'r':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        location.reload();
+                    }
+                    break;
+            }
+        });
+
+        // === INITIALIZATION ===
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 IQAir AirVisual Pro Monitor v2 Starting...');
+            
+            // Set viewport height for mobile
+            function setVH() {
+                let vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            }
+            setVH();
+            window.addEventListener('resize', setVH);
+            
+            // Start systems
+            startClock();
+            startDataUpdates();
+            
+            console.log('✅ IQAir AirVisual Pro Monitor v2 Ready!');
+            console.log('🎮 Controls: Space=Refresh, Ctrl+F=Fullscreen, Ctrl+R=Reload');
+        });
+    </script>
+</body>
+</html>

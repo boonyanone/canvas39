@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas 39 - Elevator Display</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // ปิด warning สำหรับ development/demo
+        if (window.tailwind) {
+            window.tailwind.config = { 
+                corePlugins: { preflight: false }
+            };
+        }
+    </script>
+    
+    <style>
+        /* Fix any styling issues */
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        /* Ensure borders and layout stay intact */
+        .border-t-2 {
+            border-top-width: 2px !important;
+            border-top-style: solid !important;
+        }
+        
+        .border-gray-300 {
+            border-color: #d1d5db !important;
+        }
+        
+        /* Force display of weather section border */
+        .weather-section-border {
+            border-top: 2px solid #d1d5db !important;
+        }
+        
+        /* HR line styles for AQI sections */
+        hr {
+            border: none !important;
+            border-top: 1px solid !important;
+            margin: 8px 0 !important;
+        }
+    </style>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <style>
+        /* Weather Icon Animations */
+        .weather-icon-sun {
+            animation: rotate 8s linear infinite;
+        }
+        
+        .weather-icon-rain {
+            animation: rain-drop 2s ease-in-out infinite;
+        }
+        
+        .weather-icon-cloud {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .weather-icon-thunder {
+            animation: thunder-flash 3s ease-in-out infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes rain-drop {
+            0%, 100% { transform: translateY(0px); opacity: 1; }
+            50% { transform: translateY(2px); opacity: 0.8; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-2px); }
+        }
+        
+        @keyframes thunder-flash {
+            0%, 90%, 100% { opacity: 1; }
+            5%, 15% { opacity: 0.8; }
+            10% { opacity: 1.2; filter: brightness(1.2); }
+        }
+    </style>
+</head>
+<body>
+    <div class="w-full h-screen bg-stone-400 flex flex-col">
+        <!-- Header -->
+        <div class="bg-amber-900 flex items-center justify-between px-8 py-4 flex-shrink-0 h-[10.53vh]" style="background-color: #3f2f15;">
+            <div class="w-16 h-16 flex items-center justify-center">
+                <img src="img/logo.png" alt="Canvas 39 Logo" class="w-full h-full object-contain filter brightness-0 invert">
+            </div>
+            <div class="text-center text-white">
+                <div class="text-2xl mb-2" id="currentDate">Wednesday, 27 November</div>
+                <div class="text-4xl font-light" id="currentTime">16:41</div>
+            </div>
+            <button id="fullscreenBtn" class="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center text-white hover:bg-opacity-30 transition-all duration-300">
+                <i data-lucide="maximize" class="w-4 h-4" id="fullscreenIcon"></i>
+            </button>
+        </div>
+
+        <!-- Building Image Section -->
+        <div class="flex items-center justify-center text-white text-lg h-[31.58vh] flex-shrink-0 relative" style="background-color: #87ceeb; background-image: url('img/FRONT FULL.jpg'); background-size: cover; background-repeat: no-repeat; background-position: center;">
+        </div>
+
+        <!-- Weather Section -->
+        <div class="border-t-2 border-gray-300 weather-section-border flex flex-shrink-0 h-[15.79vh]" style="background-color: #e8ddd4;">
+            <!-- Today -->
+            <div class="w-2/5 p-4 flex flex-col justify-start" style="background-color: #f3efe6;">
+                <div class="text-lg font-medium mb-3" style="color: #3f2f15;">TODAY</div>
+                <div class="flex flex-col items-center justify-center flex-1">
+                    <div class="w-8 h-8 sm:w-12 sm:h-12 mb-1" id="todayIcon">
+                        <svg viewBox="0 0 48 48" class="w-full h-full">
+                            <!-- Rain Cloud -->
+                            <path d="M36 20c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 .685.057 1.354.166 2.001C9.97 22.46 8 24.81 8 27.5 8 30.537 10.463 33 13.5 33h21c3.037 0 5.5-2.463 5.5-5.5 0-2.69-1.97-5.04-4.166-5.499.109-.647.166-1.316.166-2.001z" fill="none" stroke="#3f2f15" stroke-width="2"/>
+                            <!-- Rain Drops -->
+                            <line x1="16" y1="36" x2="16" y2="42" stroke="#3f2f15" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="20" y1="38" x2="20" y2="44" stroke="#3f2f15" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="24" y1="36" x2="24" y2="42" stroke="#3f2f15" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="28" y1="38" x2="28" y2="44" stroke="#3f2f15" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="32" y1="36" x2="32" y2="42" stroke="#3f2f15" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="text-lg flex items-center gap-1 font-medium" style="color: #3f2f15;">
+                        <span id="lowTemp">26°C</span>
+                        <span>/</span>
+                        <span id="highTemp">34°C</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Outlook -->
+            <div class="w-3/5 p-4 flex flex-col justify-start" style="background-color: #ddd6cc;">
+                <div class="text-lg font-medium mb-3" style="color: #3f2f15;">OUTLOOK</div>
+                <div class="grid grid-cols-4 gap-3 flex-1 items-center" id="forecastGrid">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Air Quality Section -->
+        <div class="p-2 sm:p-4 flex gap-2 sm:gap-4 flex-shrink-0 h-[21.05vh]" style="background-color: #929079;">
+            <div class="flex-1" style="color: #3f2f15;">
+                <div class="text-sm sm:text-lg mb-2 sm:mb-3 font-medium" style="color: #3f2f15;">INDOOR</div>
+                <div class="bg-green-500 p-2 sm:p-4 rounded flex-1 flex flex-col">
+                    <div class="flex justify-between items-center mb-1 sm:mb-2">
+                        <div class="flex items-center gap-1 sm:gap-3">
+                            <div class="bg-green-600 px-2 py-1 sm:px-3 sm:py-2 rounded">
+                                <div class="text-xl sm:text-3xl font-light" style="color: #3f2f15;" id="indoorAQI">40</div>
+                                <div class="text-xs sm:text-sm opacity-90" style="color: #3f2f15;">US AQI</div>
+                            </div>
+                            <div class="text-sm sm:text-lg font-bold" style="color: #3f2f15;" id="indoorLevel">Good</div>
+                        </div>
+                        <div class="w-6 h-6 sm:w-12 sm:h-12" id="indoorFace">
+                            <img src="https://www.iqair.com/dl/assets/aqi/ic-face-green.svg" alt="AQI Face" class="w-full h-full object-contain filter brightness-0">
+                        </div>
+                    </div>
+                    <hr class="border-opacity-30 my-1 sm:my-2" style="border-color: #3f2f15;">
+                    <div class="text-xs sm:text-sm opacity-90 flex justify-between" style="color: #3f2f15;">
+                        <div>Main pollutant: <span class="font-bold" id="indoorPollutant">PM10</span></div>
+                        <div class="text-xs"><span id="indoorConcentration">43.5</span> <span class="font-bold">μg/m³</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1" style="color: #3f2f15;">
+                <div class="text-sm sm:text-lg mb-2 sm:mb-3 font-medium" style="color: #3f2f15;">OUTDOOR</div>
+                <div class="bg-yellow-500 p-2 sm:p-4 rounded flex-1 flex flex-col">
+                    <div class="flex justify-between items-center mb-1 sm:mb-2">
+                        <div class="flex items-center gap-1 sm:gap-3">
+                            <div class="bg-yellow-600 px-2 py-1 sm:px-3 sm:py-2 rounded">
+                                <div class="text-xl sm:text-3xl font-light" style="color: #3f2f15;" id="outdoorAQI">84</div>
+                                <div class="text-xs sm:text-sm opacity-90" style="color: #3f2f15;">US AQI</div>
+                            </div>
+                            <div class="text-sm sm:text-lg font-bold" style="color: #3f2f15;" id="outdoorLevel">Moderate</div>
+                        </div>
+                        <div class="w-6 h-6 sm:w-12 sm:h-12" id="outdoorFace">
+                            <img src="https://www.iqair.com/dl/assets/aqi/ic-face-yellow.svg" alt="AQI Face" class="w-full h-full object-contain filter brightness-0">
+                        </div>
+                    </div>
+                    <hr class="border-opacity-30 my-1 sm:my-2" style="border-color: #3f2f15;">
+                    <div class="text-xs sm:text-sm opacity-90 flex justify-between" style="color: #3f2f15;">
+                        <div>Main pollutant: <span class="font-bold" id="outdoorPollutant">PM2.5</span></div>
+                        <div class="text-xs"><span id="outdoorConcentration">27</span> <span class="font-bold">μg/m³</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Water Quality Section -->
+        <div class="p-4 flex gap-4 flex-shrink-0 h-[21.05vh]" style="background-color: #b7a591;">
+            <div class="flex-1 text-white">
+                <div class="text-lg mb-3 font-medium" style="color: #3f2f15;">WATER</div>
+                <div class="grid grid-cols-2 gap-2 flex-1">
+                    <div class="bg-green-500 p-3 rounded text-center flex flex-col justify-center" style="color: #3f2f15;">
+                        <div class="text-xs opacity-90">PH</div>
+                        <div class="text-lg font-medium" id="waterPH">7.2</div>
+                    </div>
+                    <div class="bg-yellow-500 p-3 rounded text-center flex flex-col justify-center" style="color: #3f2f15;">
+                        <div class="text-xs opacity-90">CHLORINE</div>
+                        <div class="text-lg font-medium" id="waterChlorine">1.8</div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1 text-white">
+                <div class="text-lg mb-3 font-medium" style="color: #3f2f15;">SWIMMING POOL</div>
+                <div class="grid grid-cols-2 gap-2 flex-1">
+                    <div class="bg-green-400 p-3 rounded text-center flex flex-col justify-center" style="color: #3f2f15;">
+                        <div class="text-xs opacity-90">PH</div>
+                        <div class="text-lg font-medium" id="poolPH">7.4</div>
+                    </div>
+                    <div class="bg-orange-500 p-3 rounded text-center flex flex-col justify-center" style="color: #3f2f15;">
+                        <div class="text-xs opacity-90">CHLORINE</div>
+                        <div class="text-lg font-medium" id="poolChlorine">2.1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // OpenWeatherMap API Configuration
+        const WEATHER_API_KEY = 'db61b712294c46506059042663feeac6'; // OpenWeatherMap API Key
+        const CITY = 'Bangkok,TH';
+        
+        // WeatherAPI.com (Free alternative - ไม่ต้อง API key)
+        const WEATHER_API_URL = 'https://api.weatherapi.com/v1/current.json?key=demo&q=Bangkok&aqi=no';
+        
+        // Mock data (fallback)
+        const mockData = {
+            weather: {
+                current: {
+                    condition: "Partly Cloudy",
+                    high: 34,
+                    low: 26
+                },
+                forecast: [
+                    { time: "11:00", condition: "Sunny", icon: "sun", temperature: 32 },
+                    { time: "12:00", condition: "Partly Cloudy", icon: "cloud", temperature: 33 },
+                    { time: "13:00", condition: "Rainy", icon: "cloud-rain", temperature: 31 },
+                    { time: "14:00", condition: "Thunderstorm", icon: "zap", temperature: 29 }
+                ]
+            },
+            airQuality: {
+                indoor: { aqi: 40, level: "Good", pollutant: "PM10", concentration: 43.5 },
+                outdoor: { aqi: 84, level: "Moderate", pollutant: "PM2.5", concentration: 27 }
+            },
+            waterQuality: {
+                water: { ph: 7.2, chlorine: 1.8 },
+                pool: { ph: 7.4, chlorine: 2.1 }
+            }
+        };
+
+        function updateFaceIcon(elementId, aqi) {
+            const element = document.getElementById(elementId);
+            let iconUrl = '';
+            
+            if (aqi <= 50) {
+                iconUrl = 'https://www.iqair.com/dl/assets/aqi/ic-face-green.svg';
+            } else if (aqi <= 100) {
+                iconUrl = 'https://www.iqair.com/dl/assets/aqi/ic-face-yellow.svg';
+            } else if (aqi <= 150) {
+                iconUrl = 'https://www.iqair.com/dl/assets/aqi/ic-face-orange.svg';
+            } else if (aqi <= 200) {
+                iconUrl = 'https://www.iqair.com/dl/assets/aqi/ic-face-red.svg';
+            } else {
+                iconUrl = 'https://www.iqair.com/dl/assets/aqi/ic-face-purple.svg';
+            }
+            
+            // ใช้ filter brightness-0 เพื่อเปลี่ยนเป็นสีดำ
+            element.innerHTML = `<img src="${iconUrl}" alt="AQI Face" class="w-full h-full object-contain filter brightness-0">`;
+        }
+        
+        // ฟังก์ชันดึงข้อมูล AQI จาก IQAir Canvas 39 (หลายวิธี)
+        async function fetchCanvas39AQI() {
+            // ลิสต์ proxy servers ที่ลองใช้ได้
+            const proxies = [
+                'https://cors-anywhere.herokuapp.com/',
+                'https://corsproxy.io/?',
+                'https://api.codetabs.com/v1/proxy?quest='
+            ];
+            
+            const targetUrl = 'https://www.iqair.com/thailand/bangkok/bangkok/canvas-39';
+            
+            for (const proxy of proxies) {
+                try {
+                    console.log(`🔄 ลอง proxy: ${proxy}`);
+                    
+                    const response = await fetch(proxy + encodeURIComponent(targetUrl), {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+                    
+                    if (!response.ok) continue;
+                    
+                    const htmlContent = await response.text();
+                    
+                    // Extract AQI data จาก HTML (regex pattern)
+                    const aqiMatch = htmlContent.match(/aqi[":]*\s*(\d+)/i);
+                    const levelMatch = htmlContent.match(/status[":]*\s*["']([^"']+)["']/i);
+                    const pollutantMatch = htmlContent.match(/pollutant[":]*\s*["']([^"']+)["']/i);
+                    const concentrationMatch = htmlContent.match(/concentration[":]*\s*(\d+\.?\d*)/i);
+                    
+                    if (aqiMatch) {
+                        const aqiData = {
+                            aqi: parseInt(aqiMatch[1]),
+                            level: levelMatch ? levelMatch[1] : 'Unknown',
+                            pollutant: pollutantMatch ? pollutantMatch[1] : 'PM2.5',
+                            concentration: concentrationMatch ? parseFloat(concentrationMatch[1]) : 0
+                        };
+                        
+                        console.log('✅ ดึงข้อมูล AQI Canvas 39 สำเร็จ:', aqiData);
+                        return aqiData;
+                    }
+                    
+                } catch (error) {
+                    console.log(`❌ Proxy ${proxy} ล้มเหลว:`, error.message);
+                    continue;
+                }
+            }
+            
+            // ถ้า scraping ไม่ได้ ใช้ IQAir API สำรอง
+            try {
+                console.log('🔄 ลอง IQAir API สำรอง...');
+                const response = await fetch(
+                    'https://api.airvisual.com/v2/city?city=Bangkok&state=Bangkok&country=Thailand&key=demo'
+                );
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        const aqiData = {
+                            aqi: data.data.current.pollution.aqius,
+                            level: getAQILevel(data.data.current.pollution.aqius),
+                            pollutant: 'PM2.5',
+                            concentration: data.data.current.pollution.aqius
+                        };
+                        
+                        console.log('✅ ดึงข้อมูล AQI จาก IQAir API สำเร็จ:', aqiData);
+                        return aqiData;
+                    }
+                }
+            } catch (error) {
+                console.log('❌ IQAir API สำรองล้มเหลว:', error.message);
+            }
+            
+            console.log('⚠️ ไม่สามารถดึงข้อมูล AQI จริงได้ ใช้ mock data');
+            return null;
+        }
+        
+        // ฟังก์ชันแปลง AQI เป็น level
+        function getAQILevel(aqi) {
+            if (aqi <= 50) return 'Good';
+            else if (aqi <= 100) return 'Moderate';
+            else if (aqi <= 150) return 'Unhealthy for Sensitive Groups';
+            else if (aqi <= 200) return 'Unhealthy';
+            else if (aqi <= 300) return 'Very Unhealthy';
+            else return 'Hazardous';
+        }
+
+        // ฟังก์ชันดึงข้อมูลอากาศจาก OpenMeteo (เร็วกว่า)
+        async function fetchOpenMeteoWeather() {
+            try {
+                // Bangkok coordinates
+                const lat = 13.7563;
+                const lng = 100.5018;
+                
+                const response = await fetch(
+                    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m&hourly=temperature_2m,weather_code&timezone=Asia%2FBangkok&forecast_days=1`
+                );
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('🌡️ OpenMeteo Raw Data:', data);
+                
+                const current = data.current;
+                const hourly = data.hourly;
+                
+                const processedData = {
+                    weather: {
+                        current: {
+                            condition: mapOpenMeteoWeatherCode(current.weather_code),
+                            high: Math.round(current.temperature_2m + 3),
+                            low: Math.round(current.temperature_2m - 3)
+                        },
+                        forecast: hourly.time.slice(1, 5).map((time, index) => {
+                            const hour = new Date(time).toLocaleTimeString('th-TH', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false
+                            });
+                            return {
+                                time: hour,
+                                condition: mapOpenMeteoWeatherCode(hourly.weather_code[index + 1]),
+                                temperature: Math.round(hourly.temperature_2m[index + 1])
+                            };
+                        })
+                    }
+                };
+                
+                console.log('✅ ดึงข้อมูล OpenMeteo สำเร็จ:', processedData);
+                console.log('📊 อุณหภูมิปัจจุบัน:', current.temperature_2m, '°C');
+                console.log('💨 ความชื้น:', current.relative_humidity_2m, '%');
+                console.log('🌬️ ความเร็วลม:', current.wind_speed_10m, 'km/h');
+                console.log('⏰ อัปเดตเมื่อ:', new Date().toLocaleTimeString('th-TH'));
+                
+                return processedData;
+                
+            } catch (error) {
+                console.error('❌ ข้อผิดพลาด OpenMeteo API:', error);
+                return null;
+            }
+        }
+        
+        // แปลง weather code ของ OpenMeteo
+        function mapOpenMeteoWeatherCode(code) {
+            const codeMap = {
+                0: 'Sunny',           // Clear sky
+                1: 'Sunny',           // Mainly clear
+                2: 'Partly Cloudy',   // Partly cloudy
+                3: 'Partly Cloudy',   // Overcast
+                45: 'Partly Cloudy',  // Fog
+                48: 'Partly Cloudy',  // Depositing rime fog
+                51: 'Rainy',          // Drizzle: Light
+                53: 'Rainy',          // Drizzle: Moderate
+                55: 'Rainy',          // Drizzle: Dense
+                61: 'Rainy',          // Rain: Slight
+                63: 'Rainy',          // Rain: Moderate
+                65: 'Rainy',          // Rain: Heavy
+                80: 'Rainy',          // Rain showers: Slight
+                81: 'Rainy',          // Rain showers: Moderate
+                82: 'Rainy',          // Rain showers: Violent
+                95: 'Thunderstorm',   // Thunderstorm: Slight
+                96: 'Thunderstorm',   // Thunderstorm with hail
+                99: 'Thunderstorm'    // Thunderstorm with heavy hail
+            };
+            return codeMap[code] || 'Partly Cloudy';
+        }
+
+        // ฟังก์ชันดึงข้อมูลอากาศแบบไม่ต้อง API Key (wttr.in backup)
+        async function fetchFreeWeatherData() {
+            try {
+                // ใช้ wttr.in - free weather API ไม่ต้อง key
+                const response = await fetch('https://wttr.in/Bangkok?format=j1');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('🌡️ Free Weather Raw Data:', data);
+                
+                const current = data.current_condition[0];
+                const today = data.weather[0];
+                
+                const processedData = {
+                    weather: {
+                        current: {
+                            condition: mapWttrWeatherCondition(current.weatherCode),
+                            high: Math.round(parseFloat(today.maxtempC)),
+                            low: Math.round(parseFloat(today.mintempC))
+                        },
+                        forecast: data.weather[0].hourly.slice(0, 4).map((hour, index) => {
+                            const time = String((new Date().getHours() + index + 1) % 24).padStart(2, '0') + ':00';
+                            return {
+                                time: time,
+                                condition: mapWttrWeatherCondition(hour.weatherCode),
+                                temperature: Math.round(parseFloat(hour.tempC))
+                            };
+                        })
+                    }
+                };
+                
+                console.log('✅ ดึงข้อมูลฟรีสำเร็จ:', processedData);
+                console.log('📊 อุณหภูมิปัจจุบัน:', current.temp_C, '°C');
+                console.log('💨 ความชื้น:', current.humidity, '%');
+                console.log('🌬️ ความเร็วลม:', current.windspeedKmph, 'km/h');
+                console.log('⏰ อัปเดตเมื่อ:', new Date().toLocaleTimeString('th-TH'));
+                
+                return processedData;
+                
+            } catch (error) {
+                console.error('❌ ข้อผิดพลาด Free Weather API:', error);
+                return null;
+            }
+        }
+        
+        // แปลง weather code ของ wttr.in เป็นสภาพอากาศ
+        function mapWttrWeatherCondition(weatherCode) {
+            const conditionMap = {
+                '113': 'Sunny',         // Clear/Sunny
+                '116': 'Partly Cloudy', // Partly cloudy
+                '119': 'Partly Cloudy', // Cloudy
+                '122': 'Partly Cloudy', // Overcast
+                '143': 'Partly Cloudy', // Mist
+                '176': 'Rainy',         // Patchy rain possible
+                '179': 'Rainy',         // Patchy snow possible
+                '182': 'Rainy',         // Patchy sleet possible
+                '185': 'Rainy',         // Patchy freezing drizzle possible
+                '200': 'Thunderstorm',  // Thundery outbreaks possible
+                '227': 'Rainy',         // Blowing snow
+                '230': 'Rainy',         // Blizzard
+                '248': 'Partly Cloudy', // Fog
+                '260': 'Partly Cloudy', // Freezing fog
+                '263': 'Rainy',         // Patchy light drizzle
+                '266': 'Rainy',         // Light drizzle
+                '281': 'Rainy',         // Freezing drizzle
+                '284': 'Rainy',         // Heavy freezing drizzle
+                '293': 'Rainy',         // Patchy light rain
+                '296': 'Rainy',         // Light rain
+                '299': 'Rainy',         // Moderate rain at times
+                '302': 'Rainy',         // Moderate rain
+                '305': 'Rainy',         // Heavy rain at times
+                '308': 'Rainy',         // Heavy rain
+                '311': 'Rainy',         // Light freezing rain
+                '314': 'Rainy',         // Moderate or heavy freezing rain
+                '317': 'Rainy',         // Light sleet
+                '320': 'Rainy',         // Moderate or heavy sleet
+                '323': 'Rainy',         // Patchy light snow
+                '326': 'Rainy',         // Light snow
+                '329': 'Rainy',         // Patchy moderate snow
+                '332': 'Rainy',         // Moderate snow
+                '335': 'Rainy',         // Patchy heavy snow
+                '338': 'Rainy',         // Heavy snow
+                '350': 'Rainy',         // Ice pellets
+                '353': 'Rainy',         // Light rain shower
+                '356': 'Rainy',         // Moderate or heavy rain shower
+                '359': 'Rainy',         // Torrential rain shower
+                '362': 'Rainy',         // Light sleet showers
+                '365': 'Rainy',         // Moderate or heavy sleet showers
+                '368': 'Rainy',         // Light snow showers
+                '371': 'Rainy',         // Moderate or heavy snow showers
+                '374': 'Rainy',         // Light showers of ice pellets
+                '377': 'Rainy',         // Moderate or heavy showers of ice pellets
+                '386': 'Thunderstorm',  // Patchy light rain with thunder
+                '389': 'Thunderstorm',  // Moderate or heavy rain with thunder
+                '392': 'Thunderstorm',  // Patchy light snow with thunder
+                '395': 'Thunderstorm'   // Moderate or heavy snow with thunder
+            };
+            return conditionMap[weatherCode] || 'Partly Cloudy';
+        }
+        
+        // สร้าง forecast จำลองจากอุณหภูมิปัจจุบัน
+        function generateMockForecast(currentTemp) {
+            const hours = [];
+            const now = new Date();
+            
+            for (let i = 1; i <= 4; i++) {
+                const futureTime = new Date(now.getTime() + (i * 60 * 60 * 1000));
+                const timeString = futureTime.toLocaleTimeString('th-TH', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+                
+                // สุ่มอุณหภูมิใกล้เคียงจริง ±2°C
+                const tempVariation = (Math.random() - 0.5) * 4;
+                const temperature = Math.round(currentTemp + tempVariation);
+                
+                // สุ่มสภาพอากาศ
+                const conditions = ['Sunny', 'Partly Cloudy', 'Rainy'];
+                const condition = conditions[Math.floor(Math.random() * conditions.length)];
+                
+                hours.push({
+                    time: timeString,
+                    condition: condition,
+                    temperature: temperature
+                });
+            }
+            
+            return hours;
+        }
+
+        // ฟังก์ชันดึงข้อมูลอากาศจาก OpenWeatherMap
+        async function fetchRealWeatherData() {
+            if (WEATHER_API_KEY === 'YOUR_API_KEY_HERE') {
+                console.log('⚠️ กรุณาใส่ API Key สำหรับ OpenWeatherMap');
+                return null;
+            }
+            
+            try {
+                // Current Weather
+                const currentResponse = await fetch(
+                    `https://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${WEATHER_API_KEY}&units=metric`
+                );
+                
+                if (!currentResponse.ok) {
+                    throw new Error(`HTTP error! status: ${currentResponse.status}`);
+                }
+                
+                const currentData = await currentResponse.json();
+                
+                // Forecast Weather (5 day / 3 hour)
+                const forecastResponse = await fetch(
+                    `https://api.openweathermap.org/data/2.5/forecast?q=${CITY}&appid=${WEATHER_API_KEY}&units=metric&cnt=4`
+                );
+                
+                const forecastData = await forecastResponse.json();
+                
+                // แปลงข้อมูลให้ตรงกับรูปแบบเดิม
+                const weatherCondition = mapWeatherCondition(currentData.weather[0].main);
+                
+                const processedData = {
+                    weather: {
+                        current: {
+                            condition: weatherCondition,
+                            high: Math.round(currentData.main.temp_max),
+                            low: Math.round(currentData.main.temp_min)
+                        },
+                        forecast: forecastData.list.map(item => {
+                            const time = new Date(item.dt * 1000).toLocaleTimeString('th-TH', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: false
+                            });
+                            return {
+                                time: time,
+                                condition: mapWeatherCondition(item.weather[0].main),
+                                temperature: Math.round(item.main.temp)
+                            };
+                        })
+                    }
+                };
+                
+                console.log('✅ ดึงข้อมูลอากาศจริงสำเร็จ:', processedData);
+                console.log('📊 อุณหภูมิปัจจุบัน:', currentData.main.temp, '°C');
+                console.log('🌤️ สภาพอากาศ:', currentData.weather[0].description);
+                console.log('💨 ความชื้น:', currentData.main.humidity, '%');
+                return processedData;
+                
+            } catch (error) {
+                console.error('❌ ข้อผิดพลาดในการดึงข้อมูลอากาศ:', error);
+                return null;
+            }
+        }
+        
+        // แปลงสภาพอากาศจาก OpenWeatherMap เป็นรูปแบบที่เราใช้
+        function mapWeatherCondition(openWeatherCondition) {
+            const conditionMap = {
+                'Clear': 'Sunny',
+                'Clouds': 'Partly Cloudy',
+                'Rain': 'Rainy',
+                'Drizzle': 'Rainy',
+                'Thunderstorm': 'Thunderstorm',
+                'Snow': 'Rainy', // ใช้ rain icon สำหรับหิมะ
+                'Mist': 'Partly Cloudy',
+                'Fog': 'Partly Cloudy'
+            };
+            return conditionMap[openWeatherCondition] || 'Partly Cloudy';
+        }
+
+        function getWeatherIcon(condition) {
+            const iconMap = {
+                'Sunny': 'sun',
+                'Partly Cloudy': 'cloud',
+                'Rainy': 'cloud-rain',
+                'Thunderstorm': 'zap'
+            };
+            
+            const animationClass = {
+                'Sunny': 'weather-icon-sun',
+                'Partly Cloudy': 'weather-icon-cloud',
+                'Rainy': 'weather-icon-rain',
+                'Thunderstorm': 'weather-icon-thunder'
+            }[condition] || 'weather-icon-cloud';
+            
+            // เลือกสีตามสภาพอากาศ
+            const colorMap = {
+                'Sunny': '#FFB800',           // สีเหลืองทอง (แดด)
+                'Partly Cloudy': '#6B7280',  // สีเทา (เมฆ)
+                'Rainy': '#3B82F6',          // สีน้ำเงิน (ฝน)
+                'Thunderstorm': '#8B5CF6'    // สีม่วง (พายุ)
+            };
+            
+            const iconName = iconMap[condition] || 'cloud';
+            const iconColor = colorMap[condition] || '#6B7280';
+            
+            return `<i data-feather="${iconName}" class="w-full h-full ${animationClass}" style="stroke: ${iconColor}; stroke-width: 2;"></i>`;
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+                timeZone: 'Asia/Bangkok'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+            
+            const dateString = now.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long',
+                timeZone: 'Asia/Bangkok'
+            });
+            document.getElementById('currentDate').textContent = dateString;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log('Error attempting to enable fullscreen:', err);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        async function updateDisplay() {
+            console.log('🔄 Updating display...');
+            
+            // ลองดึงข้อมูลอากาศจาก OpenMeteo ก่อน (เร็วที่สุด)
+            let realWeatherData = await fetchOpenMeteoWeather();
+            
+            if (!realWeatherData) {
+                console.log('⚠️ OpenMeteo API ไม่พร้อมใช้งาน ลอง wttr.in...');
+                realWeatherData = await fetchFreeWeatherData();
+            }
+            
+            if (!realWeatherData) {
+                console.log('⚠️ Weather APIs ไม่พร้อมใช้งาน ลอง OpenWeatherMap...');
+                realWeatherData = await fetchRealWeatherData();
+            }
+            
+            const weather = realWeatherData ? realWeatherData.weather : mockData.weather;
+            
+            // ใช้ Mock AQI data ชั่วคราว เพื่อให้แสดงผลเร็ว
+            // TODO: เพิ่ม AQI scraping ในระบบหลังบ้าน
+            let airQuality = mockData.airQuality;
+            console.log('📊 ใช้ Mock AQI Data ชั่วคราว (เพื่อให้แสดงผลเร็ว)');
+            
+            if (realWeatherData) {
+                console.log('🎯 ใช้ข้อมูลอากาศจริงจาก Weather API');
+            } else {
+                console.log('⚠️ ใช้ Mock Data เนื่องจาก Weather APIs ทั้งหมดไม่พร้อมใช้งาน');
+            }
+            document.getElementById('lowTemp').textContent = weather.current.low + '°C';
+            document.getElementById('highTemp').textContent = weather.current.high + '°C';
+            
+            // Update today's weather icon
+            const todayIconContainer = document.getElementById('todayIcon');
+            todayIconContainer.innerHTML = getWeatherIcon(weather.current.condition);
+            
+            // Update forecast
+            const forecastGrid = document.getElementById('forecastGrid');
+            forecastGrid.innerHTML = '';
+            
+            weather.forecast.forEach(item => {
+                const forecastItem = document.createElement('div');
+                forecastItem.className = 'text-center flex flex-col items-center justify-center h-16 sm:h-20';
+                forecastItem.innerHTML = `
+                    <div class="w-8 h-8 sm:w-12 sm:h-12 mb-1">
+                        ${getWeatherIcon(item.condition)}
+                    </div>
+                    <div class="text-lg font-medium" style="color: #3f2f15;">${item.time}</div>
+                `;
+                forecastGrid.appendChild(forecastItem);
+            });
+            
+            // Update AQI
+            document.getElementById('indoorAQI').textContent = airQuality.indoor.aqi;
+            document.getElementById('indoorLevel').textContent = airQuality.indoor.level;
+            document.getElementById('indoorPollutant').textContent = airQuality.indoor.pollutant;
+            document.getElementById('indoorConcentration').textContent = airQuality.indoor.concentration;
+            
+            document.getElementById('outdoorAQI').textContent = airQuality.outdoor.aqi;
+            document.getElementById('outdoorLevel').textContent = airQuality.outdoor.level;
+            document.getElementById('outdoorPollutant').textContent = airQuality.outdoor.pollutant;
+            document.getElementById('outdoorConcentration').textContent = airQuality.outdoor.concentration;
+            
+            // Update face icons based on AQI levels
+            updateFaceIcon('indoorFace', airQuality.indoor.aqi);
+            updateFaceIcon('outdoorFace', airQuality.outdoor.aqi);
+            
+            // Update water quality
+            const waterQuality = mockData.waterQuality;
+            document.getElementById('waterPH').textContent = waterQuality.water.ph;
+            document.getElementById('waterChlorine').textContent = waterQuality.water.chlorine;
+            document.getElementById('poolPH').textContent = waterQuality.pool.ph;
+            document.getElementById('poolChlorine').textContent = waterQuality.pool.chlorine;
+            
+            // Reinitialize icons
+            lucide.createIcons();
+            feather.replace();
+            
+            console.log('✅ Display updated successfully');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 Canvas 39 GitHub Design initializing...');
+            
+            updateDateTime();
+            await updateDisplay();
+            
+            // Fullscreen button
+            document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+            
+            // เพิ่มการคลิกที่มุมขวาบนเพื่อออก fullscreen
+            const headerRight = document.createElement('div');
+            headerRight.className = 'fixed top-0 right-0 w-20 h-20 z-50 cursor-pointer';
+            headerRight.style.display = 'none';
+            headerRight.title = 'Click to exit fullscreen';
+            headerRight.addEventListener('click', function() {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                }
+            });
+            document.body.appendChild(headerRight);
+            
+            // Listen for fullscreen changes
+            document.addEventListener('fullscreenchange', function() {
+                const btn = document.getElementById('fullscreenBtn');
+                const icon = document.getElementById('fullscreenIcon');
+                
+                if (document.fullscreenElement) {
+                    // เข้า fullscreen - ซ่อนปุ่ม และแสดงพื้นที่คลิก
+                    btn.style.opacity = '0';
+                    btn.style.pointerEvents = 'none';
+                    headerRight.style.display = 'block';
+                    icon.setAttribute('data-lucide', 'minimize');
+                } else {
+                    // ออก fullscreen - แสดงปุ่ม และซ่อนพื้นที่คลิก
+                    btn.style.opacity = '1';
+                    btn.style.pointerEvents = 'auto';
+                    headerRight.style.display = 'none';
+                    icon.setAttribute('data-lucide', 'maximize');
+                }
+                lucide.createIcons();
+                feather.replace();
+            });
+            
+            // เพิ่มการกด ESC เพื่อออก fullscreen
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.fullscreenElement) {
+                    document.exitFullscreen();
+                }
+            });
+            
+            // Start clock
+            setInterval(updateDateTime, 1000);
+            
+            // Auto-update weather data every 10 minutes
+            setInterval(async function() {
+                console.log('🔄 Auto-updating weather data...');
+                await updateDisplay();
+            }, 10 * 60 * 1000); // 10 minutes
+            
+            console.log('✅ GitHub Design version loaded successfully');
+            
+            // Initialize Feather icons
+            feather.replace();
+        });
+    </script>
+</body>
+</html>

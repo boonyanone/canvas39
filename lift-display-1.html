@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas 39 - Elevator Display</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="w-full h-screen bg-white flex flex-col">
+        <!-- Header -->
+        <div class="bg-amber-800 flex items-center justify-between px-8 py-4 flex-shrink-0">
+            <div class="w-16 h-16 bg-white rounded-lg flex items-center justify-center text-amber-800 font-bold text-sm text-center leading-tight">
+                CANVAS<br>39
+            </div>
+            <div class="text-center text-white">
+                <div class="text-2xl mb-2" id="currentDate">Wednesday, 27 November</div>
+                <div class="text-4xl font-light" id="currentTime">16:41</div>
+            </div>
+            <div class="w-16"></div>
+        </div>
+
+        <!-- Building Image Section -->
+        <div class="flex-1 bg-sky-500 flex items-center justify-center text-white text-lg min-h-0">
+            Click to upload building image
+        </div>
+
+        <!-- Weather Section -->
+        <div class="bg-gray-100 border-t-2 border-gray-300 flex flex-shrink-0">
+            <!-- Today -->
+            <div class="flex-1 p-3 bg-gray-200 flex flex-col items-center">
+                <div class="text-xs text-gray-600 mb-1 font-medium">TODAY</div>
+                <div class="w-6 h-6 text-yellow-400 mb-1" id="todayIcon">
+                    <i data-lucide="cloud"></i>
+                </div>
+                <div class="text-sm text-gray-800 flex items-center gap-1">
+                    <span id="lowTemp">26°C</span>
+                    <span>/</span>
+                    <span id="highTemp">34°C</span>
+                </div>
+            </div>
+            <!-- Outlook -->
+            <div class="flex-2 p-3 bg-gray-300">
+                <div class="text-xs text-gray-600 mb-2 font-medium">OUTLOOK</div>
+                <div class="grid grid-cols-4 gap-2" id="forecastGrid">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Air Quality Section -->
+        <div class="bg-amber-700 p-4 flex gap-4 flex-shrink-0">
+            <div class="flex-1 text-white">
+                <div class="text-sm mb-1 font-medium">INDOOR</div>
+                <div class="bg-green-500 p-2 rounded flex justify-between items-center">
+                    <div>
+                        <div class="text-lg font-light" id="indoorAQI">40</div>
+                        <div class="text-xs">US AQI</div>
+                    </div>
+                    <div class="text-sm text-right">
+                        <div id="indoorLevel">Good</div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1 text-white">
+                <div class="text-sm mb-1 font-medium">OUTDOOR</div>
+                <div class="bg-yellow-500 p-2 rounded flex justify-between items-center">
+                    <div>
+                        <div class="text-lg font-light" id="outdoorAQI">84</div>
+                        <div class="text-xs">US AQI</div>
+                    </div>
+                    <div class="text-sm text-right">
+                        <div id="outdoorLevel">Moderate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Water Quality Section -->
+        <div class="bg-amber-600 p-4 flex gap-4 flex-shrink-0">
+            <div class="flex-1 text-white">
+                <div class="text-sm mb-1 font-medium">WATER</div>
+                <div class="grid grid-cols-2 gap-1">
+                    <div class="bg-white bg-opacity-20 p-1 rounded text-center">
+                        <div class="text-xs opacity-90">PH</div>
+                        <div class="text-sm font-medium" id="waterPH">7.2</div>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-1 rounded text-center">
+                        <div class="text-xs opacity-90">CHLORINE</div>
+                        <div class="text-sm font-medium" id="waterChlorine">1.8</div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1 text-white">
+                <div class="text-sm mb-1 font-medium">SWIMMING POOL</div>
+                <div class="grid grid-cols-2 gap-1">
+                    <div class="bg-white bg-opacity-20 p-1 rounded text-center">
+                        <div class="text-xs opacity-90">PH</div>
+                        <div class="text-sm font-medium" id="poolPH">7.4</div>
+                    </div>
+                    <div class="bg-white bg-opacity-20 p-1 rounded text-center">
+                        <div class="text-xs opacity-90">CHLORINE</div>
+                        <div class="text-sm font-medium" id="poolChlorine">2.1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Mock data
+        const mockData = {
+            weather: {
+                current: {
+                    condition: "Partly Cloudy",
+                    high: 34,
+                    low: 26
+                },
+                forecast: [
+                    { time: "11:00", condition: "Sunny", icon: "sun", temperature: 32 },
+                    { time: "12:00", condition: "Partly Cloudy", icon: "cloud", temperature: 33 },
+                    { time: "13:00", condition: "Rainy", icon: "cloud-rain", temperature: 31 },
+                    { time: "14:00", condition: "Thunderstorm", icon: "zap", temperature: 29 }
+                ]
+            },
+            airQuality: {
+                indoor: { aqi: 40, level: "Good" },
+                outdoor: { aqi: 84, level: "Moderate" }
+            },
+            waterQuality: {
+                water: { ph: 7.2, chlorine: 1.8 },
+                pool: { ph: 7.4, chlorine: 2.1 }
+            }
+        };
+
+        function getWeatherIconColor(condition) {
+            const colorMap = {
+                'Sunny': 'text-yellow-400',
+                'Partly Cloudy': 'text-gray-600',
+                'Rainy': 'text-blue-400',
+                'Thunderstorm': 'text-purple-400'
+            };
+            return colorMap[condition] || 'text-gray-600';
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false,
+                timeZone: 'Asia/Bangkok'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+            
+            const dateString = now.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long',
+                timeZone: 'Asia/Bangkok'
+            });
+            document.getElementById('currentDate').textContent = dateString;
+        }
+
+        function updateDisplay() {
+            console.log('🔄 Updating display...');
+            
+            // Update weather
+            const weather = mockData.weather;
+            document.getElementById('lowTemp').textContent = weather.current.low + '°C';
+            document.getElementById('highTemp').textContent = weather.current.high + '°C';
+            
+            // Update today's weather icon
+            const todayIconContainer = document.getElementById('todayIcon');
+            const iconClass = getWeatherIconColor(weather.current.condition);
+            todayIconContainer.className = `w-6 h-6 mb-1 ${iconClass}`;
+            
+            // Update forecast
+            const forecastGrid = document.getElementById('forecastGrid');
+            forecastGrid.innerHTML = '';
+            
+            weather.forecast.forEach(item => {
+                const forecastItem = document.createElement('div');
+                forecastItem.className = 'text-center flex flex-col items-center justify-between h-12';
+                forecastItem.innerHTML = `
+                    <div class="text-xs text-gray-600">${item.time}</div>
+                    <div class="w-4 h-4 ${getWeatherIconColor(item.condition)}">
+                        <i data-lucide="${item.icon}"></i>
+                    </div>
+                    <div class="text-xs text-gray-800">${item.temperature}°C</div>
+                `;
+                forecastGrid.appendChild(forecastItem);
+            });
+            
+            // Update AQI
+            const airQuality = mockData.airQuality;
+            document.getElementById('indoorAQI').textContent = airQuality.indoor.aqi;
+            document.getElementById('indoorLevel').textContent = airQuality.indoor.level;
+            document.getElementById('outdoorAQI').textContent = airQuality.outdoor.aqi;
+            document.getElementById('outdoorLevel').textContent = airQuality.outdoor.level;
+            
+            // Update water quality
+            const waterQuality = mockData.waterQuality;
+            document.getElementById('waterPH').textContent = waterQuality.water.ph;
+            document.getElementById('waterChlorine').textContent = waterQuality.water.chlorine;
+            document.getElementById('poolPH').textContent = waterQuality.pool.ph;
+            document.getElementById('poolChlorine').textContent = waterQuality.pool.chlorine;
+            
+            // Reinitialize icons
+            lucide.createIcons();
+            
+            console.log('✅ Display updated successfully');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Canvas 39 GitHub Design initializing...');
+            
+            updateDateTime();
+            updateDisplay();
+            
+            // Start clock
+            setInterval(updateDateTime, 1000);
+            
+            console.log('✅ GitHub Design version loaded successfully');
+        });
+    </script>
+</body>
+</html>

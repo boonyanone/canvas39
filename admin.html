@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas 39 - Admin Panel</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <h1 class="text-xl font-semibold text-gray-900">Canvas 39 Admin Panel</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="previewBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i data-lucide="eye" class="w-4 h-4 mr-2"></i>
+                            ดูตัวอย่าง Display
+                        </button>
+                        <button id="saveBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i data-lucide="save" class="w-4 h-4 mr-2"></i>
+                            บันทึกการตั้งค่า
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Left Column: Settings -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- รูปภาพและโลโก้ -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">รูปภาพและโลโก้</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-4">
+                            <!-- โลโก้ -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">โลโก้องค์กร</label>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                                        <img id="logoPreview" src="img/logo.png" alt="Logo Preview" class="w-full h-full object-contain">
+                                    </div>
+                                    <div class="flex-1">
+                                        <input type="file" id="logoUpload" accept="image/*" class="hidden">
+                                        <button onclick="document.getElementById('logoUpload').click()" class="bg-white border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                            เลือกไฟล์ใหม่
+                                        </button>
+                                        <p class="text-xs text-gray-500 mt-1">รองรับ: PNG, JPG, SVG (แนะนำ 64x64px)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- รูปอาคาร -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">รูปอาคาร</label>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-24 h-16 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                                        <img id="buildingPreview" src="img/FRONT FULL.jpg" alt="Building Preview" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1">
+                                        <input type="file" id="buildingUpload" accept="image/*" class="hidden">
+                                        <button onclick="document.getElementById('buildingUpload').click()" class="bg-white border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                            เลือกไฟล์ใหม่
+                                        </button>
+                                        <p class="text-xs text-gray-500 mt-1">รองรับ: PNG, JPG (แนะนำ 1920x1080px)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- การตั้งค่า Font -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่า Font</h3>
+                        </div>
+                        <div class="px-6 py-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">เลือก Font</label>
+                            <select id="fontSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                <option value="default">Default (System Font)</option>
+                                <option value="roman">Roman (Local Font)</option>
+                                <option value="kanit">Kanit (Google Fonts)</option>
+                                <option value="sarabun">Sarabun (Google Fonts)</option>
+                                <option value="inter">Inter (Google Fonts)</option>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">Font จะมีผลกับข้อความทั้งหมดในหน้าจอ</p>
+                        </div>
+                    </div>
+
+                    <!-- API Settings -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่า API</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-4">
+                            <!-- Weather API -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Weather API Provider</label>
+                                <select id="weatherApiSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option value="openmeteo">OpenMeteo (ฟรี, แนะนำ)</option>
+                                    <option value="wttr">wttr.in (ฟรี, สำรอง)</option>
+                                    <option value="openweather">OpenWeatherMap</option>
+                                </select>
+                            </div>
+                            
+                            <!-- OpenWeatherMap API Key -->
+                            <div id="openweatherKeyDiv" class="hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">OpenWeatherMap API Key</label>
+                                <input type="text" id="openweatherKey" value="db61b712294c46506059042663feeac6" class="w-full border border-gray-300 rounded-md px-3 py-2 font-mono text-sm">
+                                <p class="text-xs text-gray-500 mt-1">ใส่ API Key สำหรับ OpenWeatherMap</p>
+                            </div>
+                            
+                            <!-- AQI Data Source -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">AQI Data Source</label>
+                                <select id="aqiSourceSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option value="mock">Mock Data (เร็ว, สำหรับทดสอบ)</option>
+                                    <option value="scraping">Canvas 39 Scraping (ข้อมูลจริง)</option>
+                                    <option value="iqair">IQAir API</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Update Interval -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ความถี่การอัปเดต (นาที)</label>
+                                <select id="updateInterval" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option value="5">ทุก 5 นาที</option>
+                                    <option value="10" selected>ทุก 10 นาที</option>
+                                    <option value="15">ทุก 15 นาที</option>
+                                    <option value="30">ทุก 30 นาที</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ข้อความประกาศ -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">ข้อความประกาศ</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ข้อความแจ้งเตือน</label>
+                                <textarea id="noticeText" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2" placeholder="พิมพ์ข้อความประกาศที่ต้องการแสดง..."></textarea>
+                            </div>
+                            
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-1">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">แสดงประกาศ</label>
+                                    <label class="inline-flex items-center">
+                                        <input type="checkbox" id="enableNotice" class="rounded border-gray-300 text-blue-600">
+                                        <span class="ml-2 text-sm text-gray-700">เปิดใช้งานการแสดงประกาศ</span>
+                                    </label>
+                                </div>
+                                
+                                <div class="flex-1">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">ระยะเวลาแสดง (วินาที)</label>
+                                    <input type="number" id="noticeDuration" value="10" min="5" max="60" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Preview & Status -->
+                <div class="space-y-6">
+                    
+                    <!-- ตัวอย่างการแสดงผล -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">ตัวอย่างการแสดงผล</h3>
+                        </div>
+                        <div class="px-6 py-4">
+                            <div class="aspect-video bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+                                <div class="text-center">
+                                    <i data-lucide="monitor" class="w-12 h-12 text-gray-400 mx-auto mb-2"></i>
+                                    <p class="text-sm text-gray-500">กด "ดูตัวอย่าง Display" เพื่อดูผลลัพธ์</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- สถานะระบบ -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">สถานะระบบ</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">Weather API</span>
+                                <span id="weatherStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    <div class="w-1.5 h-1.5 bg-green-400 rounded-full mr-1"></div>
+                                    ทำงานปกติ
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">AQI Data</span>
+                                <span id="aqiStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    <div class="w-1.5 h-1.5 bg-yellow-400 rounded-full mr-1"></div>
+                                    Mock Data
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">อัปเดตล่าสุด</span>
+                                <span id="lastUpdate" class="text-sm text-gray-900">--:--:--</span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">Display Status</span>
+                                <span id="displayStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    <div class="w-1.5 h-1.5 bg-blue-400 rounded-full mr-1"></div>
+                                    พร้อมใช้งาน
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ข้อมูลปัจจุบัน -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">ข้อมูลปัจจุบัน</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">อุณหภูมิ</span>
+                                <span id="currentTemp" class="text-sm font-medium text-gray-900">--°C</span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">AQI ภายใน</span>
+                                <span id="currentIndoorAQI" class="text-sm font-medium text-gray-900">--</span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">AQI ภายนอก</span>
+                                <span id="currentOutdoorAQI" class="text-sm font-medium text-gray-900">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Configuration object to store all settings
+        const config = {
+            font: 'default',
+            weatherApi: 'openmeteo',
+            openweatherKey: 'db61b712294c46506059042663feeac6',
+            aqiSource: 'mock',
+            updateInterval: 10,
+            notice: {
+                enabled: false,
+                text: '',
+                duration: 10
+            },
+            images: {
+                logo: 'img/logo.png',
+                building: 'img/FRONT FULL.jpg'
+            }
+        };
+
+        // Load saved configuration
+        function loadConfig() {
+            const saved = localStorage.getItem('canvas39_admin_config');
+            if (saved) {
+                Object.assign(config, JSON.parse(saved));
+                updateUI();
+            }
+        }
+
+        // Save configuration
+        function saveConfig() {
+            localStorage.setItem('canvas39_admin_config', JSON.stringify(config));
+            showNotification('บันทึกการตั้งค่าเรียบร้อยแล้ว', 'success');
+        }
+
+        // Update UI with current config
+        function updateUI() {
+            document.getElementById('fontSelect').value = config.font;
+            document.getElementById('weatherApiSelect').value = config.weatherApi;
+            document.getElementById('openweatherKey').value = config.openweatherKey;
+            document.getElementById('aqiSourceSelect').value = config.aqiSource;
+            document.getElementById('updateInterval').value = config.updateInterval;
+            document.getElementById('noticeText').value = config.notice.text;
+            document.getElementById('enableNotice').checked = config.notice.enabled;
+            document.getElementById('noticeDuration').value = config.notice.duration;
+            
+            // Show/hide OpenWeather API key field
+            toggleOpenWeatherKey();
+        }
+
+        // Toggle OpenWeather API key field
+        function toggleOpenWeatherKey() {
+            const weatherApi = document.getElementById('weatherApiSelect').value;
+            const keyDiv = document.getElementById('openweatherKeyDiv');
+            keyDiv.classList.toggle('hidden', weatherApi !== 'openweather');
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-md shadow-lg ${
+                type === 'success' ? 'bg-green-500 text-white' : 
+                type === 'error' ? 'bg-red-500 text-white' : 
+                'bg-blue-500 text-white'
+            }`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            loadConfig();
+            
+            // Font selection
+            document.getElementById('fontSelect').addEventListener('change', function() {
+                config.font = this.value;
+            });
+            
+            // Weather API selection
+            document.getElementById('weatherApiSelect').addEventListener('change', function() {
+                config.weatherApi = this.value;
+                toggleOpenWeatherKey();
+            });
+            
+            // OpenWeather API key
+            document.getElementById('openweatherKey').addEventListener('input', function() {
+                config.openweatherKey = this.value;
+            });
+            
+            // AQI source selection
+            document.getElementById('aqiSourceSelect').addEventListener('change', function() {
+                config.aqiSource = this.value;
+                updateAQIStatus();
+            });
+            
+            // Update interval
+            document.getElementById('updateInterval').addEventListener('change', function() {
+                config.updateInterval = parseInt(this.value);
+            });
+            
+            // Notice settings
+            document.getElementById('noticeText').addEventListener('input', function() {
+                config.notice.text = this.value;
+            });
+            
+            document.getElementById('enableNotice').addEventListener('change', function() {
+                config.notice.enabled = this.checked;
+            });
+            
+            document.getElementById('noticeDuration').addEventListener('input', function() {
+                config.notice.duration = parseInt(this.value);
+            });
+            
+            // File uploads
+            document.getElementById('logoUpload').addEventListener('change', handleLogoUpload);
+            document.getElementById('buildingUpload').addEventListener('change', handleBuildingUpload);
+            
+            // Buttons
+            document.getElementById('saveBtn').addEventListener('click', saveConfig);
+            document.getElementById('previewBtn').addEventListener('click', openPreview);
+            
+            // Initial status update
+            updateStatus();
+            
+            // Update status every 30 seconds
+            setInterval(updateStatus, 30000);
+        });
+
+        // Handle logo upload
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('logoPreview').src = e.target.result;
+                    config.images.logo = e.target.result;
+                    showNotification('อัปโหลดโลโก้เรียบร้อยแล้ว', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Handle building upload
+        function handleBuildingUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('buildingPreview').src = e.target.result;
+                    config.images.building = e.target.result;
+                    showNotification('อัปโหลดรูปอาคารเรียบร้อยแล้ว', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Update AQI status
+        function updateAQIStatus() {
+            const aqiStatus = document.getElementById('aqiStatus');
+            const source = config.aqiSource;
+            
+            if (source === 'mock') {
+                aqiStatus.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800';
+                aqiStatus.innerHTML = '<div class="w-1.5 h-1.5 bg-yellow-400 rounded-full mr-1"></div>Mock Data';
+            } else if (source === 'scraping') {
+                aqiStatus.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800';
+                aqiStatus.innerHTML = '<div class="w-1.5 h-1.5 bg-green-400 rounded-full mr-1"></div>ข้อมูลจริง';
+            } else {
+                aqiStatus.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800';
+                aqiStatus.innerHTML = '<div class="w-1.5 h-1.5 bg-blue-400 rounded-full mr-1"></div>IQAir API';
+            }
+        }
+
+        // Update system status
+        function updateStatus() {
+            // Update last update time
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('th-TH');
+            
+            // Mock current data (in real system, this would fetch from APIs)
+            document.getElementById('currentTemp').textContent = '31°C';
+            document.getElementById('currentIndoorAQI').textContent = '40 (Good)';
+            document.getElementById('currentOutdoorAQI').textContent = '84 (Moderate)';
+        }
+
+        // Open preview window
+        function openPreview() {
+            // Create URL with configuration parameters
+            const params = new URLSearchParams({
+                config: JSON.stringify(config)
+            });
+            
+            const previewUrl = `lift-display.html?${params.toString()}`;
+            window.open(previewUrl, '_blank', 'width=1200,height=800');
+        }
+    </script>
+</body>
+</html>
