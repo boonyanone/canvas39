@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas 39 - Admin Login</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Header -->
+            <div class="text-center">
+                <div class="mx-auto h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center">
+                    <i data-lucide="shield-check" class="h-8 w-8 text-white"></i>
+                </div>
+                <h2 class="mt-6 text-3xl font-bold text-gray-900">Canvas 39</h2>
+                <p class="mt-2 text-sm text-gray-600">เข้าสู่ระบบ Admin Panel</p>
+            </div>
+
+            <!-- Login Form -->
+            <form class="mt-8 space-y-6" id="loginForm">
+                <div class="bg-white rounded-lg shadow-md p-6 space-y-4">
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">ชื่อผู้ใช้</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i data-lucide="user" class="h-5 w-5 text-gray-400"></i>
+                            </div>
+                            <input id="username" name="username" type="text" required
+                                class="appearance-none rounded-md relative block w-full pl-10 pr-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                                placeholder="กรุณากรอกชื่อผู้ใช้">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่าน</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i data-lucide="lock" class="h-5 w-5 text-gray-400"></i>
+                            </div>
+                            <input id="password" name="password" type="password" required
+                                class="appearance-none rounded-md relative block w-full pl-10 pr-10 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                                placeholder="กรุณากรอกรหัสผ่าน">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <button type="button" id="togglePassword" class="text-gray-400 hover:text-gray-600">
+                                    <i data-lucide="eye" class="h-5 w-5" id="eyeIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                            <label for="remember-me" class="ml-2 block text-sm text-gray-700">จดจำการเข้าสู่ระบบ</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div id="errorMessage" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i data-lucide="alert-circle" class="h-5 w-5 text-red-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm" id="errorText">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" id="loginButton"
+                        class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i data-lucide="log-in" class="h-5 w-5 text-blue-500 group-hover:text-blue-400"></i>
+                        </span>
+                        <span id="loginButtonText">เข้าสู่ระบบ</span>
+                    </button>
+                </div>
+
+                <!-- Default Credentials Info -->
+                <div class="bg-blue-50 border border-blue-200 rounded-md p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i data-lucide="info" class="h-5 w-5 text-blue-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-blue-800">ข้อมูลสำหรับทดสอบ</h3>
+                            <div class="mt-2 text-sm text-blue-700">
+                                <p><strong>ผู้ใช้:</strong> admin</p>
+                                <p><strong>รหัส:</strong> canvas39</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Default users (stored in localStorage for demo)
+        const defaultUsers = [
+            {
+                id: 1,
+                username: 'admin',
+                password: 'canvas39',
+                role: 'admin',
+                name: 'Administrator',
+                email: 'admin@canvas39.com',
+                createdAt: new Date().toISOString()
+            }
+        ];
+
+        // Initialize users if not exists
+        function initializeUsers() {
+            if (!localStorage.getItem('canvas39_users')) {
+                localStorage.setItem('canvas39_users', JSON.stringify(defaultUsers));
+            }
+        }
+
+        // Get users from localStorage
+        function getUsers() {
+            const users = localStorage.getItem('canvas39_users');
+            return users ? JSON.parse(users) : defaultUsers;
+        }
+
+        // Authenticate user
+        function authenticateUser(username, password) {
+            const users = getUsers();
+            return users.find(user => user.username === username && user.password === password);
+        }
+
+        // Save login session
+        function saveSession(user, remember = false) {
+            const sessionData = {
+                userId: user.id,
+                username: user.username,
+                role: user.role,
+                name: user.name,
+                loginTime: new Date().toISOString()
+            };
+
+            if (remember) {
+                localStorage.setItem('canvas39_session', JSON.stringify(sessionData));
+            } else {
+                sessionStorage.setItem('canvas39_session', JSON.stringify(sessionData));
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+
+        // Hide error message
+        function hideError() {
+            document.getElementById('errorMessage').classList.add('hidden');
+        }
+
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        });
+
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            hideError();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember-me').checked;
+            const submitButton = document.getElementById('loginButton');
+            const buttonText = document.getElementById('loginButtonText');
+
+            if (!username || !password) {
+                showError('กรุณากรอกชื่อผู้ใช้และรหัสผ่าน');
+                return;
+            }
+
+            // Show loading state
+            submitButton.disabled = true;
+            buttonText.textContent = 'กำลังตรวจสอบ...';
+
+            // Simulate API delay
+            setTimeout(() => {
+                const user = authenticateUser(username, password);
+
+                if (user) {
+                    saveSession(user, remember);
+                    
+                    // Show success message
+                    buttonText.textContent = 'เข้าสู่ระบบสำเร็จ!';
+                    
+                    // Redirect to admin panel
+                    setTimeout(() => {
+                        window.location.href = 'admin.html';
+                    }, 1000);
+                } else {
+                    showError('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+                    submitButton.disabled = false;
+                    buttonText.textContent = 'เข้าสู่ระบบ';
+                }
+            }, 1000);
+        });
+
+        // Check if already logged in
+        function checkExistingSession() {
+            const session = localStorage.getItem('canvas39_session') || sessionStorage.getItem('canvas39_session');
+            if (session) {
+                window.location.href = 'admin.html';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeUsers();
+            checkExistingSession();
+        });
+    </script>
+</body>
+</html>

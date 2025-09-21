@@ -23,6 +23,15 @@
                         <h1 class="text-xl font-semibold text-gray-900">Canvas 39 Admin Panel</h1>
                     </div>
                     <div class="flex items-center space-x-4">
+                        <!-- User Info -->
+                        <div class="flex items-center space-x-3">
+                            <div class="text-sm text-gray-700">
+                                <span>สวัสดี, </span>
+                                <span id="currentUserName" class="font-medium">Admin</span>
+                            </div>
+                            <div class="h-8 w-px bg-gray-300"></div>
+                        </div>
+                        
                         <button id="previewBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
                             <i data-lucide="eye" class="w-4 h-4 mr-2"></i>
                             ดูตัวอย่าง Display
@@ -31,6 +40,25 @@
                             <i data-lucide="save" class="w-4 h-4 mr-2"></i>
                             บันทึกการตั้งค่า
                         </button>
+                        
+                        <!-- User Menu -->
+                        <div class="relative">
+                            <button id="userMenuBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                                <i data-lucide="user" class="w-4 h-4 mr-2"></i>
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </button>
+                            <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                                <a href="#" id="userManagementBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i data-lucide="users" class="w-4 h-4 mr-2 inline"></i>
+                                    จัดการผู้ใช้งาน
+                                </a>
+                                <div class="border-t border-gray-100"></div>
+                                <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i data-lucide="log-out" class="w-4 h-4 mr-2 inline"></i>
+                                    ออกจากระบบ
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -296,6 +324,118 @@
         </div>
     </div>
 
+    <!-- User Management Modal -->
+    <div id="userManagementModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between pb-4 border-b">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                        <i data-lucide="users" class="w-5 h-5 mr-2"></i>
+                        จัดการผู้ใช้งาน
+                    </h3>
+                    <button id="closeUserModal" class="text-gray-400 hover:text-gray-600">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Content -->
+                <div class="py-4">
+                    <!-- Add User Button -->
+                    <div class="mb-4 flex justify-between items-center">
+                        <h4 class="text-md font-medium text-gray-700">รายชื่อผู้ใช้งาน</h4>
+                        <button id="addUserBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i data-lucide="user-plus" class="w-4 h-4 mr-2"></i>
+                            เพิ่มผู้ใช้งาน
+                        </button>
+                    </div>
+
+                    <!-- Users Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">ชื่อผู้ใช้</th>
+                                    <th scope="col" class="px-6 py-3">ชื่อ-นามสกุล</th>
+                                    <th scope="col" class="px-6 py-3">อีเมล</th>
+                                    <th scope="col" class="px-6 py-3">สิทธิ์</th>
+                                    <th scope="col" class="px-6 py-3">วันที่สร้าง</th>
+                                    <th scope="col" class="px-6 py-3">การจัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Users will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit User Modal -->
+    <div id="userFormModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-md shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between pb-4 border-b">
+                    <h3 id="userFormTitle" class="text-lg font-semibold text-gray-900">เพิ่มผู้ใช้งาน</h3>
+                    <button id="closeUserFormModal" class="text-gray-400 hover:text-gray-600">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <!-- User Form -->
+                <form id="userForm" class="py-4 space-y-4">
+                    <input type="hidden" id="userId" name="userId">
+                    
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">ชื่อผู้ใช้</label>
+                        <input type="text" id="userFormUsername" name="username" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">ชื่อ-นามสกุล</label>
+                        <input type="text" id="userFormName" name="name" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">อีเมล</label>
+                        <input type="email" id="userFormEmail" name="email" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่าน</label>
+                        <input type="password" id="userFormPassword" name="password"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <p class="text-xs text-gray-500 mt-1">เว้นว่างไว้หากไม่ต้องการเปลี่ยนรหัสผ่าน</p>
+                    </div>
+
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-gray-700 mb-2">สิทธิ์</label>
+                        <select id="userFormRole" name="role" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="admin">ผู้ดูแลระบบ</option>
+                            <option value="user">ผู้ใช้งานทั่วไป</option>
+                        </select>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" id="cancelUserForm" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">
+                            ยกเลิก
+                        </button>
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">
+                            บันทึก
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
@@ -398,8 +538,189 @@
             });
         }
 
+        // Authentication functions
+        function checkAuthentication() {
+            const session = localStorage.getItem('canvas39_session') || sessionStorage.getItem('canvas39_session');
+            if (!session) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            
+            try {
+                return JSON.parse(session);
+            } catch (error) {
+                localStorage.removeItem('canvas39_session');
+                sessionStorage.removeItem('canvas39_session');
+                window.location.href = 'login.html';
+                return null;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('canvas39_session');
+            sessionStorage.removeItem('canvas39_session');
+            window.location.href = 'login.html';
+        }
+
+        function updateUserInfo(session) {
+            if (session) {
+                document.getElementById('currentUserName').textContent = session.name || session.username;
+            }
+        }
+
+        // User Management Functions
+        function getUsers() {
+            const users = localStorage.getItem('canvas39_users');
+            return users ? JSON.parse(users) : [];
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('canvas39_users', JSON.stringify(users));
+        }
+
+        function generateUserId() {
+            const users = getUsers();
+            return users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+        }
+
+        function loadUsersTable() {
+            const users = getUsers();
+            const tbody = document.getElementById('usersTableBody');
+            
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${user.username}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.email}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            user.role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                        }">
+                            ${user.role === 'admin' ? 'ผู้ดูแลระบบ' : 'ผู้ใช้งานทั่วไป'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${new Date(user.createdAt).toLocaleDateString('th-TH')}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="editUser(${user.id})" class="text-blue-600 hover:text-blue-900 mr-3">
+                            <i data-lucide="edit-2" class="w-4 h-4"></i>
+                        </button>
+                        ${users.length > 1 ? `
+                            <button onclick="deleteUser(${user.id})" class="text-red-600 hover:text-red-900">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Re-initialize Lucide icons
+            lucide.createIcons();
+        }
+
+        function openUserModal() {
+            document.getElementById('userManagementModal').classList.remove('hidden');
+            loadUsersTable();
+        }
+
+        function closeUserModal() {
+            document.getElementById('userManagementModal').classList.add('hidden');
+        }
+
+        function openUserForm(user = null) {
+            const modal = document.getElementById('userFormModal');
+            const title = document.getElementById('userFormTitle');
+            const form = document.getElementById('userForm');
+            
+            if (user) {
+                title.textContent = 'แก้ไขผู้ใช้งาน';
+                document.getElementById('userId').value = user.id;
+                document.getElementById('userFormUsername').value = user.username;
+                document.getElementById('userFormName').value = user.name;
+                document.getElementById('userFormEmail').value = user.email;
+                document.getElementById('userFormPassword').value = '';
+                document.getElementById('userFormRole').value = user.role;
+                document.getElementById('userFormPassword').required = false;
+            } else {
+                title.textContent = 'เพิ่มผู้ใช้งาน';
+                form.reset();
+                document.getElementById('userFormPassword').required = true;
+            }
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeUserForm() {
+            document.getElementById('userFormModal').classList.add('hidden');
+        }
+
+        function editUser(userId) {
+            const users = getUsers();
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                openUserForm(user);
+            }
+        }
+
+        function deleteUser(userId) {
+            if (confirm('คุณแน่ใจหรือไม่ที่จะลบผู้ใช้งานนี้?')) {
+                let users = getUsers();
+                users = users.filter(u => u.id !== userId);
+                saveUsers(users);
+                loadUsersTable();
+                showNotification('ลบผู้ใช้งานเรียบร้อยแล้ว', 'success');
+            }
+        }
+
+        function saveUser(formData) {
+            let users = getUsers();
+            const userId = formData.get('userId');
+            
+            if (userId) {
+                // Edit existing user
+                const userIndex = users.findIndex(u => u.id === parseInt(userId));
+                if (userIndex !== -1) {
+                    users[userIndex] = {
+                        ...users[userIndex],
+                        username: formData.get('username'),
+                        name: formData.get('name'),
+                        email: formData.get('email'),
+                        role: formData.get('role')
+                    };
+                    
+                    // Update password if provided
+                    if (formData.get('password')) {
+                        users[userIndex].password = formData.get('password');
+                    }
+                }
+            } else {
+                // Add new user
+                const newUser = {
+                    id: generateUserId(),
+                    username: formData.get('username'),
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    password: formData.get('password'),
+                    role: formData.get('role'),
+                    createdAt: new Date().toISOString()
+                };
+                users.push(newUser);
+            }
+            
+            saveUsers(users);
+            closeUserForm();
+            loadUsersTable();
+            showNotification(userId ? 'แก้ไขผู้ใช้งานเรียบร้อยแล้ว' : 'เพิ่มผู้ใช้งานเรียบร้อยแล้ว', 'success');
+        }
+
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication first
+            const session = checkAuthentication();
+            if (!session) return;
+            
+            updateUserInfo(session);
             loadConfig();
             
             // Initialize Quill Editor after a short delay
@@ -450,6 +771,69 @@
             // Buttons
             document.getElementById('saveBtn').addEventListener('click', saveConfig);
             document.getElementById('previewBtn').addEventListener('click', openPreview);
+            
+            // User Menu
+            document.getElementById('userMenuBtn').addEventListener('click', function() {
+                const menu = document.getElementById('userMenu');
+                menu.classList.toggle('hidden');
+            });
+            
+            // User Management
+            document.getElementById('userManagementBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('userMenu').classList.add('hidden');
+                openUserModal();
+            });
+            
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                logout();
+            });
+            
+            // User Management Modal
+            document.getElementById('closeUserModal').addEventListener('click', closeUserModal);
+            document.getElementById('addUserBtn').addEventListener('click', () => openUserForm());
+            
+            // User Form Modal
+            document.getElementById('closeUserFormModal').addEventListener('click', closeUserForm);
+            document.getElementById('cancelUserForm').addEventListener('click', closeUserForm);
+            
+            document.getElementById('userForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                // Validate username uniqueness
+                const users = getUsers();
+                const userId = formData.get('userId');
+                const username = formData.get('username');
+                const existingUser = users.find(u => u.username === username && u.id !== parseInt(userId));
+                
+                if (existingUser) {
+                    showNotification('ชื่อผู้ใช้นี้มีอยู่แล้ว', 'error');
+                    return;
+                }
+                
+                saveUser(formData);
+            });
+            
+            // Close modals when clicking outside
+            document.getElementById('userManagementModal').addEventListener('click', function(e) {
+                if (e.target === this) closeUserModal();
+            });
+            
+            document.getElementById('userFormModal').addEventListener('click', function(e) {
+                if (e.target === this) closeUserForm();
+            });
+            
+            // Close user menu when clicking outside
+            document.addEventListener('click', function(e) {
+                const userMenu = document.getElementById('userMenu');
+                const userMenuBtn = document.getElementById('userMenuBtn');
+                
+                if (!userMenuBtn.contains(e.target) && !userMenu.contains(e.target)) {
+                    userMenu.classList.add('hidden');
+                }
+            });
             
             // Initial status update
             updateStatus();
