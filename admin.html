@@ -9,6 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- TinyMCE -->
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body class="bg-gray-100">
     <div class="min-h-screen">
@@ -153,7 +155,10 @@
                         <div class="px-6 py-4 space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">ข้อความแจ้งเตือน</label>
-                                <textarea id="noticeText" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2" placeholder="พิมพ์ข้อความประกาศที่ต้องการแสดง..."></textarea>
+                                <div class="border border-gray-300 rounded-md">
+                                    <textarea id="noticeText" rows="5" class="w-full px-3 py-2 border-0 rounded-md" placeholder="พิมพ์ข้อความประกาศที่ต้องการแสดง..."></textarea>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">รองรับ HTML formatting สำหรับการจัดรูปแบบข้อความ</p>
                             </div>
                             
                             <div class="flex items-center space-x-4">
@@ -300,7 +305,14 @@
             document.getElementById('openweatherKey').value = config.openweatherKey;
             document.getElementById('aqiSourceSelect').value = config.aqiSource;
             document.getElementById('updateInterval').value = config.updateInterval;
-            document.getElementById('noticeText').value = config.notice.text;
+            
+            // Update TinyMCE content if initialized
+            if (tinymce.get('noticeText')) {
+                tinymce.get('noticeText').setContent(config.notice.text || '');
+            } else {
+                document.getElementById('noticeText').value = config.notice.text;
+            }
+            
             document.getElementById('enableNotice').checked = config.notice.enabled;
             document.getElementById('noticeDuration').value = config.notice.duration;
             
@@ -334,9 +346,36 @@
             }, 3000);
         }
 
+        // Initialize TinyMCE
+        function initTinyMCE() {
+            tinymce.init({
+                selector: '#noticeText',
+                height: 200,
+                menubar: false,
+                plugins: [
+                    'advlist', 'autolink', 'lists', 'link', 'charmap', 'preview',
+                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                    'insertdatetime', 'table', 'code', 'help', 'wordcount', 'emoticons'
+                ],
+                toolbar: 'undo redo | blocks | bold italic forecolor backcolor | ' +
+                    'alignleft aligncenter alignright alignjustify | ' +
+                    'bullist numlist outdent indent | emoticons charmap | ' +
+                    'removeformat | code preview',
+                content_style: 'body { font-family: Arial, sans-serif; font-size: 14px }',
+                setup: function (editor) {
+                    editor.on('change', function () {
+                        config.notice.text = editor.getContent();
+                    });
+                }
+            });
+        }
+
         // Event listeners
         document.addEventListener('DOMContentLoaded', function() {
             loadConfig();
+            
+            // Initialize TinyMCE after a short delay
+            setTimeout(initTinyMCE, 500);
             
             // Font selection
             document.getElementById('fontSelect').addEventListener('change', function() {
@@ -365,10 +404,10 @@
                 config.updateInterval = parseInt(this.value);
             });
             
-            // Notice settings
-            document.getElementById('noticeText').addEventListener('input', function() {
-                config.notice.text = this.value;
-            });
+            // Notice settings - TinyMCE handles this now
+            // document.getElementById('noticeText').addEventListener('input', function() {
+            //     config.notice.text = this.value;
+            // });
             
             document.getElementById('enableNotice').addEventListener('change', function() {
                 config.notice.enabled = this.checked;
