@@ -109,13 +109,9 @@
         <!-- Building Image Section -->
         <div class="flex items-center justify-center text-white text-lg h-[31.58vh] flex-shrink-0 relative" style="background-color: #87ceeb; background-image: url('img/FRONT FULL.jpg'); background-size: cover; background-repeat: no-repeat; background-position: center;">
             <!-- Notification Overlay -->
-            <div id="notificationOverlay" class="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-10">
+            <div id="notificationOverlay" class="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center z-10">
                 <div class="bg-white rounded-lg p-6 max-w-md mx-4 text-center shadow-2xl">
-                    <div class="text-xl font-medium text-gray-900 mb-4">📢 ประกาศ</div>
-                    <div id="notificationContent" class="text-gray-700 mb-4"></div>
-                    <div class="text-sm text-gray-500">
-                        ข้อความนี้จะหายไปอัตโนมัติใน <span id="notificationCountdown"></span> วินาที
-                    </div>
+                    <div id="notificationContent" class="text-gray-700"></div>
                 </div>
             </div>
         </div>
@@ -309,44 +305,32 @@
                 UPDATE_INTERVAL = config.updateInterval * 60 * 1000; // Convert to milliseconds
             }
 
-            // Show notice if enabled
-            if (config.notice && config.notice.enabled && config.notice.text) {
-                showNotice(config.notice.text, config.notice.duration);
+            // Show notices if any are active
+            if (config.notices && config.notices.length > 0) {
+                showNotice(config.notices);
             }
 
             console.log('✅ Configuration applied successfully');
         }
 
-        // Show notice in building section
-        function showNotice(text, duration) {
+        // Show notice in building section (permanent display)
+        function showNotice(notices) {
             const overlay = document.getElementById('notificationOverlay');
             const content = document.getElementById('notificationContent');
-            const countdown = document.getElementById('notificationCountdown');
             
-            if (!overlay || !content || !countdown) return;
+            if (!overlay || !content) return;
             
-            // Set content and show overlay
-            content.innerHTML = text;
-            countdown.textContent = duration;
-            overlay.classList.remove('hidden');
+            // Find active notices
+            const activeNotices = notices.filter(notice => notice.active);
             
-            // Countdown timer
-            let timeLeft = duration;
-            const timer = setInterval(() => {
-                timeLeft--;
-                countdown.textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    overlay.classList.add('hidden');
-                }
-            }, 1000);
-            
-            // Click to dismiss
-            overlay.addEventListener('click', function() {
-                clearInterval(timer);
+            if (activeNotices.length > 0) {
+                // Show the first active notice
+                content.innerHTML = activeNotices[0].content;
+                overlay.classList.remove('hidden');
+            } else {
+                // Hide overlay if no active notices
                 overlay.classList.add('hidden');
-            });
+            }
         }
 
         // Initialize Lucide icons

@@ -176,67 +176,27 @@
                         </div>
                     </div>
 
-                    <!-- ข้อความประกาศ -->
+                    <!-- จัดการประกาศ -->
                     <div class="bg-white overflow-hidden shadow rounded-lg">
                         <div class="px-6 py-4 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">ข้อความประกาศ</h3>
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-medium text-gray-900">จัดการประกาศ</h3>
+                                <button id="addNoticeBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                                    เพิ่มประกาศ
+                                </button>
+                            </div>
                         </div>
-                        <div class="px-6 py-4 space-y-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">ข้อความแจ้งเตือน</label>
-                                <div class="bg-white rounded-md">
-                                    <div id="noticeToolbar" class="border border-gray-300 rounded-t-md">
-                                        <span class="ql-formats">
-                                            <select class="ql-font"></select>
-                                            <select class="ql-size"></select>
-                                        </span>
-                                        <span class="ql-formats">
-                                            <button class="ql-bold"></button>
-                                            <button class="ql-italic"></button>
-                                            <button class="ql-underline"></button>
-                                            <button class="ql-strike"></button>
-                                        </span>
-                                        <span class="ql-formats">
-                                            <select class="ql-color"></select>
-                                            <select class="ql-background"></select>
-                                        </span>
-                                        <span class="ql-formats">
-                                            <button class="ql-list" value="ordered"></button>
-                                            <button class="ql-list" value="bullet"></button>
-                                            <button class="ql-indent" value="-1"></button>
-                                            <button class="ql-indent" value="+1"></button>
-                                        </span>
-                                        <span class="ql-formats">
-                                            <button class="ql-align" value=""></button>
-                                            <button class="ql-align" value="center"></button>
-                                            <button class="ql-align" value="right"></button>
-                                            <button class="ql-align" value="justify"></button>
-                                        </span>
-                                        <span class="ql-formats">
-                                            <button class="ql-link"></button>
-                                            <button class="ql-clean"></button>
-                                        </span>
-                                    </div>
-                                    <div id="noticeContent" class="border-l border-r border-b border-gray-300 rounded-b-md" style="height: 150px;"></div>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-2">รองรับ Rich Text formatting สำหรับการจัดรูปแบบข้อความ</p>
+                        <div class="px-6 py-4">
+                            <!-- Notices List -->
+                            <div id="noticesList" class="space-y-4">
+                                <!-- Notices will be populated here -->
                             </div>
                             
-                            <div class="bg-gray-50 p-4 rounded-lg">
-                                <h4 class="text-sm font-medium text-gray-900 mb-3">การตั้งค่าการแสดงผล</h4>
-                                <div class="flex items-center space-x-6">
-                                    <div class="flex-1">
-                                        <label class="inline-flex items-center">
-                                            <input type="checkbox" id="enableNotice" class="rounded border-gray-300 text-blue-600">
-                                            <span class="ml-2 text-sm text-gray-700">เปิดใช้งานการแสดงประกาศ</span>
-                                        </label>
-                                    </div>
-                                    
-                                    <div class="flex-1">
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">ระยะเวลาแสดง (วินาที)</label>
-                                        <input type="number" id="noticeDuration" value="10" min="5" max="60" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                    </div>
-                                </div>
+                            <!-- Empty State -->
+                            <div id="emptyNotices" class="text-center py-8 text-gray-500">
+                                <i data-lucide="message-square" class="w-12 h-12 mx-auto mb-4 text-gray-300"></i>
+                                <p>ยังไม่มีประกาศ กดปุ่ม "เพิ่มประกาศ" เพื่อสร้างประกาศใหม่</p>
                             </div>
                         </div>
                     </div>
@@ -436,6 +396,82 @@
         </div>
     </div>
 
+    <!-- Notice Form Modal -->
+    <div id="noticeFormModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-10 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between pb-4 border-b">
+                    <h3 id="noticeFormTitle" class="text-lg font-semibold text-gray-900">เพิ่มประกาศใหม่</h3>
+                    <button id="closeNoticeFormModal" class="text-gray-400 hover:text-gray-600">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <!-- Notice Form -->
+                <form id="noticeForm" class="py-4 space-y-4">
+                    <input type="hidden" id="noticeId" name="noticeId">
+                    
+                    <div>
+                        <label for="noticeTitle" class="block text-sm font-medium text-gray-700 mb-2">หัวข้อประกาศ</label>
+                        <input type="text" id="noticeTitle" name="title" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="ระบุหัวข้อประกาศ">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เนื้อหาประกาศ</label>
+                        <div class="bg-white rounded-md">
+                            <div id="noticeToolbar" class="border border-gray-300 rounded-t-md">
+                                <span class="ql-formats">
+                                    <select class="ql-font"></select>
+                                    <select class="ql-size"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                    <button class="ql-indent" value="-1"></button>
+                                    <button class="ql-indent" value="+1"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-align" value=""></button>
+                                    <button class="ql-align" value="center"></button>
+                                    <button class="ql-align" value="right"></button>
+                                    <button class="ql-align" value="justify"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                    <button class="ql-clean"></button>
+                                </span>
+                            </div>
+                            <div id="noticeContent" class="border-l border-r border-b border-gray-300 rounded-b-md" style="height: 200px;"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">รองรับ Rich Text formatting สำหรับการจัดรูปแบบข้อความ</p>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" id="cancelNoticeForm" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">
+                            ยกเลิก
+                        </button>
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">
+                            บันทึก
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
@@ -447,11 +483,7 @@
             openweatherKey: 'db61b712294c46506059042663feeac6',
             aqiSource: 'mock',
             updateInterval: 10,
-            notice: {
-                enabled: false,
-                text: '',
-                duration: 10
-            },
+            notices: [],
             images: {
                 logo: 'img/logo.png',
                 building: 'img/FRONT FULL.jpg'
@@ -481,13 +513,8 @@
             document.getElementById('aqiSourceSelect').value = config.aqiSource;
             document.getElementById('updateInterval').value = config.updateInterval;
             
-            // Update Quill Editor content if initialized
-            if (quillEditor) {
-                quillEditor.root.innerHTML = config.notice.text || '';
-            }
-            
-            document.getElementById('enableNotice').checked = config.notice.enabled;
-            document.getElementById('noticeDuration').value = config.notice.duration;
+            // Load notices
+            loadNoticesList();
             
             // Show/hide OpenWeather API key field
             toggleOpenWeatherKey();
@@ -528,14 +555,139 @@
                 modules: {
                     toolbar: '#noticeToolbar'
                 },
-                placeholder: 'พิมพ์ข้อความประกาศที่ต้องการแสดง...',
+                placeholder: 'พิมพ์เนื้อหาประกาศที่ต้องการแสดง...',
                 formats: ['font', 'size', 'bold', 'italic', 'underline', 'strike', 'color', 'background', 'list', 'indent', 'align', 'link']
             });
+        }
 
-            // Listen for content changes
-            quillEditor.on('text-change', function() {
-                config.notice.text = quillEditor.root.innerHTML;
-            });
+        // Notice Management Functions
+        function generateNoticeId() {
+            return Date.now().toString();
+        }
+
+        function loadNoticesList() {
+            const noticesList = document.getElementById('noticesList');
+            const emptyNotices = document.getElementById('emptyNotices');
+            
+            if (config.notices.length === 0) {
+                noticesList.innerHTML = '';
+                emptyNotices.classList.remove('hidden');
+            } else {
+                emptyNotices.classList.add('hidden');
+                noticesList.innerHTML = config.notices.map(notice => `
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-3">
+                                <h4 class="text-md font-medium text-gray-900">${notice.title}</h4>
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" ${notice.active ? 'checked' : ''} 
+                                           onchange="toggleNotice('${notice.id}')"
+                                           class="rounded border-gray-300 text-blue-600">
+                                    <span class="ml-2 text-sm text-gray-700">แสดงในหน้าจอ</span>
+                                </label>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="editNotice('${notice.id}')" class="text-blue-600 hover:text-blue-900">
+                                    <i data-lucide="edit-2" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="deleteNotice('${notice.id}')" class="text-red-600 hover:text-red-900">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-600 prose max-w-none">
+                            ${notice.content}
+                        </div>
+                        <div class="text-xs text-gray-500 mt-2">
+                            สร้างเมื่อ: ${new Date(notice.createdAt).toLocaleDateString('th-TH')}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Re-initialize Lucide icons
+            lucide.createIcons();
+        }
+
+        function openNoticeForm(notice = null) {
+            const modal = document.getElementById('noticeFormModal');
+            const title = document.getElementById('noticeFormTitle');
+            const form = document.getElementById('noticeForm');
+            
+            if (notice) {
+                title.textContent = 'แก้ไขประกาศ';
+                document.getElementById('noticeId').value = notice.id;
+                document.getElementById('noticeTitle').value = notice.title;
+                if (quillEditor) {
+                    quillEditor.root.innerHTML = notice.content;
+                }
+            } else {
+                title.textContent = 'เพิ่มประกาศใหม่';
+                form.reset();
+                if (quillEditor) {
+                    quillEditor.root.innerHTML = '';
+                }
+            }
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeNoticeForm() {
+            document.getElementById('noticeFormModal').classList.add('hidden');
+        }
+
+        function editNotice(noticeId) {
+            const notice = config.notices.find(n => n.id === noticeId);
+            if (notice) {
+                openNoticeForm(notice);
+            }
+        }
+
+        function deleteNotice(noticeId) {
+            if (confirm('คุณแน่ใจหรือไม่ที่จะลบประกาศนี้?')) {
+                config.notices = config.notices.filter(n => n.id !== noticeId);
+                loadNoticesList();
+                showNotification('ลบประกาศเรียบร้อยแล้ว', 'success');
+            }
+        }
+
+        function toggleNotice(noticeId) {
+            const notice = config.notices.find(n => n.id === noticeId);
+            if (notice) {
+                notice.active = !notice.active;
+                showNotification(notice.active ? 'เปิดการแสดงประกาศแล้ว' : 'ปิดการแสดงประกาศแล้ว', 'success');
+            }
+        }
+
+        function saveNotice(formData) {
+            const noticeId = formData.get('noticeId');
+            const content = quillEditor.root.innerHTML;
+            
+            if (noticeId) {
+                // Edit existing notice
+                const noticeIndex = config.notices.findIndex(n => n.id === noticeId);
+                if (noticeIndex !== -1) {
+                    config.notices[noticeIndex] = {
+                        ...config.notices[noticeIndex],
+                        title: formData.get('title'),
+                        content: content
+                    };
+                }
+            } else {
+                // Add new notice
+                const newNotice = {
+                    id: generateNoticeId(),
+                    title: formData.get('title'),
+                    content: content,
+                    active: false,
+                    createdAt: new Date().toISOString()
+                };
+                config.notices.push(newNotice);
+            }
+            
+            closeNoticeForm();
+            loadNoticesList();
+            showNotification(noticeId ? 'แก้ไขประกาศเรียบร้อยแล้ว' : 'เพิ่มประกาศเรียบร้อยแล้ว', 'success');
         }
 
         // Authentication functions
@@ -753,17 +905,6 @@
                 config.updateInterval = parseInt(this.value);
             });
             
-            // Notice settings - Quill Editor handles this now
-            // Text changes are handled by Quill's text-change event
-            
-            document.getElementById('enableNotice').addEventListener('change', function() {
-                config.notice.enabled = this.checked;
-            });
-            
-            document.getElementById('noticeDuration').addEventListener('input', function() {
-                config.notice.duration = parseInt(this.value);
-            });
-            
             // File uploads
             document.getElementById('logoUpload').addEventListener('change', handleLogoUpload);
             document.getElementById('buildingUpload').addEventListener('change', handleBuildingUpload);
@@ -823,6 +964,21 @@
             
             document.getElementById('userFormModal').addEventListener('click', function(e) {
                 if (e.target === this) closeUserForm();
+            });
+            
+            // Notice Management
+            document.getElementById('addNoticeBtn').addEventListener('click', () => openNoticeForm());
+            document.getElementById('closeNoticeFormModal').addEventListener('click', closeNoticeForm);
+            document.getElementById('cancelNoticeForm').addEventListener('click', closeNoticeForm);
+            
+            document.getElementById('noticeForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                saveNotice(formData);
+            });
+            
+            document.getElementById('noticeFormModal').addEventListener('click', function(e) {
+                if (e.target === this) closeNoticeForm();
             });
             
             // Close user menu when clicking outside
