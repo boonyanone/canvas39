@@ -230,19 +230,44 @@
     </div>
 
     <script>
-        // Parse configuration from URL parameters
-        function parseConfig() {
+        // Parse configuration from URL parameters, server file, or localStorage
+        async function parseConfig() {
             const urlParams = new URLSearchParams(window.location.search);
             const configParam = urlParams.get('config');
             
+            // First try to get config from URL parameters (for preview)
             if (configParam) {
                 try {
                     return JSON.parse(decodeURIComponent(configParam));
                 } catch (error) {
-                    console.error('Error parsing config:', error);
-                    return null;
+                    console.error('❌ Error parsing config from URL:', error);
                 }
             }
+            
+            // Try to get config from server (for cross-device sync)
+            try {
+                const response = await fetch('config.json?' + Date.now()); // Cache bust
+                if (response.ok) {
+                    const serverConfig = await response.json();
+                    console.log('🌐 Loading config from server');
+                    return serverConfig;
+                }
+            } catch (error) {
+                console.warn('Could not load config from server:', error);
+            }
+            
+            // Fallback to localStorage (for backwards compatibility)
+            try {
+                const savedConfig = localStorage.getItem('canvas39_admin_config');
+                if (savedConfig) {
+                    console.log('📄 Loading config from localStorage');
+                    return JSON.parse(savedConfig);
+                }
+            } catch (error) {
+                console.error('❌ Error parsing config from localStorage:', error);
+            }
+            
+            console.log('⚠️ No configuration found');
             return null;
         }
 
@@ -1025,12 +1050,21 @@
         }
 
         // Initialize
+        // Periodically check for config updates
+        async function checkConfigUpdates() {
+            const config = await parseConfig();
+            applyConfig(config);
+        }
+
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('🚀 Canvas 39 GitHub Design initializing...');
             
-            // Parse and apply configuration from URL parameters
-            const config = parseConfig();
+            // Parse and apply configuration from URL parameters, server, or localStorage
+            const config = await parseConfig();
             applyConfig(config);
+
+            // Check for config updates every 30 seconds
+            setInterval(checkConfigUpdates, 30000);
             
             updateDateTime();
             await updateDisplay();

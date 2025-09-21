@@ -500,9 +500,29 @@
         }
 
         // Save configuration
-        function saveConfig() {
+        async function saveConfig() {
+            // Save to localStorage for admin panel
             localStorage.setItem('canvas39_admin_config', JSON.stringify(config));
-            showNotification('บันทึกการตั้งค่าเรียบร้อยแล้ว', 'success');
+            
+            // Also save to a JSON file for cross-device sync
+            try {
+                const response = await fetch('save-config.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(config)
+                });
+                
+                if (response.ok) {
+                    showNotification('บันทึกการตั้งค่าเรียบร้อยแล้ว (Synced)', 'success');
+                } else {
+                    throw new Error('Server error');
+                }
+            } catch (error) {
+                console.warn('Could not sync to server, saved locally only:', error);
+                showNotification('บันทึกการตั้งค่าเรียบร้อยแล้ว (Local only)', 'success');
+            }
         }
 
         // Update UI with current config
