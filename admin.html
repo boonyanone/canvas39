@@ -41,6 +41,11 @@
                             บันทึกการตั้งค่า
                         </button>
                         
+                        <button id="shareBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i data-lucide="share-2" class="w-4 h-4 mr-2"></i>
+                            แชร์ลิงก์
+                        </button>
+                        
                         <!-- User Menu -->
                         <div class="relative">
                             <button id="userMenuBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium flex items-center">
@@ -500,29 +505,10 @@
         }
 
         // Save configuration
-        async function saveConfig() {
+        function saveConfig() {
             // Save to localStorage for admin panel
             localStorage.setItem('canvas39_admin_config', JSON.stringify(config));
-            
-            // Also save to a JSON file for cross-device sync
-            try {
-                const response = await fetch('save-config.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(config)
-                });
-                
-                if (response.ok) {
-                    showNotification('บันทึกการตั้งค่าเรียบร้อยแล้ว (Synced)', 'success');
-                } else {
-                    throw new Error('Server error');
-                }
-            } catch (error) {
-                console.warn('Could not sync to server, saved locally only:', error);
-                showNotification('บันทึกการตั้งค่าเรียบร้อยแล้ว (Local only)', 'success');
-            }
+            showNotification('บันทึกการตั้งค่าเรียบร้อยแล้ว', 'success');
         }
 
         // Update UI with current config
@@ -932,6 +918,7 @@
             // Buttons
             document.getElementById('saveBtn').addEventListener('click', saveConfig);
             document.getElementById('previewBtn').addEventListener('click', openPreview);
+            document.getElementById('shareBtn').addEventListener('click', copyShareableLink);
             
             // User Menu
             document.getElementById('userMenuBtn').addEventListener('click', function() {
@@ -1083,6 +1070,30 @@
             
             const previewUrl = `index.html?${params.toString()}`;
             window.open(previewUrl, '_blank', 'width=1200,height=800');
+        }
+
+        // Generate shareable link for cross-device viewing
+        function generateShareableLink() {
+            const params = new URLSearchParams({
+                config: JSON.stringify(config)
+            });
+            
+            const currentUrl = window.location.origin + window.location.pathname.replace('admin.html', 'index.html');
+            const shareableUrl = `${currentUrl}?${params.toString()}`;
+            
+            return shareableUrl;
+        }
+
+        // Copy shareable link to clipboard
+        async function copyShareableLink() {
+            try {
+                const shareableUrl = generateShareableLink();
+                await navigator.clipboard.writeText(shareableUrl);
+                showNotification('คัดลอกลิงก์สำหรับแชร์เรียบร้อยแล้ว', 'success');
+            } catch (error) {
+                console.error('Failed to copy link:', error);
+                showNotification('ไม่สามารถคัดลอกลิงก์ได้', 'error');
+            }
         }
     </script>
 </body>
