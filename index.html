@@ -9,6 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // ปิด warning สำหรับ development/demo
+        window.process = { env: { NODE_ENV: 'production' } };
         if (window.tailwind) {
             window.tailwind.config = { 
                 corePlugins: { preflight: false }
@@ -109,7 +110,7 @@
         <!-- Building Image Section -->
         <div class="flex items-center justify-center text-white text-lg h-[31.58vh] flex-shrink-0 relative" style="background-color: #87ceeb; background-image: url('img/FRONT FULL.jpg'); background-size: cover; background-repeat: no-repeat; background-position: center;">
             <!-- Notification Overlay -->
-            <div id="notificationOverlay" class="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center z-10">
+            <div id="notificationOverlay" class="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center z-10 hidden">
                 <div class="bg-white rounded-lg p-6 max-w-md mx-4 text-center shadow-2xl">
                     <div id="notificationContent" class="text-gray-700"></div>
                 </div>
@@ -277,7 +278,10 @@
 
         // Apply configuration to display
         function applyConfig(config) {
-            if (!config) return;
+            if (!config) {
+                console.log('⚠️ No config found, using default');
+                return;
+            }
 
             console.log('🔧 Applying configuration:', config);
 
@@ -336,7 +340,20 @@
 
             // Show notices if any are active
             if (config.notices && config.notices.length > 0) {
+                console.log('📢 Found notices in config:', config.notices);
                 showNotice(config.notices);
+            } else {
+                console.log('⚠️ No notices found in config');
+                // ทดสอบข้อความ - สร้างประกาศทดสอบหากไม่มี
+                if (!config.notices || config.notices.length === 0) {
+                    console.log('🧪 Creating test notice');
+                    showNotice([{
+                        id: 'test',
+                        title: 'ประกาศทดสอบ',
+                        content: '<p>ระบบทำงานปกติ ✅</p>',
+                        active: true
+                    }]);
+                }
             }
 
             console.log('✅ Configuration applied successfully');
@@ -344,19 +361,26 @@
 
         // Show notice in building section (permanent display)
         function showNotice(notices) {
+            console.log('📢 showNotice called with:', notices);
             const overlay = document.getElementById('notificationOverlay');
             const content = document.getElementById('notificationContent');
             
-            if (!overlay || !content) return;
+            if (!overlay || !content) {
+                console.log('❌ Overlay or content element not found');
+                return;
+            }
             
             // Find active notices
             const activeNotices = notices.filter(notice => notice.active);
+            console.log('✅ Active notices found:', activeNotices.length);
             
             if (activeNotices.length > 0) {
                 // Show the first active notice
+                console.log('📺 Showing notice:', activeNotices[0].title);
                 content.innerHTML = activeNotices[0].content;
                 overlay.classList.remove('hidden');
             } else {
+                console.log('⚠️ No active notices, hiding overlay');
                 // Hide overlay if no active notices
                 overlay.classList.add('hidden');
             }
@@ -1064,7 +1088,7 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             console.log('🚀 Canvas 39 GitHub Design initializing...');
             
             // Parse and apply configuration from URL parameters or localStorage
