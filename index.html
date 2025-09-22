@@ -7,8 +7,15 @@
     
     <!-- Tailwind CSS -->
     <script>
-        // ปิด warning สำหรับ production
-        window.process = { env: { NODE_ENV: 'production' } };
+        // ปิด warning console
+        const originalWarn = console.warn;
+        console.warn = function(...args) {
+            const message = args.join(' ');
+            if (message.includes('tailwindcss.com should not be used in production')) {
+                return; // ซ่อน warning นี้
+            }
+            originalWarn.apply(console, args);
+        };
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -251,30 +258,67 @@
             // Fallback to localStorage (for same-origin usage)
             try {
                 const savedConfig = localStorage.getItem('canvas39_admin_config');
+                console.log('🔍 Checking localStorage:', savedConfig ? 'Found' : 'Empty');
                 if (savedConfig) {
                     console.log('📄 Loading config from localStorage');
-                    return JSON.parse(savedConfig);
+                    const parsed = JSON.parse(savedConfig);
+                    console.log('📊 Config data:', parsed);
+                    return parsed;
                 }
             } catch (error) {
                 console.error('❌ Error parsing config from localStorage:', error);
             }
             
-            console.log('⚠️ No configuration found');
-            return null;
+            console.log('⚠️ No configuration found - creating default config');
+            // สร้าง default config และบันทึกไว้
+            const defaultConfig = {
+                font: 'default',
+                weatherApi: 'openmeteo',
+                updateInterval: 10,
+                notices: [],
+                images: {
+                    logo: 'img/logo.png',
+                    building: 'img/FRONT FULL.jpg'
+                }
+            };
+            
+            try {
+                localStorage.setItem('canvas39_admin_config', JSON.stringify(defaultConfig));
+                console.log('✅ Default config created and saved');
+            } catch (error) {
+                console.error('❌ Failed to save default config:', error);
+            }
+            
+            return defaultConfig;
         }
 
         // Listen for config updates from other windows (BroadcastChannel)
         function listenForConfigUpdates() {
             try {
                 const channel = new BroadcastChannel('canvas39-config');
+                console.log('📻 BroadcastChannel listener started');
+                
                 channel.addEventListener('message', (event) => {
+                    console.log('📡 Received broadcast message:', event.data);
                     if (event.data.type === 'config-update') {
-                        console.log('📡 Received config update from other window');
+                        console.log('🔄 Processing config update from admin panel');
+                        // อัปเดต localStorage ด้วย
+                        try {
+                            localStorage.setItem('canvas39_admin_config', JSON.stringify(event.data.config));
+                            console.log('💾 Config saved to localStorage');
+                        } catch (error) {
+                            console.error('❌ Failed to save config to localStorage:', error);
+                        }
                         applyConfig(event.data.config);
                     }
                 });
+                
+                channel.addEventListener('error', (error) => {
+                    console.error('❌ BroadcastChannel error:', error);
+                });
+                
             } catch (error) {
-                console.warn('BroadcastChannel not supported:', error);
+                console.warn('❌ BroadcastChannel not supported:', error);
             }
         }
 
