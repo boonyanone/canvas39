@@ -6,10 +6,12 @@
     <title>Canvas 39 - Elevator Display</title>
     
     <!-- Tailwind CSS -->
+    <script>
+        // ปิด warning สำหรับ production
+        window.process = { env: { NODE_ENV: 'production' } };
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // ปิด warning สำหรับ development/demo
-        window.process = { env: { NODE_ENV: 'production' } };
         if (window.tailwind) {
             window.tailwind.config = { 
                 corePlugins: { preflight: false }
@@ -344,16 +346,6 @@
                 showNotice(config.notices);
             } else {
                 console.log('⚠️ No notices found in config');
-                // ทดสอบข้อความ - สร้างประกาศทดสอบหากไม่มี
-                if (!config.notices || config.notices.length === 0) {
-                    console.log('🧪 Creating test notice');
-                    showNotice([{
-                        id: 'test',
-                        title: 'ประกาศทดสอบ',
-                        content: '<p>ระบบทำงานปกติ ✅</p>',
-                        active: true
-                    }]);
-                }
             }
 
             console.log('✅ Configuration applied successfully');
