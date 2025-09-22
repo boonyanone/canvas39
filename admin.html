@@ -481,6 +481,9 @@
         // Initialize Lucide icons
         lucide.createIcons();
         
+        // Global variables
+        let quillEditor = null;
+        
         // Configuration object to store all settings
         const config = {
             font: 'default',
@@ -494,6 +497,23 @@
                 building: 'img/FRONT FULL.jpg'
             }
         };
+
+        // Initialize Quill Editor
+        function initQuillEditor() {
+            if (typeof Quill !== 'undefined') {
+                quillEditor = new Quill('#noticeContent', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: '#noticeToolbar'
+                    },
+                    placeholder: 'พิมพ์เนื้อหาประกาศที่ต้องการแสดง...',
+                    formats: ['font', 'size', 'bold', 'italic', 'underline', 'strike', 'color', 'background', 'list', 'indent', 'align', 'link']
+                });
+                console.log('✅ Quill Editor initialized');
+            } else {
+                console.error('❌ Quill library not loaded');
+            }
+        }
 
         // Load saved configuration
         async function loadConfig() {
