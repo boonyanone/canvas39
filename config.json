@@ -1,12 +1,10 @@
 {
-    "font": "default",
-    "weatherApi": "openmeteo",
-    "openweatherKey": "db61b712294c46506059042663feeac6",
-    "aqiSource": "mock",
-    "updateInterval": 10,
-    "notices": [],
-    "images": {
-        "logo": "img/logo.png",
-        "building": "img/FRONT FULL.jpg"
-    }
+  "font": "default",
+  "weatherApi": "openmeteo", 
+  "updateInterval": 10,
+  "notices": [],
+  "images": {
+    "logo": "img/logo.png",
+    "building": "img/FRONT FULL.jpg"
+  }
 }
