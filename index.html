@@ -235,7 +235,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const configParam = urlParams.get('config');
             
-            // First try to get config from URL parameters (for cross-device sharing)
+            // First try to get config from URL parameters (for preview mode)
             if (configParam) {
                 try {
                     console.log('🔗 Loading config from URL parameters');
@@ -245,7 +245,7 @@
                 }
             }
             
-            // Fallback to localStorage (for same-device usage)
+            // Fallback to localStorage (for same-origin usage)
             try {
                 const savedConfig = localStorage.getItem('canvas39_admin_config');
                 if (savedConfig) {
@@ -258,6 +258,21 @@
             
             console.log('⚠️ No configuration found');
             return null;
+        }
+
+        // Listen for config updates from other windows (BroadcastChannel)
+        function listenForConfigUpdates() {
+            try {
+                const channel = new BroadcastChannel('canvas39-config');
+                channel.addEventListener('message', (event) => {
+                    if (event.data.type === 'config-update') {
+                        console.log('📡 Received config update from other window');
+                        applyConfig(event.data.config);
+                    }
+                });
+            } catch (error) {
+                console.warn('BroadcastChannel not supported:', error);
+            }
         }
 
         // Apply configuration to display
@@ -1039,9 +1054,9 @@
         }
 
         // Initialize
-        // Periodically check for config updates (only for localStorage)
+        // Periodically check for config updates (localStorage only)
         function checkConfigUpdates() {
-            // Only check localStorage updates if no URL config is present
+            // Only check for updates if no URL config is present
             const urlParams = new URLSearchParams(window.location.search);
             if (!urlParams.get('config')) {
                 const config = parseConfig();
@@ -1056,7 +1071,10 @@
             const config = parseConfig();
             applyConfig(config);
 
-            // Check for config updates every 30 seconds (only for localStorage mode)
+            // Listen for real-time config updates from admin panel
+            listenForConfigUpdates();
+
+            // Check for config updates every 30 seconds (for fallback)
             setInterval(checkConfigUpdates, 30000);
             
             updateDateTime();

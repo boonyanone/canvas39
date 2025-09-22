@@ -508,7 +508,27 @@
         function saveConfig() {
             // Save to localStorage for admin panel
             localStorage.setItem('canvas39_admin_config', JSON.stringify(config));
+            
+            // Broadcast config change to other tabs/windows
+            broadcastConfigUpdate(config);
+            
             showNotification('บันทึกการตั้งค่าเรียบร้อยแล้ว', 'success');
+        }
+
+        // Broadcast config updates using BroadcastChannel
+        function broadcastConfigUpdate(configData) {
+            try {
+                // Create broadcast channel for same-origin communication
+                const channel = new BroadcastChannel('canvas39-config');
+                channel.postMessage({
+                    type: 'config-update',
+                    config: configData,
+                    timestamp: Date.now()
+                });
+                console.log('📡 Config broadcast to other windows');
+            } catch (error) {
+                console.warn('BroadcastChannel not supported:', error);
+            }
         }
 
         // Update UI with current config
