@@ -702,6 +702,10 @@
             if (confirm('คุณแน่ใจหรือไม่ที่จะลบประกาศนี้?')) {
                 config.notices = config.notices.filter(n => n.id !== noticeId);
                 loadNoticesList();
+                
+                // บันทึกการเปลี่ยนแปลงทันที
+                saveConfig();
+                
                 showNotification('ลบประกาศเรียบร้อยแล้ว', 'success');
             }
         }
@@ -710,6 +714,10 @@
             const notice = config.notices.find(n => n.id === noticeId);
             if (notice) {
                 notice.active = !notice.active;
+                
+                // บันทึกการเปลี่ยนแปลงทันที
+                saveConfig();
+                
                 showNotification(notice.active ? 'เปิดการแสดงประกาศแล้ว' : 'ปิดการแสดงประกาศแล้ว', 'success');
             }
         }
@@ -742,6 +750,10 @@
             
             closeNoticeForm();
             loadNoticesList();
+            
+            // บันทึกการเปลี่ยนแปลงทันที
+            saveConfig();
+            
             showNotification(noticeId ? 'แก้ไขประกาศเรียบร้อยแล้ว' : 'เพิ่มประกาศเรียบร้อยแล้ว', 'success');
         }
 

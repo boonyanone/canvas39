@@ -1140,14 +1140,11 @@
         }
 
         // Initialize
-        // Periodically check for config updates (localStorage only)
+        // Periodically check for config updates (disabled - use manual refresh)
         function checkConfigUpdates() {
-            // Only check for updates if no URL config is present
-            const urlParams = new URLSearchParams(window.location.search);
-            if (!urlParams.get('config')) {
-                const config = parseConfig();
-                applyConfig(config);
-            }
+            // Disabled automatic polling to prevent excessive requests
+            // Users can refresh page to get latest config.json updates
+            console.log('🔄 Skipping automatic config check - refresh page for updates');
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
