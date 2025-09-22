@@ -2,15 +2,7 @@
   "font": "default",
   "weatherApi": "openmeteo", 
   "updateInterval": 10,
-  "notices": [
-    {
-      "id": "test-notice-1",
-      "title": "ประกาศทดสอบ",
-      "content": "<p>🎉 ระบบ Cross-Device Sync ทำงานได้แล้ว!</p>",
-      "active": true,
-      "createdAt": "2025-09-22T08:40:00.000Z"
-    }
-  ],
+  "notices": [],
   "images": {
     "logo": "img/logo.png",
     "building": "img/FRONT FULL.jpg"
