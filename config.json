@@ -1,8 +1,18 @@
 {
   "font": "default",
-  "weatherApi": "openmeteo", 
+  "weatherApi": "openmeteo",
+  "openweatherKey": "db61b712294c46506059042663feeac6",
+  "aqiSource": "mock",
   "updateInterval": 10,
-  "notices": [],
+  "notices": [
+    {
+      "id": "1758549658834",
+      "title": "ประกาศ",
+      "content": "<p>ประกาศ</p>",
+      "active": true,
+      "createdAt": "2025-09-22T14:00:58.834Z"
+    }
+  ],
   "images": {
     "logo": "img/logo.png",
     "building": "img/FRONT FULL.jpg"
