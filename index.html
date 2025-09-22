@@ -240,8 +240,8 @@
     </div>
 
     <script>
-        // Parse configuration from URL parameters or localStorage
-        function parseConfig() {
+        // Parse configuration from URL parameters, JSONBin, or localStorage
+        async function parseConfig() {
             const urlParams = new URLSearchParams(window.location.search);
             const configParam = urlParams.get('config');
             
@@ -255,12 +255,39 @@
                 }
             }
             
-            // Fallback to localStorage (for same-origin usage)
+            // Try to load from JSONBin.io
+            try {
+                console.log('📡 Loading config from JSONBin...');
+                const response = await fetch('https://api.jsonbin.io/v3/b/68d0fd7643b1c97be94b2806/latest', {
+                    headers: {
+                        'X-Master-Key': '$2a$10$LnTysFoBV2rtQhF5La5LVeRNVW4wRHNmotQgoxvsd2vUL5dB8p4Pq'
+                    }
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('✅ Configuration loaded from JSONBin:', result.record);
+                    
+                    // บันทึกลง localStorage สำหรับ cache
+                    try {
+                        localStorage.setItem('canvas39_admin_config', JSON.stringify(result.record));
+                        console.log('💾 Config cached to localStorage');
+                    } catch (error) {
+                        console.warn('❌ Failed to cache config:', error);
+                    }
+                    
+                    return result.record;
+                }
+            } catch (error) {
+                console.error('❌ Failed to load from JSONBin:', error);
+            }
+            
+            // Fallback to localStorage (for cache/offline usage)
             try {
                 const savedConfig = localStorage.getItem('canvas39_admin_config');
-                console.log('🔍 Checking localStorage:', savedConfig ? 'Found' : 'Empty');
+                console.log('🔍 Checking localStorage cache:', savedConfig ? 'Found' : 'Empty');
                 if (savedConfig) {
-                    console.log('📄 Loading config from localStorage');
+                    console.log('📄 Loading config from localStorage cache');
                     const parsed = JSON.parse(savedConfig);
                     console.log('📊 Config data:', parsed);
                     return parsed;
@@ -298,17 +325,20 @@
                 const channel = new BroadcastChannel('canvas39-config');
                 console.log('📻 BroadcastChannel listener started');
                 
-                channel.addEventListener('message', (event) => {
+                channel.addEventListener('message', async (event) => {
                     console.log('📡 Received broadcast message:', event.data);
                     if (event.data.type === 'config-update') {
                         console.log('🔄 Processing config update from admin panel');
-                        // อัปเดต localStorage ด้วย
+                        
+                        // อัปเดต localStorage cache
                         try {
                             localStorage.setItem('canvas39_admin_config', JSON.stringify(event.data.config));
-                            console.log('💾 Config saved to localStorage');
+                            console.log('💾 Config cached to localStorage');
                         } catch (error) {
                             console.error('❌ Failed to save config to localStorage:', error);
                         }
+                        
+                        // Apply config to display immediately
                         applyConfig(event.data.config);
                     }
                 });
@@ -1127,8 +1157,8 @@
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('🚀 Canvas 39 GitHub Design initializing...');
             
-            // Parse and apply configuration from URL parameters or localStorage
-            const config = parseConfig();
+            // Parse and apply configuration from URL parameters, JSONBin, or localStorage
+            const config = await parseConfig();
             applyConfig(config);
 
             // Listen for real-time config updates from admin panel
