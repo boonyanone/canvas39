@@ -60,6 +60,32 @@
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
     
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJ2iqJUyjd5m0xe0rz-IyRiNyCD3Ga8XM",
+            authDomain: "canvas39-display.firebaseapp.com",
+            databaseURL: "https://canvas39-display-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "canvas39-display",
+            storageBucket: "canvas39-display.firebasestorage.app",
+            messagingSenderId: "126886607717",
+            appId: "1:126886607717:web:01029a9d874d87dfc5bf8c"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        
+        // Make Firebase functions globally available
+        window.firebaseDB = database;
+        window.firebaseRef = ref;
+        window.firebaseOnValue = onValue;
+        
+        console.log('🔥 Firebase initialized on display');
+    </script>
+    
     <style>
         /* Weather Icon Animations */
         .weather-icon-sun {
@@ -240,7 +266,7 @@
     </div>
 
     <script>
-        // Parse configuration from URL parameters, JSONBin, or localStorage
+        // Parse configuration from URL parameters, Firebase, or localStorage
         async function parseConfig() {
             const urlParams = new URLSearchParams(window.location.search);
             const configParam = urlParams.get('config');
@@ -255,27 +281,37 @@
                 }
             }
             
-            // Try to load from config.json file (cross-device sync)
+            // Try to load from Firebase Realtime Database
             try {
-                console.log('📡 Loading config from config.json...');
-                const response = await fetch('./config.json');
+                console.log('🔥 Loading config from Firebase...');
+                const configRef = window.firebaseRef(window.firebaseDB, 'canvas39-config');
                 
-                if (response.ok) {
-                    const configData = await response.json();
-                    console.log('✅ Configuration loaded from config.json:', configData);
-                    
-                    // บันทึกลง localStorage สำหรับ cache
-                    try {
-                        localStorage.setItem('canvas39_admin_config', JSON.stringify(configData));
-                        console.log('💾 Config cached to localStorage');
-                    } catch (error) {
-                        console.warn('❌ Failed to cache config:', error);
-                    }
-                    
-                    return configData;
-                }
+                return new Promise((resolve) => {
+                    window.firebaseOnValue(configRef, (snapshot) => {
+                        const configData = snapshot.val();
+                        if (configData) {
+                            console.log('✅ Configuration loaded from Firebase:', configData);
+                            
+                            // บันทึกลง localStorage สำหรับ cache
+                            try {
+                                localStorage.setItem('canvas39_admin_config', JSON.stringify(configData));
+                                console.log('💾 Config cached to localStorage');
+                            } catch (error) {
+                                console.warn('❌ Failed to cache config:', error);
+                            }
+                            
+                            resolve(configData);
+                        } else {
+                            console.log('⚠️ No config found in Firebase, trying fallback...');
+                            resolve(null);
+                        }
+                    }, (error) => {
+                        console.error('❌ Firebase read error:', error);
+                        resolve(null);
+                    });
+                });
             } catch (error) {
-                console.error('❌ Failed to load from config.json:', error);
+                console.error('❌ Failed to connect to Firebase:', error);
             }
             
             // Fallback to localStorage (for cache/offline usage)
