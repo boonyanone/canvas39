@@ -689,30 +689,32 @@
             // ส่ง broadcast ไปยัง display tabs (same origin)
             broadcastConfigUpdate(config);
             
-            // แสดงผลลัพธ์และ reset ปุ่มทันที (ไม่รอ)
-            saveBtn.disabled = false;
-            saveBtn.innerHTML = originalText;
-            
-            if (jsonbinSuccess && firebaseSuccess) {
-                saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
-                showNotification('🎉 บันทึกสำเร็จทั้ง JSONBin.io และ Firebase backup!', 'success');
-            } else if (jsonbinSuccess) {
-                saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
-                showNotification('📦 บันทึกไป JSONBin.io สำเร็จ! (Firebase backup ไม่พร้อม)', 'success');
-            } else if (firebaseSuccess) {
-                saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-yellow-600 hover:bg-yellow-700');
-                showNotification('🔥 บันทึกไป Firebase สำเร็จ! (JSONBin.io ไม่พร้อม)', 'warning');
-            } else {
-                saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-red-600 hover:bg-red-700');
-                showNotification('❌ ไม่สามารถบันทึกไป cloud ได้ - บันทึกเฉพาะ localStorage', 'error');
-            }
-            
-            lucide.createIcons();
-            
-            // รีเซ็ตสีปุ่มหลัง 3 วินาที
+            // รอนิดนึงแล้วค่อย reset ปุ่ม (ให้เวลา Firebase เสร็จ)
             setTimeout(() => {
-                saveBtn.className = saveBtn.className.replace(/bg-(green|yellow|red)-600 hover:bg-(green|yellow|red)-700/, 'bg-green-600 hover:bg-green-700');
-            }, 3000);
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
+                
+                if (jsonbinSuccess && firebaseSuccess) {
+                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
+                    showNotification('🎉 บันทึกสำเร็จทั้ง JSONBin.io และ Firebase backup!', 'success');
+                } else if (jsonbinSuccess) {
+                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
+                    showNotification('📦 บันทึกไป JSONBin.io สำเร็จ! (Firebase backup ไม่พร้อม)', 'success');
+                } else if (firebaseSuccess) {
+                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-yellow-600 hover:bg-yellow-700');
+                    showNotification('🔥 บันทึกไป Firebase สำเร็จ! (JSONBin.io ไม่พร้อม)', 'warning');
+                } else {
+                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-red-600 hover:bg-red-700');
+                    showNotification('❌ ไม่สามารถบันทึกไป cloud ได้ - บันทึกเฉพาะ localStorage', 'error');
+                }
+                
+                lucide.createIcons();
+                
+                // รีเซ็ตสีปุ่มหลัง 3 วินาที
+                setTimeout(() => {
+                    saveBtn.className = saveBtn.className.replace(/bg-(green|yellow|red)-600 hover:bg-(green|yellow|red)-700/, 'bg-green-600 hover:bg-green-700');
+                }, 3000);
+            }, 800);
         }
 
         // Broadcast config updates using BroadcastChannel
@@ -1282,15 +1284,10 @@
                         canvas.width = width;
                         canvas.height = height;
                         
-                        // เติมพื้นหลังสีขาวสำหรับ PNG ที่มีพื้นหลังใส
-                        if (file.type === 'image/png') {
-                            ctx.fillStyle = 'white';
-                            ctx.fillRect(0, 0, width, height);
-                        }
-                        
+                        // ไม่เติมพื้นหลัง - เก็บความโปร่งใส
                         ctx.drawImage(img, 0, 0, width, height);
                         
-                        // ใช้ PNG สำหรับไฟล์ PNG เดิม, JPEG สำหรับไฟล์อื่น
+                        // ใช้ PNG สำหรับไฟล์ PNG เดิมเพื่อเก็บความโปร่งใส, JPEG สำหรับไฟล์อื่น
                         const outputFormat = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
                         const quality = file.type === 'image/png' ? 0.9 : 0.7;
                         const compressedDataUrl = canvas.toDataURL(outputFormat, quality);
@@ -1352,7 +1349,7 @@
                         canvas.width = width;
                         canvas.height = height;
                         
-                        // เติมพื้นหลังสีขาวสำหรับ PNG ที่มีพื้นหลังใส
+                        // สำหรับ building - เติมพื้นหลังสีขาวเพื่อไม่ให้โปร่งใส
                         if (file.type === 'image/png') {
                             ctx.fillStyle = 'white';
                             ctx.fillRect(0, 0, width, height);
@@ -1360,10 +1357,8 @@
                         
                         ctx.drawImage(img, 0, 0, width, height);
                         
-                        // ใช้ PNG สำหรับไฟล์ PNG เดิม, JPEG สำหรับไฟล์อื่น
-                        const outputFormat = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
-                        const quality = file.type === 'image/png' ? 0.9 : 0.8;
-                        const compressedDataUrl = canvas.toDataURL(outputFormat, quality);
+                        // ใช้ JPEG สำหรับ building image เพื่อลดขนาด
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
                         console.log('🗜️ Building image compressed from', file.size, 'to', compressedDataUrl.length);
                         
                         document.getElementById('buildingPreview').src = compressedDataUrl;
