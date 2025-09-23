@@ -91,18 +91,9 @@
                             <div class="h-8 w-px bg-gray-300"></div>
                         </div>
                         
-                        <button id="previewBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
-                            <i data-lucide="eye" class="w-4 h-4 mr-2"></i>
-                            ดูตัวอย่าง Display
-                        </button>
                         <button id="saveBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
                             <i data-lucide="save" class="w-4 h-4 mr-2"></i>
                             บันทึกการตั้งค่า
-                        </button>
-                        
-                        <button id="shareBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
-                            <i data-lucide="share-2" class="w-4 h-4 mr-2"></i>
-                            แชร์ลิงก์
                         </button>
                         
                         <!-- User Menu -->
@@ -269,17 +260,29 @@
                 <!-- Right Column: Preview & Status -->
                 <div class="space-y-6">
                     
-                    <!-- ตัวอย่างการแสดงผล -->
+                    <!-- คำแนะนำการใช้งาน -->
                     <div class="bg-white overflow-hidden shadow rounded-lg">
                         <div class="px-6 py-4 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">ตัวอย่างการแสดงผล</h3>
+                            <h3 class="text-lg font-medium text-gray-900">การใช้งาน</h3>
                         </div>
-                        <div class="px-6 py-4">
-                            <div class="aspect-video bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
-                                <div class="text-center">
-                                    <i data-lucide="monitor" class="w-12 h-12 text-gray-400 mx-auto mb-2"></i>
-                                    <p class="text-sm text-gray-500">กด "ดูตัวอย่าง Display" เพื่อดูผลลัพธ์</p>
+                        <div class="px-6 py-4 space-y-3">
+                            <div class="flex items-start space-x-3">
+                                <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span class="text-blue-600 text-xs font-medium">1</span>
                                 </div>
+                                <p class="text-sm text-gray-600">แก้ไขการตั้งค่าตามต้องการ</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span class="text-blue-600 text-xs font-medium">2</span>
+                                </div>
+                                <p class="text-sm text-gray-600">กดปุ่ม "บันทึกการตั้งค่า"</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span class="text-blue-600 text-xs font-medium">3</span>
+                                </div>
+                                <p class="text-sm text-gray-600">เปิดไฟล์ <code class="bg-gray-100 px-1 rounded text-xs">index.html</code> เพื่อดูผลลัพธ์</p>
                             </div>
                         </div>
                     </div>
@@ -689,32 +692,37 @@
             // ส่ง broadcast ไปยัง display tabs (same origin)
             broadcastConfigUpdate(config);
             
-            // รอนิดนึงแล้วค่อย reset ปุ่ม (ให้เวลา Firebase เสร็จ)
+            // รอนิดนึงแล้วค่อย reset ปุ่ม (เพิ่มเวลารอ)
             setTimeout(() => {
                 saveBtn.disabled = false;
-                saveBtn.innerHTML = originalText;
                 
                 if (jsonbinSuccess && firebaseSuccess) {
+                    saveBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4 mr-2"></i>บันทึกสำเร็จ!';
                     saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
                     showNotification('🎉 บันทึกสำเร็จทั้ง JSONBin.io และ Firebase backup!', 'success');
                 } else if (jsonbinSuccess) {
+                    saveBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4 mr-2"></i>บันทึกสำเร็จ!';
                     saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
                     showNotification('📦 บันทึกไป JSONBin.io สำเร็จ! (Firebase backup ไม่พร้อม)', 'success');
                 } else if (firebaseSuccess) {
+                    saveBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4 mr-2"></i>บันทึกแล้ว';
                     saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-yellow-600 hover:bg-yellow-700');
                     showNotification('🔥 บันทึกไป Firebase สำเร็จ! (JSONBin.io ไม่พร้อม)', 'warning');
                 } else {
+                    saveBtn.innerHTML = '<i data-lucide="x-circle" class="w-4 h-4 mr-2"></i>บันทึกล้มเหลว';
                     saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-red-600 hover:bg-red-700');
                     showNotification('❌ ไม่สามารถบันทึกไป cloud ได้ - บันทึกเฉพาะ localStorage', 'error');
                 }
                 
                 lucide.createIcons();
                 
-                // รีเซ็ตสีปุ่มหลัง 3 วินาที
+                // รีเซ็ตปุ่มเป็นสถานะปกติหลัง 3 วินาที
                 setTimeout(() => {
+                    saveBtn.innerHTML = originalText;
                     saveBtn.className = saveBtn.className.replace(/bg-(green|yellow|red)-600 hover:bg-(green|yellow|red)-700/, 'bg-green-600 hover:bg-green-700');
+                    lucide.createIcons();
                 }, 3000);
-            }, 500);
+            }, 1000);
         }
 
         // Broadcast config updates using BroadcastChannel
@@ -1165,8 +1173,6 @@
                 e.preventDefault();
                 saveConfig();
             });
-            document.getElementById('previewBtn').addEventListener('click', openPreview);
-            document.getElementById('shareBtn').addEventListener('click', copyShareableLink);
             
             // User Menu
             document.getElementById('userMenuBtn').addEventListener('click', function() {
@@ -1276,9 +1282,9 @@
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         
-                        // กำหนดขนาดสูงสุด
-                        const maxWidth = 200;
-                        const maxHeight = 200;
+                        // กำหนดขนาดสูงสุดสำหรับ logo (เล็กลง)
+                        const maxWidth = 100;
+                        const maxHeight = 100;
                         let { width, height } = img;
                         
                         if (width > height) {
@@ -1299,8 +1305,8 @@
                         // ไม่เติมพื้นหลัง - เก็บความโปร่งใส
                         ctx.drawImage(img, 0, 0, width, height);
                         
-                        // ใช้ PNG เสมอสำหรับ logo เพื่อเก็บความโปร่งใส
-                        const compressedDataUrl = canvas.toDataURL('image/png', 0.9);
+                        // ใช้ PNG เสมอสำหรับ logo เพื่อเก็บความโปร่งใส (quality ต่ำลง)
+                        const compressedDataUrl = canvas.toDataURL('image/png', 0.5);
                         console.log('🗜️ Logo compressed from', file.size, 'to', compressedDataUrl.length);
                         
                         document.getElementById('logoPreview').src = compressedDataUrl;
@@ -1340,9 +1346,9 @@
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         
-                        // กำหนดขนาดสูงสุด
-                        const maxWidth = 800;
-                        const maxHeight = 600;
+                        // กำหนดขนาดสูงสุดสำหรับ building (เล็กลง)
+                        const maxWidth = 400;
+                        const maxHeight = 300;
                         let { width, height } = img;
                         
                         if (width > height) {
@@ -1413,40 +1419,7 @@
             document.getElementById('currentOutdoorAQI').textContent = '84 (Moderate)';
         }
 
-        // Open preview window
-        function openPreview() {
-            // Create URL with configuration parameters
-            const params = new URLSearchParams({
-                config: JSON.stringify(config)
-            });
-            
-            const previewUrl = `index.html?${params.toString()}`;
-            window.open(previewUrl, '_blank', 'width=1200,height=800');
-        }
 
-        // Generate shareable link for cross-device viewing
-        function generateShareableLink() {
-            const params = new URLSearchParams({
-                config: JSON.stringify(config)
-            });
-            
-            const currentUrl = window.location.origin + window.location.pathname.replace('admin.html', 'index.html');
-            const shareableUrl = `${currentUrl}?${params.toString()}`;
-            
-            return shareableUrl;
-        }
-
-        // Copy shareable link to clipboard
-        async function copyShareableLink() {
-            try {
-                const shareableUrl = generateShareableLink();
-                await navigator.clipboard.writeText(shareableUrl);
-                showNotification('คัดลอกลิงก์สำหรับแชร์เรียบร้อยแล้ว', 'success');
-            } catch (error) {
-                console.error('Failed to copy link:', error);
-                showNotification('ไม่สามารถคัดลอกลิงก์ได้', 'error');
-            }
-        }
     </script>
 </body>
 </html>

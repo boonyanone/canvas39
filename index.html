@@ -314,20 +314,9 @@
     </div>
 
     <script>
-        // Parse configuration from URL parameters, Firebase, or localStorage
+        // Parse configuration from Firebase, JSONBin.io, or localStorage
         async function parseConfig() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const configParam = urlParams.get('config');
             
-            // First try to get config from URL parameters (for preview mode)
-            if (configParam) {
-                try {
-                    console.log('🔗 Loading config from URL parameters');
-                    return JSON.parse(decodeURIComponent(configParam));
-                } catch (error) {
-                    console.error('❌ Error parsing config from URL:', error);
-                }
-            }
             
             // Try to load from JSONBin.io (Primary)
             try {
