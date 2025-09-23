@@ -36,6 +36,37 @@
             padding: 0 !important;
         }
         
+        /* Slideshow optimization for tablet */
+        #slide1, #slide2 {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            will-change: transform;
+        }
+        
+        /* Hardware acceleration for smooth transitions */
+        .transition-transform {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+        
+        /* Slide positioning classes */
+        .slide-active {
+            -webkit-transform: translateX(0) translateZ(0) !important;
+            transform: translateX(0) translateZ(0) !important;
+        }
+        
+        .slide-next {
+            -webkit-transform: translateX(100%) translateZ(0) !important;
+            transform: translateX(100%) translateZ(0) !important;
+        }
+        
+        .slide-prev {
+            -webkit-transform: translateX(-100%) translateZ(0) !important;
+            transform: translateX(-100%) translateZ(0) !important;
+        }
+        
         /* Ensure borders and layout stay intact */
         .border-t-2 {
             border-top-width: 2px !important;
@@ -243,7 +274,7 @@
             </div>
             
             <!-- Slide 1: Air Quality -->
-            <div class="absolute inset-0 transition-transform duration-500 ease-in-out" id="slide1">
+            <div class="absolute inset-0 transition-transform duration-1000 ease-in-out slide-active" id="slide1">
                 <div class="p-8 h-full flex flex-col">
                     <!-- Header Title -->
                     <div class="text-center mb-6">
@@ -325,42 +356,143 @@
             </div>
 
             <!-- Slide 2: Pool Water Quality -->
-            <div class="absolute inset-0 transition-transform duration-500 ease-in-out translate-x-full" id="slide2">
-                <div class="p-4 h-full" style="background-color: #b7a591;">
-                    <div class="text-3xl mb-6 font-medium text-center" style="color: #3f2f15;">POOL WATER QUALITY</div>
-                    <div class="grid grid-cols-4 gap-6 h-full">
+            <div class="absolute inset-0 transition-transform duration-1000 ease-in-out slide-next" id="slide2">
+                <div class="p-8 h-full flex flex-col" style="background-color: #b7a591;">
+                    <!-- Header Title -->
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl font-medium tracking-wide" style="color: #3f2f15;">POOL WATER QUALITY</h2>
+                    </div>
+                    
+                    <!-- Content Grid -->
+                    <div class="grid grid-cols-2 gap-6 mb-6">
                         <!-- Temperature -->
-                        <div class="bg-blue-500 p-6 rounded flex flex-col justify-center items-center text-center" style="color: #3f2f15;">
-                            <div class="text-5xl mb-2">🌡️</div>
-                            <div class="text-3xl font-bold" id="poolTemperature">27.5</div>
-                            <div class="text-lg opacity-90">°C</div>
-                            <div class="text-sm opacity-75 mt-2">TEMPERATURE</div>
+                        <div class="flex flex-col">
+                            <div class="text-lg mb-3 font-medium" style="color: #3f2f15;">
+                                <span class="inline-block px-3 py-1 bg-white bg-opacity-20 rounded-full">TEMPERATURE</span>
+                            </div>
+                            <div class="bg-blue-500 rounded-xl shadow-lg overflow-hidden">
+                                <div class="p-6">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div class="flex flex-col">
+                                            <div class="flex items-end gap-3 mb-2">
+                                                <div class="text-4xl font-light leading-none" style="color: #3f2f15;" id="poolTemperature">27.5</div>
+                                                <div class="text-lg font-semibold pb-1" style="color: #3f2f15;">°C</div>
+                                            </div>
+                                            <div class="text-sm opacity-80" style="color: #3f2f15;">Water Temperature</div>
+                                        </div>
+                                        <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white bg-opacity-20 rounded-full">
+                                            <svg class="w-6 h-6" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 2c1.1 0 2 .9 2 2v8.5c1.2.7 2 2 2 3.5 0 2.2-1.8 4-4 4s-4-1.8-4-4c0-1.5.8-2.8 2-3.5V4c0-1.1.9-2 2-2zm0 2c-.6 0-1 .4-1 1v8c0 .4-.2.7-.5.9-.8.5-1.5 1.3-1.5 2.1 0 1.1.9 2 2 2s2-.9 2-2c0-.8-.7-1.6-1.5-2.1-.3-.2-.5-.5-.5-.9V5c0-.6-.4-1-1-1z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="border-t border-white border-opacity-30 pt-3">
+                                        <div class="text-sm font-semibold" style="color: #3f2f15;">OPTIMAL</div>
+                                        <div class="text-xs opacity-80" style="color: #3f2f15;">Ideal for swimming</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- pH Level -->
-                        <div class="bg-green-500 p-6 rounded flex flex-col justify-center items-center text-center" style="color: #3f2f15;">
-                            <div class="text-5xl mb-2">⚗️</div>
-                            <div class="text-3xl font-bold" id="poolPH">7.4</div>
-                            <div class="text-lg opacity-90">pH</div>
-                            <div class="text-sm opacity-75 mt-2">OPTIMAL</div>
-                        </div>
-                        
-                        <!-- Chlorine -->
-                        <div class="bg-yellow-500 p-6 rounded flex flex-col justify-center items-center text-center" style="color: #3f2f15;">
-                            <div class="text-5xl mb-2">🧪</div>
-                            <div class="text-3xl font-bold" id="poolChlorine">2.1</div>
-                            <div class="text-lg opacity-90">ppm</div>
-                            <div class="text-sm opacity-75 mt-2">CHLORINE</div>
+                        <div class="flex flex-col">
+                            <div class="text-lg mb-3 font-medium" style="color: #3f2f15;">
+                                <span class="inline-block px-3 py-1 bg-white bg-opacity-20 rounded-full">pH LEVEL</span>
+                            </div>
+                            <div class="bg-green-500 rounded-xl shadow-lg overflow-hidden">
+                                <div class="p-6">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div class="flex flex-col">
+                                            <div class="flex items-end gap-3 mb-2">
+                                                <div class="text-4xl font-light leading-none" style="color: #3f2f15;" id="poolPH">7.4</div>
+                                                <div class="text-lg font-semibold pb-1" style="color: #3f2f15;">pH</div>
+                                            </div>
+                                            <div class="text-sm opacity-80" style="color: #3f2f15;">Acid-Base Balance</div>
+                                        </div>
+                                        <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white bg-opacity-20 rounded-full">
+                                            <svg class="w-6 h-6" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M9.5 2c-.8 0-1.5.7-1.5 1.5v1c-1.5.3-3 1.3-3.8 2.8-.5.9-.2 2 .7 2.5s2 .2 2.5-.7c.4-.7 1.2-1.1 2.1-1.1s1.7.4 2.1 1.1c.5.9 1.6 1.2 2.5.7s1.2-1.6.7-2.5C14.5 5.8 13 4.8 11.5 4.5v-1C11.5 2.7 10.8 2 10 2h-.5zm-6 8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm17 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM12 14c-3.3 0-6 2.7-6 6 0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2 0-3.3-2.7-6-6-6z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="border-t border-white border-opacity-30 pt-3">
+                                        <div class="text-sm font-semibold" style="color: #3f2f15;">OPTIMAL</div>
+                                        <div class="text-xs opacity-80" style="color: #3f2f15;">Perfect balance</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- ORP -->
-                        <div class="bg-purple-500 p-6 rounded flex flex-col justify-center items-center text-center" style="color: #3f2f15;">
-                            <div class="text-5xl mb-2">⚡</div>
-                            <div class="text-3xl font-bold" id="poolORP">720</div>
-                            <div class="text-lg opacity-90">mV</div>
-                            <div class="text-sm opacity-75 mt-2">ORP</div>
+                        <div class="flex flex-col">
+                            <div class="text-lg mb-3 font-medium" style="color: #3f2f15;">
+                                <span class="inline-block px-3 py-1 bg-white bg-opacity-20 rounded-full">ORP</span>
+                            </div>
+                            <div class="bg-green-500 rounded-xl shadow-lg overflow-hidden">
+                                <div class="p-6">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div class="flex flex-col">
+                                            <div class="flex items-end gap-3 mb-2">
+                                                <div class="text-4xl font-light leading-none" style="color: #3f2f15;" id="poolORP">720</div>
+                                                <div class="text-lg font-semibold pb-1" style="color: #3f2f15;">mV</div>
+                                            </div>
+                                            <div class="text-sm opacity-80" style="color: #3f2f15;">Disinfection Power</div>
+                                        </div>
+                                        <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white bg-opacity-20 rounded-full">
+                                            <svg class="w-6 h-6" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M7 2v11h3v9l7-12h-4l3-8z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="border-t border-white border-opacity-30 pt-3">
+                                        <div class="text-sm font-semibold" style="color: #3f2f15;">GOOD</div>
+                                        <div class="text-xs opacity-80" style="color: #3f2f15;">Effective sanitization</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- TDS -->
+                        <div class="flex flex-col">
+                            <div class="text-lg mb-3 font-medium" style="color: #3f2f15;">
+                                <span class="inline-block px-3 py-1 bg-white bg-opacity-20 rounded-full">TDS</span>
+                            </div>
+                            <div class="bg-yellow-500 rounded-xl shadow-lg overflow-hidden">
+                                <div class="p-6">
+                                    <div class="flex justify-between items-start mb-4">
+                                        <div class="flex flex-col">
+                                            <div class="flex items-end gap-3 mb-2">
+                                                <div class="text-4xl font-light leading-none" style="color: #3f2f15;" id="poolTDS">450</div>
+                                                <div class="text-lg font-semibold pb-1" style="color: #3f2f15;">ppm</div>
+                                            </div>
+                                            <div class="text-sm opacity-80" style="color: #3f2f15;">Total Dissolved Solids</div>
+                                        </div>
+                                        <div class="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white bg-opacity-20 rounded-full">
+                                            <svg class="w-6 h-6" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="border-t border-white border-opacity-30 pt-3">
+                                        <div class="text-sm font-semibold" style="color: #3f2f15;">GOOD</div>
+                                        <div class="text-xs opacity-80" style="color: #3f2f15;">Within normal range</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    
+                    <!-- Water Index Status -->
+                    <div class="mb-6">
+                        <div class="bg-white bg-opacity-20 rounded-xl p-4 text-center">
+                            <div class="text-lg font-medium mb-1" style="color: #3f2f15;">Water Index</div>
+                            <div class="text-2xl font-bold text-green-600">OPTIMAL</div>
+                            <div class="text-sm opacity-80" style="color: #3f2f15;">Safe for swimming</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bottom Spacer -->
+                    <div class="flex-1"></div>
                 </div>
             </div>
         </div>
@@ -643,7 +775,8 @@
                     ph: 7.4, 
                     chlorine: 2.1, 
                     temperature: 27.5,
-                    orp: 720
+                    orp: 720,
+                    tds: 450
                 }
             }
         };
@@ -1303,11 +1436,13 @@
             const poolPH = document.getElementById('poolPH');
             const poolChlorine = document.getElementById('poolChlorine');
             const poolORP = document.getElementById('poolORP');
+            const poolTDS = document.getElementById('poolTDS');
             
             if (poolTemp) poolTemp.textContent = waterQuality.pool.temperature || '27.5';
             if (poolPH) poolPH.textContent = waterQuality.pool.ph;
             if (poolChlorine) poolChlorine.textContent = waterQuality.pool.chlorine;
             if (poolORP) poolORP.textContent = waterQuality.pool.orp || '720';
+            if (poolTDS) poolTDS.textContent = waterQuality.pool.tds || '450';
             
             // Legacy elements (may not exist in slideshow version)
             const waterPH = document.getElementById('waterPH');
@@ -1400,6 +1535,8 @@
         // Slideshow functionality
         let currentSlide = 0;
         let slideInterval;
+        let isTransitioning = false;
+        let slideshowInitialized = false;
         let slideshowConfig = {
             enabled: true,
             interval: 10000, // 10 seconds default
@@ -1409,7 +1546,13 @@
         };
 
         function showSlide(slideIndex) {
+            if (isTransitioning) {
+                console.log('⏸️ Transition in progress, skipping...');
+                return;
+            }
+            
             console.log(`🎬 showSlide called with index: ${slideIndex}`);
+            isTransitioning = true;
             
             const slide1 = document.getElementById('slide1');
             const slide2 = document.getElementById('slide2');
@@ -1418,13 +1561,18 @@
             
             if (!slide1 || !slide2) {
                 console.error('❌ Slide elements not found');
+                isTransitioning = false;
                 return;
             }
             
+            // Clear all slide classes
+            slide1.classList.remove('slide-active', 'slide-next', 'slide-prev');
+            slide2.classList.remove('slide-active', 'slide-next', 'slide-prev');
+            
             if (slideIndex === 0) {
                 console.log('📺 Showing slide 1 (Air Quality)');
-                slide1.style.transform = 'translateX(0)';
-                slide2.style.transform = 'translateX(100%)';
+                slide1.classList.add('slide-active');
+                slide2.classList.add('slide-next');
                 if (dot1) {
                     dot1.classList.remove('bg-opacity-30');
                     dot1.classList.add('bg-opacity-60');
@@ -1435,8 +1583,8 @@
                 }
             } else {
                 console.log('🏊‍♂️ Showing slide 2 (Pool Water)');
-                slide1.style.transform = 'translateX(-100%)';
-                slide2.style.transform = 'translateX(0)';
+                slide1.classList.add('slide-prev');
+                slide2.classList.add('slide-active');
                 if (dot2) {
                     dot2.classList.remove('bg-opacity-30');
                     dot2.classList.add('bg-opacity-60');
@@ -1447,6 +1595,11 @@
                 }
             }
             currentSlide = slideIndex;
+            
+            // Reset transition flag after transition completes (1000ms + buffer)
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 1200);
         }
 
         function nextSlide() {
@@ -1460,6 +1613,11 @@
         }
 
         function startSlideshow() {
+            if (slideInterval) {
+                console.log('⚠️ Slideshow already running, stopping first...');
+                stopSlideshow();
+            }
+            
             if (slideshowConfig.enabled && slideshowConfig.autoPlay) {
                 slideInterval = setInterval(nextSlide, slideshowConfig.interval);
                 console.log(`🎬 Slideshow started - interval: ${slideshowConfig.interval}ms`);
@@ -1515,16 +1673,18 @@
                 console.error('❌ Error in updateDisplay:', error);
             }
             
-            // Initialize slideshow
-            console.log('🎬 Initializing slideshow...');
-            
-            // Check if slideshow elements exist
-            const slide1 = document.getElementById('slide1');
-            const slide2 = document.getElementById('slide2');
-            
-            if (slide1 && slide2) {
-                console.log('✅ Slideshow elements found, setting up...');
-                showSlide(0);
+            // Initialize slideshow only once
+            if (!slideshowInitialized) {
+                console.log('🎬 Initializing slideshow...');
+                
+                // Check if slideshow elements exist
+                const slide1 = document.getElementById('slide1');
+                const slide2 = document.getElementById('slide2');
+                
+                if (slide1 && slide2) {
+                    console.log('✅ Slideshow elements found, setting up...');
+                    slideshowInitialized = true;
+                    showSlide(0);
                 
                 // Setup navigation dots
                 const dot1 = document.getElementById('slideDot1');
@@ -1534,7 +1694,11 @@
                     dot1.addEventListener('click', () => {
                         console.log('🔘 Dot 1 clicked');
                         showSlide(0);
-                        restartSlideshow();
+                        // Pause slideshow briefly then restart
+                        stopSlideshow();
+                        setTimeout(() => {
+                            startSlideshow();
+                        }, 2000); // 2 second pause
                     });
                 }
                 
@@ -1542,7 +1706,11 @@
                     dot2.addEventListener('click', () => {
                         console.log('🔘 Dot 2 clicked');
                         showSlide(1);
-                        restartSlideshow();
+                        // Pause slideshow briefly then restart
+                        stopSlideshow();
+                        setTimeout(() => {
+                            startSlideshow();
+                        }, 2000); // 2 second pause
                     });
                 }
                 
