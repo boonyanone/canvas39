@@ -234,82 +234,115 @@
             </div>
         </div>
 
-        <!-- Air Quality Section -->
-        <div class="p-2 sm:p-4 flex gap-2 sm:gap-4 flex-shrink-0 h-[21.05vh]" style="background-color: #929079;">
-            <div class="flex-1" style="color: #3f2f15;">
-                <div class="text-sm sm:text-lg mb-2 sm:mb-3 font-medium" style="color: #3f2f15;">INDOOR</div>
-                <div class="bg-green-500 p-2 sm:p-4 rounded flex-1 flex flex-col">
-                    <div class="flex justify-between items-center mb-1 sm:mb-2">
-                        <div class="flex items-center gap-1 sm:gap-3">
-                            <div class="bg-green-600 px-2 py-1 sm:px-3 sm:py-2 rounded">
-                                <div class="text-xl sm:text-3xl font-light" style="color: #3f2f15;" id="indoorAQI">40</div>
-                                <div class="text-xs sm:text-sm opacity-90" style="color: #3f2f15;">US AQI</div>
+        <!-- Quality Information Slideshow -->
+        <div class="relative flex-shrink-0 h-[42.1vh] overflow-hidden" style="background-color: #929079;">
+            <!-- Slide Navigation Dots -->
+            <div class="absolute top-4 right-4 z-10 flex gap-2">
+                <div class="w-3 h-3 rounded-full bg-white bg-opacity-50 transition-all duration-300" id="slideDot1"></div>
+                <div class="w-3 h-3 rounded-full bg-white bg-opacity-30 transition-all duration-300" id="slideDot2"></div>
+            </div>
+            
+            <!-- Slide 1: Air Quality -->
+            <div class="absolute inset-0 transition-transform duration-500 ease-in-out" id="slide1">
+                <div class="p-4 flex gap-4 h-full">
+                    <div class="flex-1" style="color: #3f2f15;">
+                        <div class="text-2xl mb-4 font-medium text-center" style="color: #3f2f15;">AIR QUALITY</div>
+                        <div class="bg-green-500 p-6 rounded flex-1 flex flex-col h-full">
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="flex items-center gap-6">
+                                    <div class="bg-green-600 px-6 py-4 rounded">
+                                        <div class="text-4xl font-light" style="color: #3f2f15;" id="indoorAQI">40</div>
+                                        <div class="text-sm opacity-90" style="color: #3f2f15;">INDOOR AQI</div>
+                                    </div>
+                                    <div class="text-xl font-bold" style="color: #3f2f15;" id="indoorLevel">Good</div>
+                                </div>
+                                <div class="w-16 h-16" id="indoorFace">
+                                    <img src="https://www.iqair.com/dl/assets/aqi/ic-face-green.svg" alt="AQI Face" class="w-full h-full object-contain filter brightness-0">
+                                </div>
                             </div>
-                            <div class="text-sm sm:text-lg font-bold" style="color: #3f2f15;" id="indoorLevel">Good</div>
-                        </div>
-                        <div class="w-6 h-6 sm:w-12 sm:h-12" id="indoorFace">
-                            <img src="https://www.iqair.com/dl/assets/aqi/ic-face-green.svg" alt="AQI Face" class="w-full h-full object-contain filter brightness-0">
+                            <hr class="border-opacity-30 my-4" style="border-color: #3f2f15;">
+                            <div class="text-lg opacity-90 flex justify-between" style="color: #3f2f15;">
+                                <div>Main pollutant: <span class="font-bold" id="indoorPollutant">PM10</span></div>
+                                <div><span id="indoorConcentration">43.5</span> <span class="font-bold">μg/m³</span></div>
+                            </div>
                         </div>
                     </div>
-                    <hr class="border-opacity-30 my-1 sm:my-2" style="border-color: #3f2f15;">
-                    <div class="text-xs sm:text-sm opacity-90 flex justify-between" style="color: #3f2f15;">
-                        <div>Main pollutant: <span class="font-bold" id="indoorPollutant">PM10</span></div>
-                        <div class="text-xs"><span id="indoorConcentration">43.5</span> <span class="font-bold">μg/m³</span></div>
+                    <div class="flex-1" style="color: #3f2f15;">
+                        <div class="text-2xl mb-4 font-medium text-center opacity-0">AIR QUALITY</div>
+                        <div class="bg-yellow-500 p-6 rounded flex-1 flex flex-col h-full">
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="flex items-center gap-6">
+                                    <div class="bg-yellow-600 px-6 py-4 rounded">
+                                        <div class="text-4xl font-light" style="color: #3f2f15;" id="outdoorAQI">84</div>
+                                        <div class="text-sm opacity-90" style="color: #3f2f15;">OUTDOOR AQI</div>
+                                    </div>
+                                    <div class="text-xl font-bold" style="color: #3f2f15;" id="outdoorLevel">Moderate</div>
+                                </div>
+                                <div class="w-16 h-16" id="outdoorFace">
+                                    <img src="https://www.iqair.com/dl/assets/aqi/ic-face-yellow.svg" alt="AQI Face" class="w-full h-full object-contain filter brightness-0">
+                                </div>
+                            </div>
+                            <hr class="border-opacity-30 my-4" style="border-color: #3f2f15;">
+                            <div class="text-lg opacity-90 flex justify-between" style="color: #3f2f15;">
+                                <div>Main pollutant: <span class="font-bold" id="outdoorPollutant">PM2.5</span></div>
+                                <div><span id="outdoorConcentration">27</span> <span class="font-bold">μg/m³</span></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="flex-1" style="color: #3f2f15;">
-                <div class="text-sm sm:text-lg mb-2 sm:mb-3 font-medium" style="color: #3f2f15;">OUTDOOR</div>
-                <div class="bg-yellow-500 p-2 sm:p-4 rounded flex-1 flex flex-col">
-                    <div class="flex justify-between items-center mb-1 sm:mb-2">
-                        <div class="flex items-center gap-1 sm:gap-3">
-                            <div class="bg-yellow-600 px-2 py-1 sm:px-3 sm:py-2 rounded">
-                                <div class="text-xl sm:text-3xl font-light" style="color: #3f2f15;" id="outdoorAQI">84</div>
-                                <div class="text-xs sm:text-sm opacity-90" style="color: #3f2f15;">US AQI</div>
-                            </div>
-                            <div class="text-sm sm:text-lg font-bold" style="color: #3f2f15;" id="outdoorLevel">Moderate</div>
-                        </div>
-                        <div class="w-6 h-6 sm:w-12 sm:h-12" id="outdoorFace">
-                            <img src="https://www.iqair.com/dl/assets/aqi/ic-face-yellow.svg" alt="AQI Face" class="w-full h-full object-contain filter brightness-0">
-                        </div>
-                    </div>
-                    <hr class="border-opacity-30 my-1 sm:my-2" style="border-color: #3f2f15;">
-                    <div class="text-xs sm:text-sm opacity-90 flex justify-between" style="color: #3f2f15;">
-                        <div>Main pollutant: <span class="font-bold" id="outdoorPollutant">PM2.5</span></div>
-                        <div class="text-xs"><span id="outdoorConcentration">27</span> <span class="font-bold">μg/m³</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Water Quality Section -->
-        <div class="p-4 flex gap-4 flex-shrink-0 h-[21.05vh]" style="background-color: #b7a591;">
-            <div class="flex-1 text-white">
-                <div class="text-lg mb-3 font-medium" style="color: #3f2f15;">WATER</div>
-                <div class="grid grid-cols-2 gap-2 flex-1">
-                    <div class="bg-green-500 p-3 rounded text-center flex flex-col justify-center" style="color: #3f2f15;">
-                        <div class="text-xs opacity-90">PH</div>
-                        <div class="text-lg font-medium" id="waterPH">7.2</div>
-                    </div>
-                    <div class="bg-yellow-500 p-3 rounded text-center flex flex-col justify-center" style="color: #3f2f15;">
-                        <div class="text-xs opacity-90">CHLORINE</div>
-                        <div class="text-lg font-medium" id="waterChlorine">1.8</div>
+            <!-- Slide 2: Pool Water Quality -->
+            <div class="absolute inset-0 transition-transform duration-500 ease-in-out translate-x-full" id="slide2">
+                <div class="p-4 h-full" style="background-color: #b7a591;">
+                    <div class="text-3xl mb-6 font-medium text-center" style="color: #3f2f15;">POOL WATER QUALITY</div>
+                    <div class="grid grid-cols-4 gap-6 h-full">
+                        <!-- Temperature -->
+                        <div class="bg-blue-500 p-6 rounded flex flex-col justify-center items-center text-center" style="color: #3f2f15;">
+                            <div class="text-5xl mb-2">🌡️</div>
+                            <div class="text-3xl font-bold" id="poolTemperature">27.5</div>
+                            <div class="text-lg opacity-90">°C</div>
+                            <div class="text-sm opacity-75 mt-2">TEMPERATURE</div>
+                        </div>
+                        
+                        <!-- pH Level -->
+                        <div class="bg-green-500 p-6 rounded flex flex-col justify-center items-center text-center" style="color: #3f2f15;">
+                            <div class="text-5xl mb-2">⚗️</div>
+                            <div class="text-3xl font-bold" id="poolPH">7.4</div>
+                            <div class="text-lg opacity-90">pH</div>
+                            <div class="text-sm opacity-75 mt-2">OPTIMAL</div>
+                        </div>
+                        
+                        <!-- Chlorine -->
+                        <div class="bg-yellow-500 p-6 rounded flex flex-col justify-center items-center text-center" style="color: #3f2f15;">
+                            <div class="text-5xl mb-2">🧪</div>
+                            <div class="text-3xl font-bold" id="poolChlorine">2.1</div>
+                            <div class="text-lg opacity-90">ppm</div>
+                            <div class="text-sm opacity-75 mt-2">CHLORINE</div>
+                        </div>
+                        
+                        <!-- ORP -->
+                        <div class="bg-purple-500 p-6 rounded flex flex-col justify-center items-center text-center" style="color: #3f2f15;">
+                            <div class="text-5xl mb-2">⚡</div>
+                            <div class="text-3xl font-bold" id="poolORP">720</div>
+                            <div class="text-lg opacity-90">mV</div>
+                            <div class="text-sm opacity-75 mt-2">ORP</div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="flex-1 text-white">
-                <div class="text-lg mb-3 font-medium" style="color: #3f2f15;">SWIMMING POOL</div>
-                <div class="grid grid-cols-2 gap-2 flex-1">
-                    <div class="bg-green-400 p-3 rounded text-center flex flex-col justify-center" style="color: #3f2f15;">
-                        <div class="text-xs opacity-90">PH</div>
-                        <div class="text-lg font-medium" id="poolPH">7.4</div>
-                    </div>
-                    <div class="bg-orange-500 p-3 rounded text-center flex flex-col justify-center" style="color: #3f2f15;">
-                        <div class="text-xs opacity-90">CHLORINE</div>
-                        <div class="text-lg font-medium" id="poolChlorine">2.1</div>
-                    </div>
-                </div>
-            </div>
+            
+            <!-- Manual Navigation Buttons (optional) -->
+            <button class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-full p-3 transition-all duration-300" id="prevSlide">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <button class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-full p-3 transition-all duration-300" id="nextSlide">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
         </div>
     </div>
 
@@ -1237,6 +1270,9 @@
             document.getElementById('poolPH').textContent = waterQuality.pool.ph;
             document.getElementById('poolChlorine').textContent = waterQuality.pool.chlorine;
             
+            // Update slideshow configuration
+            updateSlideshowConfig(config);
+            
             // Reinitialize icons
             lucide.createIcons();
             feather.replace();
@@ -1314,6 +1350,85 @@
             }
         }
 
+        // Slideshow functionality
+        let currentSlide = 0;
+        let slideInterval;
+        let slideshowConfig = {
+            enabled: true,
+            interval: 10000, // 10 seconds default
+            autoPlay: true,
+            showAirQuality: true,
+            showPoolWater: true
+        };
+
+        function showSlide(slideIndex) {
+            const slide1 = document.getElementById('slide1');
+            const slide2 = document.getElementById('slide2');
+            const dot1 = document.getElementById('slideDot1');
+            const dot2 = document.getElementById('slideDot2');
+            
+            if (slideIndex === 0) {
+                slide1.style.transform = 'translateX(0)';
+                slide2.style.transform = 'translateX(100%)';
+                dot1.classList.add('bg-opacity-50');
+                dot1.classList.remove('bg-opacity-30');
+                dot2.classList.add('bg-opacity-30');
+                dot2.classList.remove('bg-opacity-50');
+            } else {
+                slide1.style.transform = 'translateX(-100%)';
+                slide2.style.transform = 'translateX(0)';
+                dot2.classList.add('bg-opacity-50');
+                dot2.classList.remove('bg-opacity-30');
+                dot1.classList.add('bg-opacity-30');
+                dot1.classList.remove('bg-opacity-50');
+            }
+            currentSlide = slideIndex;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % 2;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + 2) % 2;
+            showSlide(currentSlide);
+        }
+
+        function startSlideshow() {
+            if (slideshowConfig.enabled && slideshowConfig.autoPlay) {
+                slideInterval = setInterval(nextSlide, slideshowConfig.interval);
+                console.log(`🎬 Slideshow started - interval: ${slideshowConfig.interval}ms`);
+            }
+        }
+
+        function stopSlideshow() {
+            if (slideInterval) {
+                clearInterval(slideInterval);
+                slideInterval = null;
+                console.log('⏸️ Slideshow stopped');
+            }
+        }
+
+        function restartSlideshow() {
+            stopSlideshow();
+            startSlideshow();
+        }
+
+        function updateSlideshowConfig(config) {
+            if (config.slideshow) {
+                slideshowConfig.enabled = config.slideshow.enabled;
+                slideshowConfig.interval = config.slideshow.interval * 1000; // Convert to milliseconds
+                slideshowConfig.showAirQuality = config.slideshow.showAirQuality;
+                slideshowConfig.showPoolWater = config.slideshow.showPoolWater;
+                
+                console.log('🎬 Slideshow config updated:', slideshowConfig);
+                
+                // Restart slideshow with new settings
+                restartSlideshow();
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('🚀 Canvas 39 GitHub Design initializing...');
             
@@ -1329,6 +1444,34 @@
             
             updateDateTime();
             await updateDisplay();
+            
+            // Initialize slideshow
+            showSlide(0);
+            
+            // Setup slideshow controls
+            document.getElementById('nextSlide').addEventListener('click', () => {
+                nextSlide();
+                restartSlideshow(); // Restart timer after manual interaction
+            });
+            
+            document.getElementById('prevSlide').addEventListener('click', () => {
+                prevSlide();
+                restartSlideshow(); // Restart timer after manual interaction
+            });
+            
+            // Click on dots to navigate
+            document.getElementById('slideDot1').addEventListener('click', () => {
+                showSlide(0);
+                restartSlideshow();
+            });
+            
+            document.getElementById('slideDot2').addEventListener('click', () => {
+                showSlide(1);
+                restartSlideshow();
+            });
+            
+            // Start auto slideshow
+            startSlideshow();
             
             // Fullscreen button
             document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
