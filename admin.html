@@ -13,8 +13,10 @@
             console.warn = function(...args) {
                 const message = args.join(' ');
                 if (message.includes('tailwindcss.com should not be used in production') || 
-                    message.includes('cdn.tailwindcss.com should not be used in production')) {
-                    return; // ซ่อน warning นี้
+                    message.includes('cdn.tailwindcss.com should not be used in production') ||
+                    message.includes('Firebase error. Please ensure that you have the URL') ||
+                    message.includes('FIREBASE WARNING')) {
+                    return; // ซ่อน warning เหล่านี้
                 }
                 originalWarn.apply(console, args);
             };
@@ -142,7 +144,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">โลโก้องค์กร</label>
                                 <div class="flex items-center space-x-4">
-                                    <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                                    <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden border-2 border-gray-300">
                                         <img id="logoPreview" src="img/logo.png" alt="Logo Preview" class="w-full h-full object-contain">
                                     </div>
                                     <div class="flex-1">
@@ -159,7 +161,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">รูปอาคาร</label>
                                 <div class="flex items-center space-x-4">
-                                    <div class="w-24 h-16 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
+                                    <div class="w-24 h-16 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden border-2 border-gray-300">
                                         <img id="buildingPreview" src="img/FRONT FULL.jpg" alt="Building Preview" class="w-full h-full object-cover">
                                     </div>
                                     <div class="flex-1">
@@ -687,32 +689,30 @@
             // ส่ง broadcast ไปยัง display tabs (same origin)
             broadcastConfigUpdate(config);
             
-            // แสดงผลลัพธ์และ reset ปุ่ม
+            // แสดงผลลัพธ์และ reset ปุ่มทันที (ไม่รอ)
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = originalText;
+            
+            if (jsonbinSuccess && firebaseSuccess) {
+                saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
+                showNotification('🎉 บันทึกสำเร็จทั้ง JSONBin.io และ Firebase backup!', 'success');
+            } else if (jsonbinSuccess) {
+                saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
+                showNotification('📦 บันทึกไป JSONBin.io สำเร็จ! (Firebase backup ไม่พร้อม)', 'success');
+            } else if (firebaseSuccess) {
+                saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-yellow-600 hover:bg-yellow-700');
+                showNotification('🔥 บันทึกไป Firebase สำเร็จ! (JSONBin.io ไม่พร้อม)', 'warning');
+            } else {
+                saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-red-600 hover:bg-red-700');
+                showNotification('❌ ไม่สามารถบันทึกไป cloud ได้ - บันทึกเฉพาะ localStorage', 'error');
+            }
+            
+            lucide.createIcons();
+            
+            // รีเซ็ตสีปุ่มหลัง 3 วินาที
             setTimeout(() => {
-                saveBtn.disabled = false;
-                saveBtn.innerHTML = originalText;
-                
-                if (jsonbinSuccess && firebaseSuccess) {
-                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
-                    showNotification('🎉 บันทึกสำเร็จทั้ง JSONBin.io และ Firebase backup!', 'success');
-                } else if (jsonbinSuccess) {
-                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
-                    showNotification('📦 บันทึกไป JSONBin.io สำเร็จ! (Firebase backup ไม่พร้อม)', 'success');
-                } else if (firebaseSuccess) {
-                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-yellow-600 hover:bg-yellow-700');
-                    showNotification('🔥 บันทึกไป Firebase สำเร็จ! (JSONBin.io ไม่พร้อม)', 'warning');
-                } else {
-                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-red-600 hover:bg-red-700');
-                    showNotification('❌ ไม่สามารถบันทึกไป cloud ได้ - บันทึกเฉพาะ localStorage', 'error');
-                }
-                
-                lucide.createIcons();
-                
-                // รีเซ็ตสีปุ่มหลัง 2 วินาที
-                setTimeout(() => {
-                    saveBtn.className = saveBtn.className.replace(/bg-(green|yellow|red)-600 hover:bg-(green|yellow|red)-700/, 'bg-green-600 hover:bg-green-700');
-                }, 2000);
-            }, 500);
+                saveBtn.className = saveBtn.className.replace(/bg-(green|yellow|red)-600 hover:bg-(green|yellow|red)-700/, 'bg-green-600 hover:bg-green-700');
+            }, 3000);
         }
 
         // Broadcast config updates using BroadcastChannel
@@ -1281,9 +1281,19 @@
                         
                         canvas.width = width;
                         canvas.height = height;
+                        
+                        // เติมพื้นหลังสีขาวสำหรับ PNG ที่มีพื้นหลังใส
+                        if (file.type === 'image/png') {
+                            ctx.fillStyle = 'white';
+                            ctx.fillRect(0, 0, width, height);
+                        }
+                        
                         ctx.drawImage(img, 0, 0, width, height);
                         
-                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                        // ใช้ PNG สำหรับไฟล์ PNG เดิม, JPEG สำหรับไฟล์อื่น
+                        const outputFormat = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+                        const quality = file.type === 'image/png' ? 0.9 : 0.7;
+                        const compressedDataUrl = canvas.toDataURL(outputFormat, quality);
                         console.log('🗜️ Logo compressed from', file.size, 'to', compressedDataUrl.length);
                         
                         document.getElementById('logoPreview').src = compressedDataUrl;
@@ -1341,9 +1351,19 @@
                         
                         canvas.width = width;
                         canvas.height = height;
+                        
+                        // เติมพื้นหลังสีขาวสำหรับ PNG ที่มีพื้นหลังใส
+                        if (file.type === 'image/png') {
+                            ctx.fillStyle = 'white';
+                            ctx.fillRect(0, 0, width, height);
+                        }
+                        
                         ctx.drawImage(img, 0, 0, width, height);
                         
-                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        // ใช้ PNG สำหรับไฟล์ PNG เดิม, JPEG สำหรับไฟล์อื่น
+                        const outputFormat = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+                        const quality = file.type === 'image/png' ? 0.9 : 0.8;
+                        const compressedDataUrl = canvas.toDataURL(outputFormat, quality);
                         console.log('🗜️ Building image compressed from', file.size, 'to', compressedDataUrl.length);
                         
                         document.getElementById('buildingPreview').src = compressedDataUrl;
