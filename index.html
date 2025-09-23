@@ -750,11 +750,11 @@
             waterQuality: {
                 water: { ph: 7.2, chlorine: 1.8 },
                 pool: { 
-                    ph: 7.4,        // Green (7.2-7.6) 
+                    ph: 7.4,        // Green (7.2-7.6) OPTIMAL - matches Air Quality Good
                     chlorine: 2.1, 
-                    temperature: 25.0,  // Green (20-28°C)
-                    orp: 680,       // Green (650-750 mV)
-                    tds: 800        // Green (500-1000 ppm)
+                    temperature: 25.0,  // Green (20-28°C) OPTIMAL - matches Air Quality Good
+                    orp: 700,       // Green (650-750 mV) OPTIMAL - matches Air Quality Good
+                    tds: 800        // Green (500-1000 ppm) OPTIMAL - matches Air Quality Good
                 }
             }
         };
@@ -779,29 +779,29 @@
             element.innerHTML = `<img src="${iconUrl}" alt="AQI Face" class="w-full h-full object-contain filter brightness-0">`;
         }
         
-        // Water Quality Color Functions
+        // Water Quality Color Functions - Match Air Quality Theme
         function getTemperatureColor(temp) {
-            if (temp >= 20 && temp <= 28) return { color: '#10b981', status: 'OPTIMAL' }; // Green
-            if ((temp >= 28 && temp <= 30) || (temp >= 18 && temp < 20)) return { color: '#f59e0b', status: 'CAUTION' }; // Yellow
-            return { color: '#ef4444', status: 'DANGER' }; // Red
+            if (temp >= 20 && temp <= 28) return { color: '#22c55e', status: 'OPTIMAL' }; // Green-500 (same as Air Quality good)
+            if ((temp >= 28 && temp <= 30) || (temp >= 18 && temp < 20)) return { color: '#eab308', status: 'CAUTION' }; // Yellow-500 (same as Air Quality moderate)
+            return { color: '#dc2626', status: 'DANGER' }; // Red-600 (same as Air Quality bad)
         }
         
         function getPHColor(ph) {
-            if (ph >= 7.2 && ph <= 7.6) return { color: '#10b981', status: 'OPTIMAL' }; // Green
-            if ((ph >= 7.0 && ph < 7.2) || (ph > 7.6 && ph <= 7.8)) return { color: '#f59e0b', status: 'CAUTION' }; // Yellow
-            return { color: '#ef4444', status: 'DANGER' }; // Red
+            if (ph >= 7.2 && ph <= 7.6) return { color: '#22c55e', status: 'OPTIMAL' }; // Green-500
+            if ((ph >= 7.0 && ph < 7.2) || (ph > 7.6 && ph <= 7.8)) return { color: '#eab308', status: 'CAUTION' }; // Yellow-500
+            return { color: '#dc2626', status: 'DANGER' }; // Red-600
         }
         
         function getORPColor(orp) {
-            if (orp >= 650 && orp <= 750) return { color: '#10b981', status: 'OPTIMAL' }; // Green
-            if (orp >= 600 && orp < 650) return { color: '#f59e0b', status: 'CAUTION' }; // Yellow
-            return { color: '#ef4444', status: 'DANGER' }; // Red
+            if (orp >= 650 && orp <= 750) return { color: '#22c55e', status: 'OPTIMAL' }; // Green-500
+            if (orp >= 600 && orp < 650) return { color: '#eab308', status: 'CAUTION' }; // Yellow-500
+            return { color: '#dc2626', status: 'DANGER' }; // Red-600
         }
         
         function getTDSColor(tds) {
-            if (tds >= 500 && tds <= 1000) return { color: '#10b981', status: 'OPTIMAL' }; // Green
-            if (tds > 1000 && tds <= 1500) return { color: '#f59e0b', status: 'CAUTION' }; // Yellow
-            return { color: '#ef4444', status: 'DANGER' }; // Red
+            if (tds >= 500 && tds <= 1000) return { color: '#22c55e', status: 'OPTIMAL' }; // Green-500
+            if (tds > 1000 && tds <= 1500) return { color: '#eab308', status: 'CAUTION' }; // Yellow-500
+            return { color: '#dc2626', status: 'DANGER' }; // Red-600
         }
         
         // ฟังก์ชันดึงข้อมูล AQI จาก IQAir Canvas 39 (หลายวิธี)
