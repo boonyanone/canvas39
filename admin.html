@@ -636,7 +636,15 @@
         }
 
         // Save configuration
+        let isSaving = false; // ป้องกันการกดซ้ำ
         async function saveConfig() {
+            // ป้องกันการกดซ้ำ
+            if (isSaving) {
+                console.log('⚠️ Save already in progress, ignoring...');
+                return;
+            }
+            
+            isSaving = true;
             const saveBtn = document.getElementById('saveBtn');
             const originalText = saveBtn.innerHTML;
             
@@ -731,6 +739,7 @@
                     saveBtn.innerHTML = originalText;
                     saveBtn.className = saveBtn.className.replace(/bg-(green|yellow|red)-600 hover:bg-(green|yellow|red)-700/, 'bg-green-600 hover:bg-green-700');
                     lucide.createIcons();
+                    isSaving = false; // ปลดล็อคการบันทึก
                 }, 3000);
             }, 500);
         }
@@ -904,10 +913,7 @@
                 config.notices = config.notices.filter(n => n.id !== noticeId);
                 loadNoticesList();
                 
-                // บันทึกการเปลี่ยนแปลงทันที
-                saveConfig();
-                
-                showNotification('ลบประกาศเรียบร้อยแล้ว', 'success');
+                showNotification('ลบประกาศเรียบร้อยแล้ว (กรุณากดบันทึกการตั้งค่า)', 'success');
             }
         }
 
@@ -916,10 +922,7 @@
             if (notice) {
                 notice.active = !notice.active;
                 
-                // บันทึกการเปลี่ยนแปลงทันที
-                saveConfig();
-                
-                showNotification(notice.active ? 'เปิดการแสดงประกาศแล้ว' : 'ปิดการแสดงประกาศแล้ว', 'success');
+                showNotification(notice.active ? 'เปิดการแสดงประกาศแล้ว (กรุณากดบันทึกการตั้งค่า)' : 'ปิดการแสดงประกาศแล้ว (กรุณากดบันทึกการตั้งค่า)', 'success');
             }
         }
 
@@ -952,10 +955,7 @@
             closeNoticeForm();
             loadNoticesList();
             
-            // บันทึกการเปลี่ยนแปลงทันที
-            saveConfig();
-            
-            showNotification(noticeId ? 'แก้ไขประกาศเรียบร้อยแล้ว' : 'เพิ่มประกาศเรียบร้อยแล้ว', 'success');
+            showNotification(noticeId ? 'แก้ไขประกาศเรียบร้อยแล้ว (กรุณากดบันทึกการตั้งค่า)' : 'เพิ่มประกาศเรียบร้อยแล้ว (กรุณากดบันทึกการตั้งค่า)', 'success');
         }
 
         // Authentication functions
@@ -1322,10 +1322,7 @@
                         document.getElementById('logoPreview').src = compressedDataUrl;
                         config.images.logo = compressedDataUrl;
                         const originalFormat = file.type === 'image/png' ? 'PNG' : 'JPEG→PNG';
-                        showNotification(`🖼️ อัปโหลดโลโก้เรียบร้อยแล้ว (${originalFormat} โปร่งใส)`, 'success');
-                        
-                        // Auto-save after image upload
-                        setTimeout(saveConfig, 500);
+                        showNotification(`🖼️ อัปโหลดโลโก้เรียบร้อยแล้ว (${originalFormat} โปร่งใส) - กรุณากดบันทึกการตั้งค่า`, 'success');
                     };
                     img.src = e.target.result;
                 };
@@ -1390,10 +1387,7 @@
                         
                         document.getElementById('buildingPreview').src = compressedDataUrl;
                         config.images.building = compressedDataUrl;
-                        showNotification('🏢 อัปโหลดรูปอาคารเรียบร้อยแล้ว (ถูกลดขนาดแล้ว)', 'success');
-                        
-                        // Auto-save after image upload
-                        setTimeout(saveConfig, 500);
+                        showNotification('🏢 อัปโหลดรูปอาคารเรียบร้อยแล้ว (ถูกลดขนาดแล้ว) - กรุณากดบันทึกการตั้งค่า', 'success');
                     };
                     img.src = e.target.result;
                 };
