@@ -1174,7 +1174,7 @@
             }
         }
 
-        async function updateDisplay() {
+        async function updateDisplay(displayConfig = null) {
             console.log('🔄 Updating display...');
             
             // เลือก API provider ตามการตั้งค่า
@@ -1230,18 +1230,24 @@
             } else {
                 console.log('⚠️ ใช้ Mock Data เนื่องจาก Weather APIs ทั้งหมดไม่พร้อมใช้งาน');
             }
-            document.getElementById('lowTemp').textContent = weather.current.low + '°C';
-            document.getElementById('highTemp').textContent = weather.current.high + '°C';
+            // Update weather elements (check if they exist)
+            const lowTemp = document.getElementById('lowTemp');
+            const highTemp = document.getElementById('highTemp');
+            if (lowTemp) lowTemp.textContent = weather.current.low + '°C';
+            if (highTemp) highTemp.textContent = weather.current.high + '°C';
             
             // Update today's weather icon
             const todayIconContainer = document.getElementById('todayIcon');
-            todayIconContainer.innerHTML = getWeatherIcon(weather.current.condition);
+            if (todayIconContainer) {
+                todayIconContainer.innerHTML = getWeatherIcon(weather.current.condition);
+            }
             
             // Update forecast
             const forecastGrid = document.getElementById('forecastGrid');
-            forecastGrid.innerHTML = '';
-            
-            weather.forecast.forEach(item => {
+            if (forecastGrid) {
+                forecastGrid.innerHTML = '';
+                
+                weather.forecast.forEach(item => {
                 const forecastItem = document.createElement('div');
                 forecastItem.className = 'text-center flex flex-col items-center justify-center h-16 sm:h-20';
                 forecastItem.innerHTML = `
@@ -1250,8 +1256,9 @@
                     </div>
                     <div class="text-lg font-medium" style="color: #3f2f15;">${item.time}</div>
                 `;
-                forecastGrid.appendChild(forecastItem);
-            });
+                    forecastGrid.appendChild(forecastItem);
+                });
+            }
             
             // Update AQI
             document.getElementById('indoorAQI').textContent = airQuality.indoor.aqi;
@@ -1289,7 +1296,9 @@
             if (waterChlorine) waterChlorine.textContent = waterQuality.water.chlorine;
             
             // Update slideshow configuration
-            updateSlideshowConfig(config);
+            if (displayConfig) {
+                updateSlideshowConfig(displayConfig);
+            }
             
             // Reinitialize icons
             lucide.createIcons();
@@ -1478,7 +1487,13 @@
             setInterval(checkConfigUpdates, 30000);
             
             updateDateTime();
-            await updateDisplay();
+            
+            try {
+                await updateDisplay(config);
+                console.log('✅ Display update completed');
+            } catch (error) {
+                console.error('❌ Error in updateDisplay:', error);
+            }
             
             // Initialize slideshow
             console.log('🎬 Initializing slideshow...');
@@ -1586,7 +1601,9 @@
             // Auto-update weather data based on configured interval
             setInterval(async function() {
                 console.log('🔄 Auto-updating weather data...');
-                await updateDisplay();
+                // ใช้ global config ที่บันทึกไว้
+                const savedConfig = JSON.parse(localStorage.getItem('canvas39_admin_config') || '{}');
+                await updateDisplay(savedConfig);
             }, UPDATE_INTERVAL);
             
             console.log('✅ GitHub Design version loaded successfully');
