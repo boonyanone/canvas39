@@ -6,6 +6,20 @@
     <title>Canvas 39 - Admin Panel</title>
     
     <!-- Tailwind CSS -->
+    <script>
+        // ปิด warning console  
+        (function() {
+            const originalWarn = console.warn;
+            console.warn = function(...args) {
+                const message = args.join(' ');
+                if (message.includes('tailwindcss.com should not be used in production') || 
+                    message.includes('cdn.tailwindcss.com should not be used in production')) {
+                    return; // ซ่อน warning นี้
+                }
+                originalWarn.apply(console, args);
+            };
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -1107,7 +1121,11 @@
             document.getElementById('buildingUpload').addEventListener('change', handleBuildingUpload);
             
             // Buttons
-            document.getElementById('saveBtn').addEventListener('click', saveConfig);
+            document.getElementById('saveBtn').addEventListener('click', function(e) {
+                console.log('💾 Save button clicked!');
+                e.preventDefault();
+                saveConfig();
+            });
             document.getElementById('previewBtn').addEventListener('click', openPreview);
             document.getElementById('shareBtn').addEventListener('click', copyShareableLink);
             
@@ -1198,13 +1216,19 @@
 
         // Handle logo upload
         function handleLogoUpload(event) {
+            console.log('🖼️ Logo upload started');
             const file = event.target.files[0];
             if (file) {
+                console.log('📁 Logo file selected:', file.name);
                 const reader = new FileReader();
                 reader.onload = function(e) {
+                    console.log('✅ Logo read successfully');
                     document.getElementById('logoPreview').src = e.target.result;
                     config.images.logo = e.target.result;
-                    showNotification('อัปโหลดโลโก้เรียบร้อยแล้ว', 'success');
+                    showNotification('🖼️ อัปโหลดโลโก้เรียบร้อยแล้ว - กดบันทึกเพื่อใช้งาน', 'success');
+                    
+                    // Auto-save after image upload
+                    setTimeout(saveConfig, 500);
                 };
                 reader.readAsDataURL(file);
             }
@@ -1212,13 +1236,19 @@
 
         // Handle building upload
         function handleBuildingUpload(event) {
+            console.log('🏢 Building upload started');
             const file = event.target.files[0];
             if (file) {
+                console.log('📁 Building file selected:', file.name);
                 const reader = new FileReader();
                 reader.onload = function(e) {
+                    console.log('✅ Building image read successfully');
                     document.getElementById('buildingPreview').src = e.target.result;
                     config.images.building = e.target.result;
-                    showNotification('อัปโหลดรูปอาคารเรียบร้อยแล้ว', 'success');
+                    showNotification('🏢 อัปโหลดรูปอาคารเรียบร้อยแล้ว - กดบันทึกเพื่อใช้งาน', 'success');
+                    
+                    // Auto-save after image upload
+                    setTimeout(saveConfig, 500);
                 };
                 reader.readAsDataURL(file);
             }
