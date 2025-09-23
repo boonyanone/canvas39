@@ -13,16 +13,47 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
     
-    <!-- JSONBin.io Configuration -->
+    <!-- JSONBin.io + Firebase Configuration -->
     <script>
-        // JSONBin.io Configuration
+        // JSONBin.io Configuration (Primary)
         const JSONBIN_CONFIG = {
             binId: '68d0fd7643b1c97be94b2806',
             masterKey: '$2a$10$lnTysFoBV2rtQhF5La5LVeRNVW4wRHNmotQgoxvsd2vUL5dB8p4Pq',
             accessKey: '$2a$10$9izErv0jJeqLJODXAxr15ugm42tS.ibw1QqZdOLFV.3XNeBNVsCda'
         };
         
-        console.log('📦 JSONBin.io configured');
+        console.log('📦 JSONBin.io configured (Primary)');
+    </script>
+    
+    <!-- Firebase SDK (Backup) -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJ2iqJUyjd5m0xe0rz-IyRiNyCD3Ga8XM",
+            authDomain: "canvas39-display.firebaseapp.com",
+            databaseURL: "https://canvas39-display-default-rtdb.firebaseio.com",
+            projectId: "canvas39-display",
+            storageBucket: "canvas39-display.firebasestorage.app",
+            messagingSenderId: "126886607717",
+            appId: "1:126886607717:web:01029a9d874d87dfc5bf8c"
+        };
+        
+        try {
+            const app = initializeApp(firebaseConfig);
+            const database = getDatabase(app);
+            
+            // Make Firebase functions globally available
+            window.firebaseDB = database;
+            window.firebaseRef = ref;
+            window.firebaseSet = set;
+            window.firebaseGet = get;
+            
+            console.log('🔥 Firebase initialized (Backup)');
+        } catch (error) {
+            console.warn('⚠️ Firebase backup not available:', error);
+        }
     </script>
 </head>
 <body class="bg-gray-100">
@@ -529,9 +560,9 @@
 
         // Load saved configuration
         async function loadConfig() {
-            // ลองโหลดจาก JSONBin.io ก่อน
+            // ลองโหลดจาก JSONBin.io ก่อน (Primary)
             try {
-                console.log('📦 Loading config from JSONBin.io...');
+                console.log('📦 Loading config from JSONBin.io (Primary)...');
                 
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}/latest`, {
                     method: 'GET',
@@ -555,6 +586,27 @@
                 console.error('❌ Failed to load from JSONBin.io:', error);
             }
             
+            // ลอง Firebase backup
+            if (window.firebaseDB && window.firebaseGet && window.firebaseRef) {
+                try {
+                    console.log('🔥 Loading config from Firebase (Backup)...');
+                    const snapshot = await window.firebaseGet(window.firebaseRef(window.firebaseDB, 'canvas39-config'));
+                    
+                    if (snapshot.exists()) {
+                        const configData = snapshot.val();
+                        Object.assign(config, configData);
+                        console.log('✅ Configuration loaded from Firebase backup:', config);
+                        
+                        // บันทึกลง localStorage สำหรับ cache
+                        localStorage.setItem('canvas39_admin_config', JSON.stringify(config));
+                        updateUI();
+                        return;
+                    }
+                } catch (error) {
+                    console.error('❌ Failed to load from Firebase backup:', error);
+                }
+            }
+            
             // Fallback: โหลดจาก localStorage
             const saved = localStorage.getItem('canvas39_admin_config');
             if (saved) {
@@ -566,9 +618,12 @@
 
         // Save configuration
         async function saveConfig() {
+            let jsonbinSuccess = false;
+            let firebaseSuccess = false;
+            
+            // ลองบันทึกไป JSONBin.io ก่อน (Primary)
             try {
-                // บันทึกไป JSONBin.io
-                console.log('📦 Saving config to JSONBin.io...');
+                console.log('📦 Saving config to JSONBin.io (Primary)...');
                 
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`, {
                     method: 'PUT',
@@ -580,29 +635,44 @@
                     body: JSON.stringify(config)
                 });
                 
-                if (!response.ok) {
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('✅ Config saved to JSONBin.io successfully:', result);
+                    jsonbinSuccess = true;
+                } else {
                     throw new Error(`JSONBin error: ${response.status}`);
                 }
-                
-                const result = await response.json();
-                console.log('✅ Config saved to JSONBin.io successfully:', result);
-                
-                // บันทึกลง localStorage สำหรับ cache
-                localStorage.setItem('canvas39_admin_config', JSON.stringify(config));
-                
-                // ส่ง broadcast ไปยัง display tabs (same origin)
-                broadcastConfigUpdate(config);
-                
-                showNotification('📦 บันทึกไป JSONBin.io สำเร็จ! ทุกอุปกรณ์จะอัปเดตอัตโนมัติ', 'success');
-                
             } catch (error) {
-                console.error('❌ Failed to save to JSONBin.io:', error);
-                
-                // Fallback: localStorage only
-                localStorage.setItem('canvas39_admin_config', JSON.stringify(config));
-                broadcastConfigUpdate(config);
-                
-                showNotification('❌ ไม่สามารถบันทึกไป JSONBin.io ได้ - บันทึกเฉพาะ localStorage', 'error');
+                console.error('❌ JSONBin.io failed:', error);
+            }
+            
+            // ลองบันทึกไป Firebase เป็น backup
+            if (window.firebaseDB && window.firebaseSet && window.firebaseRef) {
+                try {
+                    console.log('🔥 Saving config to Firebase (Backup)...');
+                    await window.firebaseSet(window.firebaseRef(window.firebaseDB, 'canvas39-config'), config);
+                    console.log('✅ Config saved to Firebase backup successfully');
+                    firebaseSuccess = true;
+                } catch (error) {
+                    console.error('❌ Firebase backup failed:', error);
+                }
+            }
+            
+            // บันทึกลง localStorage สำหรับ cache
+            localStorage.setItem('canvas39_admin_config', JSON.stringify(config));
+            
+            // ส่ง broadcast ไปยัง display tabs (same origin)
+            broadcastConfigUpdate(config);
+            
+            // แสดงผลลัพธ์
+            if (jsonbinSuccess && firebaseSuccess) {
+                showNotification('🎉 บันทึกสำเร็จทั้ง JSONBin.io และ Firebase backup!', 'success');
+            } else if (jsonbinSuccess) {
+                showNotification('📦 บันทึกไป JSONBin.io สำเร็จ! (Firebase backup ไม่พร้อม)', 'success');
+            } else if (firebaseSuccess) {
+                showNotification('🔥 บันทึกไป Firebase สำเร็จ! (JSONBin.io ไม่พร้อม)', 'warning');
+            } else {
+                showNotification('❌ ไม่สามารถบันทึกไป cloud ได้ - บันทึกเฉพาะ localStorage', 'error');
             }
         }
 
