@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Quality Color Standards Test</title>
+    <style>
+        body { 
+            background: linear-gradient(135deg, #f5f1ed 0%, #e8e0d6 100%);
+            margin: 0;
+            padding: 20px;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .parameter-group {
+            margin-bottom: 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .color-demo {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .color-card {
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            color: #3f2f15;
+            font-weight: bold;
+        }
+        .green { background-color: #10b981; }
+        .yellow { background-color: #f59e0b; }
+        .red { background-color: #ef4444; }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; color: #3f2f15; margin-bottom: 40px;">🎨 Water Quality Color Standards</h1>
+    
+    <!-- Temperature -->
+    <div class="parameter-group">
+        <h2 style="color: #3f2f15; margin-bottom: 8px;">🌡️ Temperature (°C)</h2>
+        <div class="color-demo">
+            <div class="color-card green">
+                <div style="font-size: 24px;">25.0°C</div>
+                <div style="font-size: 14px; margin-top: 8px;">OPTIMAL</div>
+                <div style="font-size: 12px; opacity: 0.8;">20-28°C</div>
+            </div>
+            <div class="color-card yellow">
+                <div style="font-size: 24px;">29.0°C</div>
+                <div style="font-size: 14px; margin-top: 8px;">CAUTION</div>
+                <div style="font-size: 12px; opacity: 0.8;">28-30°C, 18-20°C</div>
+            </div>
+            <div class="color-card red">
+                <div style="font-size: 24px;">32.0°C</div>
+                <div style="font-size: 14px; margin-top: 8px;">DANGER</div>
+                <div style="font-size: 12px; opacity: 0.8;">>30°C, <18°C</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- pH -->
+    <div class="parameter-group">
+        <h2 style="color: #3f2f15; margin-bottom: 8px;">⚗️ pH Level</h2>
+        <div class="color-demo">
+            <div class="color-card green">
+                <div style="font-size: 24px;">7.4</div>
+                <div style="font-size: 14px; margin-top: 8px;">OPTIMAL</div>
+                <div style="font-size: 12px; opacity: 0.8;">7.2-7.6</div>
+            </div>
+            <div class="color-card yellow">
+                <div style="font-size: 24px;">7.0</div>
+                <div style="font-size: 14px; margin-top: 8px;">CAUTION</div>
+                <div style="font-size: 12px; opacity: 0.8;">7.0-7.2, 7.6-7.8</div>
+            </div>
+            <div class="color-card red">
+                <div style="font-size: 24px;">6.8</div>
+                <div style="font-size: 14px; margin-top: 8px;">DANGER</div>
+                <div style="font-size: 12px; opacity: 0.8;"><7.0, >7.8</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ORP -->
+    <div class="parameter-group">
+        <h2 style="color: #3f2f15; margin-bottom: 8px;">🔬 ORP (mV)</h2>
+        <div class="color-demo">
+            <div class="color-card green">
+                <div style="font-size: 24px;">680</div>
+                <div style="font-size: 14px; margin-top: 8px;">OPTIMAL</div>
+                <div style="font-size: 12px; opacity: 0.8;">650-750 mV</div>
+            </div>
+            <div class="color-card yellow">
+                <div style="font-size: 24px;">630</div>
+                <div style="font-size: 14px; margin-top: 8px;">CAUTION</div>
+                <div style="font-size: 12px; opacity: 0.8;">600-650 mV</div>
+            </div>
+            <div class="color-card red">
+                <div style="font-size: 24px;">580</div>
+                <div style="font-size: 14px; margin-top: 8px;">DANGER</div>
+                <div style="font-size: 12px; opacity: 0.8;"><600 mV</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TDS -->
+    <div class="parameter-group">
+        <h2 style="color: #3f2f15; margin-bottom: 8px;">💧 TDS (ppm)</h2>
+        <div class="color-demo">
+            <div class="color-card green">
+                <div style="font-size: 24px;">800</div>
+                <div style="font-size: 14px; margin-top: 8px;">OPTIMAL</div>
+                <div style="font-size: 12px; opacity: 0.8;">500-1000 ppm</div>
+            </div>
+            <div class="color-card yellow">
+                <div style="font-size: 24px;">1200</div>
+                <div style="font-size: 14px; margin-top: 8px;">CAUTION</div>
+                <div style="font-size: 12px; opacity: 0.8;">1000-1500 ppm</div>
+            </div>
+            <div class="color-card red">
+                <div style="font-size: 24px;">1800</div>
+                <div style="font-size: 14px; margin-top: 8px;">DANGER</div>
+                <div style="font-size: 12px; opacity: 0.8;">>1500 ppm</div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px; padding: 20px; background: rgba(255,255,255,0.5); border-radius: 12px;">
+        <p style="font-size: 16px; font-weight: bold; color: #3f2f15; margin-bottom: 8px;">🎯 Traffic Light System</p>
+        <p style="font-size: 14px; color: #3f2f15; opacity: 0.8;">Green = Safe/Optimal | Yellow = Caution/Warning | Red = Dangerous/Action Required</p>
+    </div>
+</body>
+</html>

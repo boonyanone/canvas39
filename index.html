@@ -750,11 +750,11 @@
             waterQuality: {
                 water: { ph: 7.2, chlorine: 1.8 },
                 pool: { 
-                    ph: 7.4, 
+                    ph: 7.4,        // Green (7.2-7.6) 
                     chlorine: 2.1, 
-                    temperature: 27.5,
-                    orp: 720,
-                    tds: 450
+                    temperature: 25.0,  // Green (20-28°C)
+                    orp: 680,       // Green (650-750 mV)
+                    tds: 800        // Green (500-1000 ppm)
                 }
             }
         };
@@ -777,6 +777,31 @@
             
             // ใช้ filter brightness-0 เพื่อเปลี่ยนเป็นสีดำ
             element.innerHTML = `<img src="${iconUrl}" alt="AQI Face" class="w-full h-full object-contain filter brightness-0">`;
+        }
+        
+        // Water Quality Color Functions
+        function getTemperatureColor(temp) {
+            if (temp >= 20 && temp <= 28) return { color: '#10b981', status: 'OPTIMAL' }; // Green
+            if ((temp >= 28 && temp <= 30) || (temp >= 18 && temp < 20)) return { color: '#f59e0b', status: 'CAUTION' }; // Yellow
+            return { color: '#ef4444', status: 'DANGER' }; // Red
+        }
+        
+        function getPHColor(ph) {
+            if (ph >= 7.2 && ph <= 7.6) return { color: '#10b981', status: 'OPTIMAL' }; // Green
+            if ((ph >= 7.0 && ph < 7.2) || (ph > 7.6 && ph <= 7.8)) return { color: '#f59e0b', status: 'CAUTION' }; // Yellow
+            return { color: '#ef4444', status: 'DANGER' }; // Red
+        }
+        
+        function getORPColor(orp) {
+            if (orp >= 650 && orp <= 750) return { color: '#10b981', status: 'OPTIMAL' }; // Green
+            if (orp >= 600 && orp < 650) return { color: '#f59e0b', status: 'CAUTION' }; // Yellow
+            return { color: '#ef4444', status: 'DANGER' }; // Red
+        }
+        
+        function getTDSColor(tds) {
+            if (tds >= 500 && tds <= 1000) return { color: '#10b981', status: 'OPTIMAL' }; // Green
+            if (tds > 1000 && tds <= 1500) return { color: '#f59e0b', status: 'CAUTION' }; // Yellow
+            return { color: '#ef4444', status: 'DANGER' }; // Red
         }
         
         // ฟังก์ชันดึงข้อมูล AQI จาก IQAir Canvas 39 (หลายวิธี)
@@ -1409,18 +1434,67 @@
             // Update water quality
             const waterQuality = mockData.waterQuality;
             
-            // Update pool water quality elements (check if they exist)
+            // Update pool water quality elements with color coding
             const poolTemp = document.getElementById('poolTemperature');
             const poolPH = document.getElementById('poolPH');
             const poolChlorine = document.getElementById('poolChlorine');
             const poolORP = document.getElementById('poolORP');
             const poolTDS = document.getElementById('poolTDS');
             
-            if (poolTemp) poolTemp.textContent = waterQuality.pool.temperature || '27.5';
-            if (poolPH) poolPH.textContent = waterQuality.pool.ph;
+            // Temperature
+            if (poolTemp) {
+                const temp = parseFloat(waterQuality.pool.temperature || '27.5');
+                const tempColor = getTemperatureColor(temp);
+                poolTemp.textContent = temp;
+                const tempCard = poolTemp.closest('.bg-blue-500');
+                if (tempCard) {
+                    tempCard.style.backgroundColor = tempColor.color;
+                    const statusEl = tempCard.querySelector('.text-xs.opacity-80');
+                    if (statusEl) statusEl.textContent = tempColor.status;
+                }
+            }
+            
+            // pH
+            if (poolPH) {
+                const ph = parseFloat(waterQuality.pool.ph);
+                const phColor = getPHColor(ph);
+                poolPH.textContent = ph;
+                const phCard = poolPH.closest('.bg-green-500');
+                if (phCard) {
+                    phCard.style.backgroundColor = phColor.color;
+                    const statusEl = phCard.querySelector('.text-xs.opacity-80');
+                    if (statusEl) statusEl.textContent = phColor.status;
+                }
+            }
+            
+            // ORP
+            if (poolORP) {
+                const orp = parseFloat(waterQuality.pool.orp || '720');
+                const orpColor = getORPColor(orp);
+                poolORP.textContent = orp;
+                const orpCard = poolORP.closest('.bg-purple-500');
+                if (orpCard) {
+                    orpCard.style.backgroundColor = orpColor.color;
+                    const statusEl = orpCard.querySelector('.text-xs.opacity-80');
+                    if (statusEl) statusEl.textContent = orpColor.status;
+                }
+            }
+            
+            // TDS
+            if (poolTDS) {
+                const tds = parseFloat(waterQuality.pool.tds || '450');
+                const tdsColor = getTDSColor(tds);
+                poolTDS.textContent = tds;
+                const tdsCard = poolTDS.closest('.bg-orange-500');
+                if (tdsCard) {
+                    tdsCard.style.backgroundColor = tdsColor.color;
+                    const statusEl = tdsCard.querySelector('.text-xs.opacity-80');
+                    if (statusEl) statusEl.textContent = tdsColor.status;
+                }
+            }
+            
+            // Legacy chlorine (for backward compatibility)
             if (poolChlorine) poolChlorine.textContent = waterQuality.pool.chlorine;
-            if (poolORP) poolORP.textContent = waterQuality.pool.orp || '720';
-            if (poolTDS) poolTDS.textContent = waterQuality.pool.tds || '450';
             
             // Legacy elements (may not exist in slideshow version)
             const waterPH = document.getElementById('waterPH');
