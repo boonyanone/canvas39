@@ -85,6 +85,21 @@
                 // ทดสอบ filter
                 logoImg.style.filter = 'brightness(0) invert(1)';
                 console.log('🧪 Applied white filter to logo');
+            } else {
+                console.log('❌ Logo element not found');
+                // หา logo elements ทั้งหมด
+                console.log('🔍 All img elements:', document.querySelectorAll('img'));
+            }
+        };
+        
+        // Debug function สำหรับ admin
+        window.debugAdminLogo = function() {
+            const logoPreview = document.getElementById('logoPreview');
+            if (logoPreview) {
+                console.log('🖼️ Admin logo preview:', logoPreview);
+                console.log('🖼️ Admin logo src:', logoPreview.src);
+            } else {
+                console.log('❌ Admin logo preview not found');
             }
         };
     </script>

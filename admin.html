@@ -714,7 +714,7 @@
                 setTimeout(() => {
                     saveBtn.className = saveBtn.className.replace(/bg-(green|yellow|red)-600 hover:bg-(green|yellow|red)-700/, 'bg-green-600 hover:bg-green-700');
                 }, 3000);
-            }, 800);
+            }, 500);
         }
 
         // Broadcast config updates using BroadcastChannel
@@ -740,6 +740,18 @@
             document.getElementById('openweatherKey').value = config.openweatherKey;
             document.getElementById('aqiSourceSelect').value = config.aqiSource;
             document.getElementById('updateInterval').value = config.updateInterval;
+            
+            // Update image previews
+            if (config.images) {
+                if (config.images.logo) {
+                    document.getElementById('logoPreview').src = config.images.logo;
+                    console.log('🖼️ Logo preview updated from config');
+                }
+                if (config.images.building) {
+                    document.getElementById('buildingPreview').src = config.images.building;
+                    console.log('🏢 Building preview updated from config');
+                }
+            }
             
             // Load notices
             loadNoticesList();
