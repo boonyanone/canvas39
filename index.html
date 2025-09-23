@@ -619,7 +619,12 @@
             },
             waterQuality: {
                 water: { ph: 7.2, chlorine: 1.8 },
-                pool: { ph: 7.4, chlorine: 2.1 }
+                pool: { 
+                    ph: 7.4, 
+                    chlorine: 2.1, 
+                    temperature: 27.5,
+                    orp: 720
+                }
             }
         };
 
@@ -1265,10 +1270,23 @@
             
             // Update water quality
             const waterQuality = mockData.waterQuality;
-            document.getElementById('waterPH').textContent = waterQuality.water.ph;
-            document.getElementById('waterChlorine').textContent = waterQuality.water.chlorine;
-            document.getElementById('poolPH').textContent = waterQuality.pool.ph;
-            document.getElementById('poolChlorine').textContent = waterQuality.pool.chlorine;
+            
+            // Update pool water quality elements (check if they exist)
+            const poolTemp = document.getElementById('poolTemperature');
+            const poolPH = document.getElementById('poolPH');
+            const poolChlorine = document.getElementById('poolChlorine');
+            const poolORP = document.getElementById('poolORP');
+            
+            if (poolTemp) poolTemp.textContent = waterQuality.pool.temperature || '27.5';
+            if (poolPH) poolPH.textContent = waterQuality.pool.ph;
+            if (poolChlorine) poolChlorine.textContent = waterQuality.pool.chlorine;
+            if (poolORP) poolORP.textContent = waterQuality.pool.orp || '720';
+            
+            // Legacy elements (may not exist in slideshow version)
+            const waterPH = document.getElementById('waterPH');
+            const waterChlorine = document.getElementById('waterChlorine');
+            if (waterPH) waterPH.textContent = waterQuality.water.ph;
+            if (waterChlorine) waterChlorine.textContent = waterQuality.water.chlorine;
             
             // Update slideshow configuration
             updateSlideshowConfig(config);
@@ -1362,25 +1380,42 @@
         };
 
         function showSlide(slideIndex) {
+            console.log(`🎬 showSlide called with index: ${slideIndex}`);
+            
             const slide1 = document.getElementById('slide1');
             const slide2 = document.getElementById('slide2');
             const dot1 = document.getElementById('slideDot1');
             const dot2 = document.getElementById('slideDot2');
             
+            if (!slide1 || !slide2) {
+                console.error('❌ Slide elements not found');
+                return;
+            }
+            
             if (slideIndex === 0) {
+                console.log('📺 Showing slide 1 (Air Quality)');
                 slide1.style.transform = 'translateX(0)';
                 slide2.style.transform = 'translateX(100%)';
-                dot1.classList.add('bg-opacity-50');
-                dot1.classList.remove('bg-opacity-30');
-                dot2.classList.add('bg-opacity-30');
-                dot2.classList.remove('bg-opacity-50');
+                if (dot1) {
+                    dot1.classList.add('bg-opacity-50');
+                    dot1.classList.remove('bg-opacity-30');
+                }
+                if (dot2) {
+                    dot2.classList.add('bg-opacity-30');
+                    dot2.classList.remove('bg-opacity-50');
+                }
             } else {
+                console.log('🏊‍♂️ Showing slide 2 (Pool Water)');
                 slide1.style.transform = 'translateX(-100%)';
                 slide2.style.transform = 'translateX(0)';
-                dot2.classList.add('bg-opacity-50');
-                dot2.classList.remove('bg-opacity-30');
-                dot1.classList.add('bg-opacity-30');
-                dot1.classList.remove('bg-opacity-50');
+                if (dot2) {
+                    dot2.classList.add('bg-opacity-50');
+                    dot2.classList.remove('bg-opacity-30');
+                }
+                if (dot1) {
+                    dot1.classList.add('bg-opacity-30');
+                    dot1.classList.remove('bg-opacity-50');
+                }
             }
             currentSlide = slideIndex;
         }
@@ -1446,32 +1481,60 @@
             await updateDisplay();
             
             // Initialize slideshow
-            showSlide(0);
+            console.log('🎬 Initializing slideshow...');
             
-            // Setup slideshow controls
-            document.getElementById('nextSlide').addEventListener('click', () => {
-                nextSlide();
-                restartSlideshow(); // Restart timer after manual interaction
-            });
+            // Check if slideshow elements exist
+            const slide1 = document.getElementById('slide1');
+            const slide2 = document.getElementById('slide2');
+            const nextBtn = document.getElementById('nextSlide');
+            const prevBtn = document.getElementById('prevSlide');
             
-            document.getElementById('prevSlide').addEventListener('click', () => {
-                prevSlide();
-                restartSlideshow(); // Restart timer after manual interaction
-            });
-            
-            // Click on dots to navigate
-            document.getElementById('slideDot1').addEventListener('click', () => {
+            if (slide1 && slide2) {
+                console.log('✅ Slideshow elements found, setting up...');
                 showSlide(0);
-                restartSlideshow();
-            });
-            
-            document.getElementById('slideDot2').addEventListener('click', () => {
-                showSlide(1);
-                restartSlideshow();
-            });
-            
-            // Start auto slideshow
-            startSlideshow();
+                
+                // Setup slideshow controls
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', () => {
+                        console.log('➡️ Next slide clicked');
+                        nextSlide();
+                        restartSlideshow(); // Restart timer after manual interaction
+                    });
+                }
+                
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', () => {
+                        console.log('⬅️ Prev slide clicked');
+                        prevSlide();
+                        restartSlideshow(); // Restart timer after manual interaction
+                    });
+                }
+                
+                // Click on dots to navigate
+                const dot1 = document.getElementById('slideDot1');
+                const dot2 = document.getElementById('slideDot2');
+                
+                if (dot1) {
+                    dot1.addEventListener('click', () => {
+                        console.log('🔘 Dot 1 clicked');
+                        showSlide(0);
+                        restartSlideshow();
+                    });
+                }
+                
+                if (dot2) {
+                    dot2.addEventListener('click', () => {
+                        console.log('🔘 Dot 2 clicked');
+                        showSlide(1);
+                        restartSlideshow();
+                    });
+                }
+                
+                // Start auto slideshow
+                startSlideshow();
+            } else {
+                console.warn('❌ Slideshow elements not found');
+            }
             
             // Fullscreen button
             document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
