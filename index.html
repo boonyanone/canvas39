@@ -72,6 +72,21 @@
         };
         
         console.log('📦 JSONBin.io configured for display (Primary)');
+        
+        // Debug function สำหรับตรวจสอบ logo
+        window.debugLogo = function() {
+            const logoImg = document.querySelector('img[alt="Canvas 39 Logo"]');
+            if (logoImg) {
+                console.log('🖼️ Logo element:', logoImg);
+                console.log('🖼️ Logo src:', logoImg.src);
+                console.log('🖼️ Logo filter:', logoImg.style.filter);
+                console.log('🖼️ Logo computed style:', getComputedStyle(logoImg).filter);
+                
+                // ทดสอบ filter
+                logoImg.style.filter = 'brightness(0) invert(1)';
+                console.log('🧪 Applied white filter to logo');
+            }
+        };
     </script>
     
     <!-- Firebase SDK (Backup) -->
@@ -466,7 +481,12 @@
             if (config.images) {
                 if (config.images.logo) {
                     const logoImg = document.querySelector('img[alt="Canvas 39 Logo"]');
-                    if (logoImg) logoImg.src = config.images.logo;
+                    if (logoImg) {
+                        logoImg.src = config.images.logo;
+                        // เก็บ filter สีขาวไว้
+                        logoImg.style.filter = 'brightness(0) invert(1)';
+                        console.log('🖼️ Logo updated with white filter:', config.images.logo.substring(0, 50) + '...');
+                    }
                 }
                 
                 if (config.images.building) {
@@ -1269,6 +1289,12 @@
                     // เช็คว่ามีการเปลี่ยนแปลงหรือไม่
                     if (JSON.stringify(newConfig) !== JSON.stringify(oldConfig)) {
                         console.log('🆕 Config updated! Applying new configuration...');
+                        
+                        // เช็คเฉพาะ logo เปลี่ยนหรือไม่
+                        const logoChanged = newConfig.images?.logo !== oldConfig.images?.logo;
+                        if (logoChanged) {
+                            console.log('🖼️ Logo changed detected!');
+                        }
                         
                         // อัปเดต localStorage
                         localStorage.setItem('canvas39_admin_config', JSON.stringify(newConfig));
