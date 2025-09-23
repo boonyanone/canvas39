@@ -47,7 +47,7 @@
         const firebaseConfig = {
             apiKey: "AIzaSyDJ2iqJUyjd5m0xe0rz-IyRiNyCD3Ga8XM",
             authDomain: "canvas39-display.firebaseapp.com",
-            databaseURL: "https://canvas39-display-default-rtdb.firebaseio.com",
+            databaseURL: "https://canvas39-display-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "canvas39-display",
             storageBucket: "canvas39-display.firebasestorage.app",
             messagingSenderId: "126886607717",
@@ -632,6 +632,15 @@
 
         // Save configuration
         async function saveConfig() {
+            const saveBtn = document.getElementById('saveBtn');
+            const originalText = saveBtn.innerHTML;
+            
+            // แสดง loading state
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 mr-2 animate-spin"></i>กำลังบันทึก...';
+            saveBtn.className = saveBtn.className.replace('bg-green-600 hover:bg-green-700', 'bg-blue-600');
+            lucide.createIcons();
+            
             let jsonbinSuccess = false;
             let firebaseSuccess = false;
             
@@ -678,16 +687,32 @@
             // ส่ง broadcast ไปยัง display tabs (same origin)
             broadcastConfigUpdate(config);
             
-            // แสดงผลลัพธ์
-            if (jsonbinSuccess && firebaseSuccess) {
-                showNotification('🎉 บันทึกสำเร็จทั้ง JSONBin.io และ Firebase backup!', 'success');
-            } else if (jsonbinSuccess) {
-                showNotification('📦 บันทึกไป JSONBin.io สำเร็จ! (Firebase backup ไม่พร้อม)', 'success');
-            } else if (firebaseSuccess) {
-                showNotification('🔥 บันทึกไป Firebase สำเร็จ! (JSONBin.io ไม่พร้อม)', 'warning');
-            } else {
-                showNotification('❌ ไม่สามารถบันทึกไป cloud ได้ - บันทึกเฉพาะ localStorage', 'error');
-            }
+            // แสดงผลลัพธ์และ reset ปุ่ม
+            setTimeout(() => {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
+                
+                if (jsonbinSuccess && firebaseSuccess) {
+                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
+                    showNotification('🎉 บันทึกสำเร็จทั้ง JSONBin.io และ Firebase backup!', 'success');
+                } else if (jsonbinSuccess) {
+                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
+                    showNotification('📦 บันทึกไป JSONBin.io สำเร็จ! (Firebase backup ไม่พร้อม)', 'success');
+                } else if (firebaseSuccess) {
+                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-yellow-600 hover:bg-yellow-700');
+                    showNotification('🔥 บันทึกไป Firebase สำเร็จ! (JSONBin.io ไม่พร้อม)', 'warning');
+                } else {
+                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-red-600 hover:bg-red-700');
+                    showNotification('❌ ไม่สามารถบันทึกไป cloud ได้ - บันทึกเฉพาะ localStorage', 'error');
+                }
+                
+                lucide.createIcons();
+                
+                // รีเซ็ตสีปุ่มหลัง 2 วินาที
+                setTimeout(() => {
+                    saveBtn.className = saveBtn.className.replace(/bg-(green|yellow|red)-600 hover:bg-(green|yellow|red)-700/, 'bg-green-600 hover:bg-green-700');
+                }, 2000);
+            }, 500);
         }
 
         // Broadcast config updates using BroadcastChannel
@@ -1219,16 +1244,56 @@
             console.log('🖼️ Logo upload started');
             const file = event.target.files[0];
             if (file) {
-                console.log('📁 Logo file selected:', file.name);
+                console.log('📁 Logo file selected:', file.name, 'Size:', file.size);
+                
+                // เช็คขนาดไฟล์ (จำกัด 500KB)
+                if (file.size > 500000) {
+                    showNotification('❌ ไฟล์ใหญ่เกินไป! กรุณาเลือกรูปที่มีขนาดไม่เกิน 500KB', 'error');
+                    return;
+                }
+                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     console.log('✅ Logo read successfully');
-                    document.getElementById('logoPreview').src = e.target.result;
-                    config.images.logo = e.target.result;
-                    showNotification('🖼️ อัปโหลดโลโก้เรียบร้อยแล้ว - กดบันทึกเพื่อใช้งาน', 'success');
                     
-                    // Auto-save after image upload
-                    setTimeout(saveConfig, 500);
+                    // ลดขนาดรูปภาพ
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // กำหนดขนาดสูงสุด
+                        const maxWidth = 200;
+                        const maxHeight = 200;
+                        let { width, height } = img;
+                        
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = height * (maxWidth / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = width * (maxHeight / height);
+                                height = maxHeight;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                        console.log('🗜️ Logo compressed from', file.size, 'to', compressedDataUrl.length);
+                        
+                        document.getElementById('logoPreview').src = compressedDataUrl;
+                        config.images.logo = compressedDataUrl;
+                        showNotification('🖼️ อัปโหลดโลโก้เรียบร้อยแล้ว (ถูกลดขนาดแล้ว)', 'success');
+                        
+                        // Auto-save after image upload
+                        setTimeout(saveConfig, 500);
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -1239,16 +1304,56 @@
             console.log('🏢 Building upload started');
             const file = event.target.files[0];
             if (file) {
-                console.log('📁 Building file selected:', file.name);
+                console.log('📁 Building file selected:', file.name, 'Size:', file.size);
+                
+                // เช็คขนาดไฟล์ (จำกัด 800KB)
+                if (file.size > 800000) {
+                    showNotification('❌ ไฟล์ใหญ่เกินไป! กรุณาเลือกรูปที่มีขนาดไม่เกิน 800KB', 'error');
+                    return;
+                }
+                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     console.log('✅ Building image read successfully');
-                    document.getElementById('buildingPreview').src = e.target.result;
-                    config.images.building = e.target.result;
-                    showNotification('🏢 อัปโหลดรูปอาคารเรียบร้อยแล้ว - กดบันทึกเพื่อใช้งาน', 'success');
                     
-                    // Auto-save after image upload
-                    setTimeout(saveConfig, 500);
+                    // ลดขนาดรูปภาพ
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // กำหนดขนาดสูงสุด
+                        const maxWidth = 800;
+                        const maxHeight = 600;
+                        let { width, height } = img;
+                        
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = height * (maxWidth / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = width * (maxHeight / height);
+                                height = maxHeight;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        console.log('🗜️ Building image compressed from', file.size, 'to', compressedDataUrl.length);
+                        
+                        document.getElementById('buildingPreview').src = compressedDataUrl;
+                        config.images.building = compressedDataUrl;
+                        showNotification('🏢 อัปโหลดรูปอาคารเรียบร้อยแล้ว (ถูกลดขนาดแล้ว)', 'success');
+                        
+                        // Auto-save after image upload
+                        setTimeout(saveConfig, 500);
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
