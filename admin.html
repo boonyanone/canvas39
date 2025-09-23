@@ -674,16 +674,26 @@
                 console.error('❌ JSONBin.io failed:', error);
             }
             
-            // ลองบันทึกไป Firebase เป็น backup
+            // ลองบันทึกไป Firebase เป็น backup (with timeout)
             if (window.firebaseDB && window.firebaseSet && window.firebaseRef) {
                 try {
                     console.log('🔥 Saving config to Firebase (Backup)...');
-                    await window.firebaseSet(window.firebaseRef(window.firebaseDB, 'canvas39-config'), config);
+                    
+                    // เพิ่ม timeout สำหรับ Firebase (3 วินาที - เร็วขึ้น)
+                    const firebasePromise = window.firebaseSet(window.firebaseRef(window.firebaseDB, 'canvas39-config'), config);
+                    const timeoutPromise = new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Firebase timeout')), 3000)
+                    );
+                    
+                    await Promise.race([firebasePromise, timeoutPromise]);
                     console.log('✅ Config saved to Firebase backup successfully');
                     firebaseSuccess = true;
                 } catch (error) {
-                    console.error('❌ Firebase backup failed:', error);
+                    console.error('❌ Firebase backup failed:', error.message);
+                    // ไม่ block การทำงาน ถ้า Firebase ล้มเหลว
                 }
+            } else {
+                console.log('⚠️ Firebase not available - skipping backup');
             }
             
             // บันทึกลง localStorage สำหรับ cache
@@ -692,7 +702,7 @@
             // ส่ง broadcast ไปยัง display tabs (same origin)
             broadcastConfigUpdate(config);
             
-            // รอนิดนึงแล้วค่อย reset ปุ่ม (เพิ่มเวลารอ)
+            // รอนิดนึงแล้วค่อย reset ปุ่ม (ลดเวลารอ)
             setTimeout(() => {
                 saveBtn.disabled = false;
                 
@@ -722,7 +732,7 @@
                     saveBtn.className = saveBtn.className.replace(/bg-(green|yellow|red)-600 hover:bg-(green|yellow|red)-700/, 'bg-green-600 hover:bg-green-700');
                     lucide.createIcons();
                 }, 3000);
-            }, 1000);
+            }, 500);
         }
 
         // Broadcast config updates using BroadcastChannel
