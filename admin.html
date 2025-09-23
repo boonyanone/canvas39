@@ -144,7 +144,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">โลโก้องค์กร</label>
                                 <div class="flex items-center space-x-4">
-                                    <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden border-2 border-gray-300">
+                                    <div class="w-16 h-16 bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden border-2 border-gray-600">
                                         <img id="logoPreview" src="img/logo.png" alt="Logo Preview" class="w-full h-full object-contain">
                                     </div>
                                     <div class="flex-1">
@@ -1287,15 +1287,14 @@
                         // ไม่เติมพื้นหลัง - เก็บความโปร่งใส
                         ctx.drawImage(img, 0, 0, width, height);
                         
-                        // ใช้ PNG สำหรับไฟล์ PNG เดิมเพื่อเก็บความโปร่งใส, JPEG สำหรับไฟล์อื่น
-                        const outputFormat = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
-                        const quality = file.type === 'image/png' ? 0.9 : 0.7;
-                        const compressedDataUrl = canvas.toDataURL(outputFormat, quality);
+                        // ใช้ PNG เสมอสำหรับ logo เพื่อเก็บความโปร่งใส
+                        const compressedDataUrl = canvas.toDataURL('image/png', 0.9);
                         console.log('🗜️ Logo compressed from', file.size, 'to', compressedDataUrl.length);
                         
                         document.getElementById('logoPreview').src = compressedDataUrl;
                         config.images.logo = compressedDataUrl;
-                        showNotification('🖼️ อัปโหลดโลโก้เรียบร้อยแล้ว (ถูกลดขนาดแล้ว)', 'success');
+                        const originalFormat = file.type === 'image/png' ? 'PNG' : 'JPEG→PNG';
+                        showNotification(`🖼️ อัปโหลดโลโก้เรียบร้อยแล้ว (${originalFormat} โปร่งใส)`, 'success');
                         
                         // Auto-save after image upload
                         setTimeout(saveConfig, 500);
