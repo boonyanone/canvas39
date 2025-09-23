@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Simple SVG Test</title>
+</head>
+<body style="padding: 20px; background: lightgray;">
+    <h1>Pure SVG Test - Should have NO background</h1>
+    
+    <div style="background: blue; padding: 20px; border-radius: 10px; color: white; text-align: center;">
+        <!-- Temperature SVG -->
+        <svg width="24" height="24" style="color: white;" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M15 13V5c0-1.66-1.34-3-3-3S9 3.34 9 5v8c-1.21.91-2 2.37-2 4 0 2.76 2.24 5 5 5s5-2.24 5-5c0-1.63-.79-3.09-2-4zm-4-2V5c0-.55.45-1 1-1s1 .45 1 1v6h-2zm1 9c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+        </svg>
+        <div>Temperature - No Background</div>
+    </div>
+    
+    <br>
+    
+    <div style="background: green; padding: 20px; border-radius: 10px; color: white; text-align: center;">
+        <!-- pH SVG -->
+        <svg width="24" height="24" style="color: white;" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm0-8h-2V7h2v2zm1 8V7h6v2h-4v2h3v2h-3v2h4v2h-6z"/>
+        </svg>
+        <div>pH - No Background</div>
+    </div>
+    
+    <p><strong>If you see any background circles around the SVG icons above, there's a CSS issue.</strong></p>
+    <p><strong>If they look clean (no circles), then the main file has a caching issue.</strong></p>
+</body>
+</html>

@@ -20,7 +20,7 @@
             };
         })();
     </script>
-    <script src="https://cdn.tailwindcss.com?v=3.4.0"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         if (window.tailwind) {
             window.tailwind.config = { 
@@ -65,14 +65,6 @@
         .slide-prev {
             -webkit-transform: translateX(-100%) translateZ(0) !important;
             transform: translateX(-100%) translateZ(0) !important;
-        }
-        
-        /* Force remove any background from SVG icons */
-        svg.w-6.h-6 {
-            background: none !important;
-            border: none !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
         }
         
         /* Ensure borders and layout stay intact */
