@@ -250,16 +250,65 @@
                                     <div class="px-6 py-4 border-b border-gray-200">
                                         <h3 class="text-lg font-medium text-gray-900">การตั้งค่า Font</h3>
                                     </div>
-                                    <div class="px-6 py-4">
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">เลือก Font</label>
-                                        <select id="fontSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                            <option value="default">Default (System Font)</option>
-                                            <option value="roman">Roman (Local Font)</option>
-                                            <option value="kanit">Kanit (Google Fonts)</option>
-                                            <option value="sarabun">Sarabun (Google Fonts)</option>
-                                            <option value="inter">Inter (Google Fonts)</option>
-                                        </select>
-                                        <p class="text-xs text-gray-500 mt-1">Font จะมีผลกับข้อความทั้งหมดในหน้าจอ</p>
+                                    <div class="px-6 py-4 space-y-4">
+                                        <!-- Font Selection -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">เลือก Font</label>
+                                            <select id="fontSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                <option value="default">Default (System Font)</option>
+                                                <option value="roman">Roman (Local Font)</option>
+                                                <option value="kanit">Kanit (Google Fonts)</option>
+                                                <option value="sarabun">Sarabun (Google Fonts)</option>
+                                                <option value="inter">Inter (Google Fonts)</option>
+                                                <option value="roboto">Roboto (Google Fonts)</option>
+                                                <option value="noto-thai">Noto Sans Thai (Google Fonts)</option>
+                                                <option value="prompt">Prompt (Google Fonts)</option>
+                                                <option value="mitr">Mitr (Google Fonts)</option>
+                                                <option value="custom">Custom Font</option>
+                                            </select>
+                                            <p class="text-xs text-gray-500 mt-1">Font จะมีผลกับข้อความทั้งหมดในหน้าจอ</p>
+                                        </div>
+
+                                        <!-- Custom Font Upload -->
+                                        <div id="customFontSection" class="hidden">
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">อัปโหลด Custom Font</label>
+                                            <div class="border-2 border-gray-300 border-dashed rounded-lg p-6">
+                                                <div class="text-center">
+                                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+                                                    <div class="mt-4">
+                                                        <label for="customFontUpload" class="cursor-pointer">
+                                                            <span class="mt-2 block text-sm font-medium text-gray-900">อัปโหลดไฟล์ฟอนต์</span>
+                                                            <span class="mt-2 block text-xs text-gray-500">WOFF2, WOFF, TTF, OTF (สูงสุด 2MB)</span>
+                                                        </label>
+                                                        <input id="customFontUpload" name="customFontUpload" type="file" class="sr-only" accept=".woff2,.woff,.ttf,.otf">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Font Info Display -->
+                                            <div id="fontInfo" class="hidden mt-3 p-3 bg-blue-50 rounded-md">
+                                                <div class="flex items-center">
+                                                    <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    <div class="ml-3">
+                                                        <p class="text-sm text-blue-800" id="fontFileName">ไม่มีไฟล์</p>
+                                                        <p class="text-xs text-blue-600" id="fontFileSize"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Font Preview -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ตัวอย่างฟอนต์</label>
+                                            <div class="p-4 bg-gray-50 rounded-md border">
+                                                <p id="fontPreview" class="text-lg">Canvas 39 Display System</p>
+                                                <p id="fontPreviewThai" class="text-base text-gray-600 mt-1">ระบบแสดงผลข้อมูลอากาศและคุณภาพน้ำ</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -600,6 +649,133 @@
             });
         }
 
+        // Initialize Font Settings
+        function initializeFontSettings() {
+            const fontSelect = document.getElementById('fontSelect');
+            const customFontSection = document.getElementById('customFontSection');
+            const customFontUpload = document.getElementById('customFontUpload');
+            const fontInfo = document.getElementById('fontInfo');
+            const fontFileName = document.getElementById('fontFileName');
+            const fontFileSize = document.getElementById('fontFileSize');
+            const fontPreview = document.getElementById('fontPreview');
+            const fontPreviewThai = document.getElementById('fontPreviewThai');
+
+            // Show/hide custom font section
+            fontSelect.addEventListener('change', function() {
+                config.font = this.value;
+                
+                if (this.value === 'custom') {
+                    customFontSection.classList.remove('hidden');
+                } else {
+                    customFontSection.classList.add('hidden');
+                    updateFontPreview(this.value);
+                }
+            });
+
+            // Handle custom font upload
+            customFontUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Validate file size (2MB max)
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('ไฟล์มีขนาดใหญ่เกิน 2MB กรุณาเลือกไฟล์ใหม่');
+                        return;
+                    }
+
+                    // Validate file type
+                    const allowedTypes = ['.woff2', '.woff', '.ttf', '.otf'];
+                    const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+                    
+                    if (!allowedTypes.includes(fileExtension)) {
+                        alert('ประเภทไฟล์ไม่ถูกต้อง กรุณาเลือกไฟล์ WOFF2, WOFF, TTF หรือ OTF');
+                        return;
+                    }
+
+                    // Convert to base64
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const fontData = e.target.result;
+                        
+                        // Save to config
+                        config.customFont = {
+                            name: file.name,
+                            size: file.size,
+                            data: fontData,
+                            format: getFileFormat(fileExtension)
+                        };
+
+                        // Update UI
+                        fontFileName.textContent = file.name;
+                        fontFileSize.textContent = `${(file.size / 1024).toFixed(1)} KB`;
+                        fontInfo.classList.remove('hidden');
+
+                        // Apply custom font preview
+                        applyCustomFontPreview(fontData, getFileFormat(fileExtension));
+                        
+                        console.log('✅ Custom font uploaded:', file.name);
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Get file format from extension
+            function getFileFormat(extension) {
+                const formatMap = {
+                    '.woff2': 'woff2',
+                    '.woff': 'woff',
+                    '.ttf': 'truetype',
+                    '.otf': 'opentype'
+                };
+                return formatMap[extension] || 'woff2';
+            }
+
+            // Apply custom font preview
+            function applyCustomFontPreview(fontData, format) {
+                const fontFace = new FontFace('CustomFontPreview', `url(${fontData})`, {
+                    format: format
+                });
+
+                fontFace.load().then(() => {
+                    document.fonts.add(fontFace);
+                    fontPreview.style.fontFamily = 'CustomFontPreview, sans-serif';
+                    fontPreviewThai.style.fontFamily = 'CustomFontPreview, sans-serif';
+                }).catch(error => {
+                    console.error('❌ Failed to load custom font:', error);
+                    alert('ไม่สามารถโหลดฟอนต์ได้ กรุณาตรวจสอบไฟล์');
+                });
+            }
+
+            // Update font preview
+            function updateFontPreview(fontValue) {
+                const fontMap = {
+                    'default': 'system-ui, sans-serif',
+                    'roman': 'Roman, serif',
+                    'kanit': 'Kanit, sans-serif',
+                    'sarabun': 'Sarabun, sans-serif',
+                    'inter': 'Inter, sans-serif',
+                    'roboto': 'Roboto, sans-serif',
+                    'noto-thai': '"Noto Sans Thai", sans-serif',
+                    'prompt': 'Prompt, sans-serif',
+                    'mitr': 'Mitr, sans-serif'
+                };
+
+                const fontFamily = fontMap[fontValue] || 'system-ui, sans-serif';
+                
+                // Load Google Font if needed
+                if (['kanit', 'sarabun', 'inter', 'roboto', 'noto-thai', 'prompt', 'mitr'].includes(fontValue)) {
+                    const fontName = fontFamily.split(',')[0].replace(/['"]/g, '');
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(' ', '+')}:wght@300;400;500;600;700&display=swap`;
+                    document.head.appendChild(link);
+                }
+
+                fontPreview.style.fontFamily = fontFamily;
+                fontPreviewThai.style.fontFamily = fontFamily;
+            }
+        }
+
         // Save Configuration
         document.getElementById('saveBtn').addEventListener('click', async function() {
             console.log('💾 Saving configuration:', config);
@@ -684,6 +860,18 @@
                 const fontSelect = document.getElementById('fontSelect');
                 if (fontSelect) {
                     fontSelect.value = config.font;
+                    
+                    // Show custom font section if needed
+                    if (config.font === 'custom') {
+                        document.getElementById('customFontSection').classList.remove('hidden');
+                        
+                        // Show custom font info
+                        if (config.customFont) {
+                            document.getElementById('fontFileName').textContent = config.customFont.name;
+                            document.getElementById('fontFileSize').textContent = `${(config.customFont.size / 1024).toFixed(1)} KB`;
+                            document.getElementById('fontInfo').classList.remove('hidden');
+                        }
+                    }
                 }
             }
             
@@ -697,6 +885,7 @@
             initializeSidebarNavigation();
             initializeMobileSidebar();
             initializeColorTheme();
+            initializeFontSettings();
             initializeUserMenu();
             
             console.log('✅ Admin Panel initialized successfully');
