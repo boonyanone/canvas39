@@ -1999,8 +1999,280 @@
             }
         }
 
+        // Admin Panel Integration Functions
+        let adminConfig = {};
+        let layoutConfig = {};
+        let slideshowConfig = {};
+
+        // Load admin panel configuration
+        async function loadAdminConfig() {
+            console.log('🔧 Loading admin panel configuration...');
+            
+            try {
+                // Load main admin config
+                const savedAdminConfig = localStorage.getItem('canvas39_admin_config');
+                if (savedAdminConfig) {
+                    adminConfig = JSON.parse(savedAdminConfig);
+                    console.log('📋 Loaded admin config:', adminConfig);
+                }
+
+                // Load layout config
+                const savedLayoutConfig = localStorage.getItem('canvas39_layout_config');
+                if (savedLayoutConfig) {
+                    layoutConfig = JSON.parse(savedLayoutConfig);
+                    console.log('🎛️ Loaded layout config:', layoutConfig);
+                }
+
+                return { adminConfig, layoutConfig };
+            } catch (error) {
+                console.error('❌ Error loading admin config:', error);
+                return {};
+            }
+        }
+
+        // Apply admin panel configuration to display
+        function applyAdminConfig(config = {}) {
+            console.log('🎨 Applying admin configuration to display...');
+
+            // Apply theme colors
+            if (config.theme) {
+                applyThemeConfig(config.theme);
+            }
+
+            // Apply font settings
+            if (config.font || config.customFont) {
+                applyFontConfig(config);
+            }
+
+            // Apply layout configuration
+            if (layoutConfig) {
+                applyLayoutConfig(layoutConfig);
+            }
+
+            // Apply slideshow configuration
+            if (config.slideshow) {
+                applySlideshowConfig(config.slideshow);
+            }
+
+            console.log('✅ Admin configuration applied successfully');
+        }
+
+        // Apply theme configuration
+        function applyThemeConfig(theme) {
+            console.log('🎨 Applying theme configuration...');
+
+            // Update header background
+            if (theme.headerColor) {
+                const header = document.querySelector('.bg-amber-900');
+                if (header) {
+                    header.style.backgroundColor = theme.headerColor;
+                }
+            }
+
+            // Update main background
+            if (theme.backgroundColor) {
+                const mainBackground = document.querySelector('div[style*="background-color: #929079"]');
+                if (mainBackground) {
+                    mainBackground.style.backgroundColor = theme.backgroundColor;
+                }
+            }
+
+            console.log('🎨 Theme colors applied');
+        }
+
+        // Apply font configuration
+        function applyFontConfig(config) {
+            console.log('🔤 Applying font configuration...');
+
+            let fontFamily = 'system-ui, sans-serif';
+
+            if (config.font && config.font !== 'default') {
+                if (config.font === 'custom' && config.customFont) {
+                    // Apply custom font
+                    try {
+                        const fontFace = new FontFace(
+                            'CustomDisplayFont',
+                            `url(${config.customFont.data})`,
+                            { display: 'swap' }
+                        );
+                        
+                        fontFace.load().then(() => {
+                            document.fonts.add(fontFace);
+                            fontFamily = 'CustomDisplayFont, system-ui, sans-serif';
+                            document.body.style.fontFamily = fontFamily;
+                            console.log('✅ Custom font applied');
+                        }).catch(error => {
+                            console.error('❌ Failed to load custom font:', error);
+                        });
+                    } catch (error) {
+                        console.error('❌ Error applying custom font:', error);
+                    }
+                } else {
+                    // Apply predefined font
+                    const fontMap = {
+                        'roman': '"Times New Roman", serif',
+                        'kanit': 'Kanit, sans-serif',
+                        'sarabun': 'Sarabun, sans-serif',
+                        'inter': 'Inter, sans-serif',
+                        'roboto': 'Roboto, sans-serif',
+                        'noto-thai': '"Noto Sans Thai", sans-serif',
+                        'prompt': 'Prompt, sans-serif',
+                        'mitr': 'Mitr, sans-serif'
+                    };
+
+                    fontFamily = fontMap[config.font] || fontFamily;
+                    
+                    // Load Google Font if needed
+                    if (['kanit', 'sarabun', 'inter', 'roboto', 'noto-thai', 'prompt', 'mitr'].includes(config.font)) {
+                        const fontName = fontFamily.split(',')[0].replace(/['"]/g, '');
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(' ', '+')}:wght@300;400;500;600;700&display=swap`;
+                        document.head.appendChild(link);
+                    }
+
+                    document.body.style.fontFamily = fontFamily;
+                    console.log(`🔤 Font applied: ${fontFamily}`);
+                }
+            }
+        }
+
+        // Apply layout configuration
+        function applyLayoutConfig(layout) {
+            console.log('📐 Applying layout configuration...');
+
+            // Apply header settings
+            if (layout.headerHeight) {
+                const header = document.querySelector('.bg-amber-900');
+                if (header) {
+                    header.style.height = layout.headerHeight + 'px';
+                }
+            }
+
+            if (layout.headerPaddingX || layout.headerPaddingY) {
+                const header = document.querySelector('.bg-amber-900');
+                if (header) {
+                    if (layout.headerPaddingX) header.style.paddingLeft = header.style.paddingRight = layout.headerPaddingX + 'px';
+                    if (layout.headerPaddingY) header.style.paddingTop = header.style.paddingBottom = layout.headerPaddingY + 'px';
+                }
+            }
+
+            if (layout.logoSize) {
+                const logo = document.querySelector('img[alt="Canvas 39 Logo"]');
+                if (logo) {
+                    logo.parentElement.style.width = layout.logoSize + 'px';
+                    logo.parentElement.style.height = layout.logoSize + 'px';
+                }
+            }
+
+            // Apply weather section settings
+            if (layout.weatherHeight) {
+                const weatherSection = document.querySelector('.weather-section-border');
+                if (weatherSection) {
+                    weatherSection.style.height = layout.weatherHeight + 'px';
+                }
+            }
+
+            // Apply quality section settings
+            if (layout.qualityHeight) {
+                const qualitySection = document.querySelector('.swiper.quality-slideshow').parentElement;
+                if (qualitySection) {
+                    qualitySection.style.height = layout.qualityHeight + 'px';
+                }
+            }
+
+            // Apply text sizes
+            if (layout.weatherTextSize) {
+                const tempElements = document.querySelectorAll('#lowTemp, #highTemp');
+                tempElements.forEach(el => {
+                    el.className = el.className.replace(/text-\w+/, layout.weatherTextSize);
+                });
+            }
+
+            if (layout.qualityTextSize) {
+                const aqiElements = document.querySelectorAll('#indoorAQI, #outdoorAQI');
+                aqiElements.forEach(el => {
+                    el.className = el.className.replace(/text-\w+/, layout.qualityTextSize);
+                });
+            }
+
+            console.log('📐 Layout configuration applied');
+        }
+
+        // Apply slideshow configuration
+        function applySlideshowConfig(slideshow) {
+            console.log('🎬 Applying slideshow configuration...');
+
+            slideshowConfig = { ...slideshowConfig, ...slideshow };
+
+            // Update global swiper instance if it exists
+            if (window.swiper && slideshow.slideshowInterval) {
+                const newDelay = parseInt(slideshow.slideshowInterval) * 1000;
+                window.swiper.params.autoplay.delay = newDelay;
+                
+                if (window.swiper.autoplay) {
+                    window.swiper.autoplay.stop();
+                    window.swiper.autoplay.start();
+                }
+                
+                console.log(`🎬 Slideshow interval updated to ${slideshow.slideshowInterval}s`);
+            }
+
+            console.log('🎬 Slideshow configuration applied');
+        }
+
+        // Listen for config updates from admin panel
+        function listenForAdminUpdates() {
+            console.log('👂 Listening for admin panel updates...');
+
+            // Listen for localStorage changes (same tab)
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'canvas39_admin_config') {
+                    console.log('🔄 Admin config updated, reloading...');
+                    setTimeout(async () => {
+                        const newConfig = await loadAdminConfig();
+                        applyAdminConfig(newConfig.adminConfig);
+                    }, 500);
+                }
+
+                if (e.key === 'canvas39_layout_config') {
+                    console.log('🔄 Layout config updated, reloading...');
+                    setTimeout(() => {
+                        const newLayoutConfig = JSON.parse(e.newValue || '{}');
+                        applyLayoutConfig(newLayoutConfig);
+                    }, 500);
+                }
+            });
+
+            // Periodic check for updates (fallback for same-tab updates)
+            setInterval(async () => {
+                const currentConfig = await loadAdminConfig();
+                
+                // Check if config has changed
+                const currentConfigStr = JSON.stringify(currentConfig);
+                const lastConfigStr = JSON.stringify({ adminConfig, layoutConfig });
+                
+                if (currentConfigStr !== lastConfigStr) {
+                    console.log('🔄 Config change detected, applying updates...');
+                    adminConfig = currentConfig.adminConfig || {};
+                    layoutConfig = currentConfig.layoutConfig || {};
+                    applyAdminConfig(adminConfig);
+                }
+            }, 5000); // Check every 5 seconds
+        }
+
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('🚀 Canvas 39 GitHub Design initializing...');
+            
+            // Load and apply admin panel configuration first
+            const adminConfigs = await loadAdminConfig();
+            adminConfig = adminConfigs.adminConfig || {};
+            layoutConfig = adminConfigs.layoutConfig || {};
+            
+            applyAdminConfig(adminConfig);
+            
+            // Start listening for admin updates
+            listenForAdminUpdates();
             
             // Parse and apply configuration from URL parameters, JSONBin, or localStorage
             const config = await parseConfig();
