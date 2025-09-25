@@ -160,7 +160,7 @@
         
         // Debug function สำหรับ slideshow
         window.debugSlideshow = function() {
-            console.log('🎬 Slideshow Debug Status:');
+            console.log('🎬 Clean Slideshow Debug (No Dots):');
             console.log('- Current slide:', currentSlide);
             console.log('- Slide interval:', slideInterval);
             console.log('- Active timeouts:', allTimeouts.length);
@@ -171,8 +171,9 @@
             const slide2 = document.getElementById('slide2');
             console.log('- Slide1 classes:', slide1?.className);
             console.log('- Slide2 classes:', slide2?.className);
+            console.log('- Dots removed: No manual navigation');
             
-            // Force stop function for testing
+            // Emergency functions for testing
             window.forceStopSlideshow = stopSlideshow;
             window.emergencyStop = clearAllSlideshowTimers;
         };
@@ -310,11 +311,7 @@
 
         <!-- Quality Information Slideshow -->
         <div class="relative flex-shrink-0 h-[42.1vh] slideshow-container" style="background-color: #929079;">
-            <!-- Slide Navigation Dots - Bottom Center -->
-            <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-10 flex gap-3">
-                <div class="w-4 h-4 rounded-full bg-white bg-opacity-60 hover:bg-opacity-80 transition-all duration-300 cursor-pointer shadow-lg" id="slideDot1"></div>
-                <div class="w-4 h-4 rounded-full bg-white bg-opacity-30 hover:bg-opacity-50 transition-all duration-300 cursor-pointer shadow-lg" id="slideDot2"></div>
-            </div>
+            <!-- Navigation dots removed to eliminate click conflicts -->
             
             <!-- Slide 1: Air Quality -->
             <div class="absolute inset-0 slide-center" id="slide1">
@@ -1646,12 +1643,10 @@
         }
 
         function showSlide(slideIndex) {
-            console.log(`🎬 Slide to: ${slideIndex}`);
+            console.log(`🎬 Slide to: ${slideIndex} (no dots)`);
             
             const slide1 = document.getElementById('slide1');
             const slide2 = document.getElementById('slide2');
-            const dot1 = document.getElementById('slideDot1');
-            const dot2 = document.getElementById('slideDot2');
             
             if (!slide1 || !slide2) {
                 console.error('❌ Slide elements not found');
@@ -1667,31 +1662,11 @@
                 // Slide 1 to center, Slide 2 moves left (out)
                 slide1.classList.add('slide-center');
                 slide2.classList.add('slide-left');
-                
-                // Update dots
-                if (dot1) {
-                    dot1.classList.remove('bg-opacity-30');
-                    dot1.classList.add('bg-opacity-60');
-                }
-                if (dot2) {
-                    dot2.classList.remove('bg-opacity-60');
-                    dot2.classList.add('bg-opacity-30');
-                }
             } else {
                 console.log('🏊‍♂️ Slide to Pool Water (forward movement)');
                 // Slide 2 to center, Slide 1 moves left (out)
                 slide2.classList.add('slide-center');
                 slide1.classList.add('slide-left');
-                
-                // Update dots
-                if (dot2) {
-                    dot2.classList.remove('bg-opacity-30');
-                    dot2.classList.add('bg-opacity-60');
-                }
-                if (dot1) {
-                    dot1.classList.remove('bg-opacity-60');
-                    dot1.classList.add('bg-opacity-30');
-                }
             }
             
             currentSlide = slideIndex;
@@ -1808,40 +1783,9 @@
                     slide2.className = 'absolute inset-0 slide-right';
                     currentSlide = 0;
                     
-                    // Initialize dots
-                    const dot1 = document.getElementById('slideDot1');
-                    const dot2 = document.getElementById('slideDot2');
-                    if (dot1) {
-                        dot1.classList.remove('bg-opacity-30');
-                        dot1.classList.add('bg-opacity-60');
-                    }
-                    if (dot2) {
-                        dot2.classList.remove('bg-opacity-60');
-                        dot2.classList.add('bg-opacity-30');
-                    }
-                    
-                    console.log('🎬 Slide slideshow initialized - Slide 1 center, Slide 2 right');
+                    console.log('🎬 Clean slideshow initialized - auto-play only');
                 
-                // Setup navigation dots - tracked timeout handlers
-                if (dot1) {
-                    dot1.addEventListener('click', () => {
-                        console.log('🔘 Dot 1 clicked - advance to next');
-                        nextSlide();
-                        stopSlideshow();
-                        const restartTimeout = setTimeout(() => startSlideshow(), 2000);
-                        allTimeouts.push(restartTimeout);
-                    });
-                }
-                
-                if (dot2) {
-                    dot2.addEventListener('click', () => {
-                        console.log('🔘 Dot 2 clicked - advance to next');
-                        nextSlide();
-                        stopSlideshow();
-                        const restartTimeout = setTimeout(() => startSlideshow(), 2000);
-                        allTimeouts.push(restartTimeout);
-                    });
-                }
+                // No dot navigation - auto slideshow only
                 
                 // Start auto slideshow
                 startSlideshow();
