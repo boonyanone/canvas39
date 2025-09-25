@@ -36,66 +36,39 @@
             padding: 0 !important;
         }
         
-        /* Clean slide effect without conflicts */
-        .slideshow-container {
-            overflow: hidden;
-            position: relative;
-        }
-        
-        #slide1, #slide2 {
-            position: absolute;
-            top: 0;
-            left: 0;
+        /* Swiper custom styles */
+        .quality-slideshow {
             width: 100%;
             height: 100%;
-            transition: transform 0.8s ease-in-out;
         }
         
-        /* Clean slide positions */
-        .slide-center { 
-            transform: translateX(0%) !important; 
-            z-index: 10;
-        }
-        .slide-right { 
-            transform: translateX(100%) !important; 
-            z-index: 1;
-        }
-        .slide-left { 
-            transform: translateX(-100%) !important; 
-            z-index: 1;
+        .quality-slideshow .swiper-slide {
+            display: flex;
+            align-items: stretch;
+            height: 100%;
         }
         
-        /* Hardware acceleration for smooth transitions */
-        .transition-transform {
+        /* Remove default Swiper pagination */
+        .quality-slideshow .swiper-pagination {
+            display: none !important;
+        }
+        
+        /* Remove default Swiper navigation */
+        .quality-slideshow .swiper-button-next,
+        .quality-slideshow .swiper-button-prev {
+            display: none !important;
+        }
+        
+        /* Smooth transitions with hardware acceleration */
+        .quality-slideshow .swiper-wrapper {
             -webkit-transform: translateZ(0);
             transform: translateZ(0);
         }
         
-        /* Slide positioning classes for forward-only carousel */
-        .slide-active {
-            -webkit-transform: translateX(0) translateZ(0) !important;
-            transform: translateX(0) translateZ(0) !important;
-        }
-        
-        .slide-next {
-            -webkit-transform: translateX(100%) translateZ(0) !important;
-            transform: translateX(100%) translateZ(0) !important;
-        }
-        
-        .slide-prev {
-            -webkit-transform: translateX(-100%) translateZ(0) !important;
-            transform: translateX(-100%) translateZ(0) !important;
-        }
-        
-        /* Force forward-only movement */
-        .slide-forward-out {
-            -webkit-transform: translateX(-100%) translateZ(0) !important;
-            transform: translateX(-100%) translateZ(0) !important;
-        }
-        
-        .slide-forward-in {
-            -webkit-transform: translateX(0) translateZ(0) !important;
-            transform: translateX(0) translateZ(0) !important;
+        /* Ensure slides take full height */
+        .quality-slideshow .swiper-slide > div {
+            width: 100%;
+            height: 100%;
         }
         
         /* Force remove any background from SVG icons */
@@ -132,6 +105,10 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- Swiper.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     
     <!-- JSONBin.io + Firebase Configuration -->
     <script>
@@ -173,25 +150,20 @@
             }
         };
         
-        // Debug function สำหรับ slideshow
+        // Debug function สำหรับ Swiper slideshow
         window.debugSlideshow = function() {
-            console.log('🎬 Protected Slideshow Debug:');
-            console.log('- Current slide:', currentSlide);
-            console.log('- Slide interval:', slideInterval);
-            console.log('- Running state:', slideshowRunning);
-            console.log('- Active timeouts:', allTimeouts.length);
-            console.log('- Slideshow initialized:', slideshowInitialized);
+            console.log('🎬 Swiper Slideshow Debug:');
+            console.log('- Swiper instance:', swiper);
+            console.log('- Active index:', swiper?.activeIndex);
+            console.log('- Autoplay running:', swiper?.autoplay?.running);
+            console.log('- Autoplay delay:', swiper?.params?.autoplay?.delay);
+            console.log('- Touch enabled:', swiper?.params?.touchRatio);
             console.log('- Slideshow config:', slideshowConfig);
-            
-            const slide1 = document.getElementById('slide1');
-            const slide2 = document.getElementById('slide2');
-            console.log('- Slide1 classes:', slide1?.className);
-            console.log('- Slide2 classes:', slide2?.className);
-            console.log('- Protected: Single instance only');
             
             // Emergency functions for testing
             window.forceStopSlideshow = stopSlideshow;
-            window.emergencyStop = clearAllSlideshowTimers;
+            window.forceStartSlideshow = startSlideshow;
+            window.restartSlideshow = restartSlideshow;
         };
     </script>
     
@@ -325,200 +297,202 @@
             </div>
         </div>
 
-        <!-- Quality Information Slideshow -->
-        <div class="relative flex-shrink-0 h-[42.1vh] slideshow-container" style="background-color: #929079;">
-            <!-- Navigation dots removed to eliminate click conflicts -->
-            
-            <!-- Slide 1: Air Quality -->
-            <div class="absolute inset-0 slide-center" id="slide1">
-                <div class="p-8 h-full flex flex-col">
-                    <!-- Header Title -->
-                    <div class="text-center mb-4">
-                        <h2 class="text-xl font-medium tracking-wide" style="color: #3f2f15;">
-                            <span class="inline-block px-4 py-2 bg-white bg-opacity-20 rounded-full">AIR QUALITY</span>
-                        </h2>
-                    </div>
-                    
-                    <!-- Content Grid -->
-                    <div class="flex gap-8 mb-8">
-                        <!-- Indoor Section -->
-                        <div class="flex-1">
-                            <div class="text-lg mb-3 font-medium" style="color: #3f2f15;">INDOOR</div>
-                            <div class="bg-green-500 rounded-xl shadow-lg overflow-hidden">
-                                <div class="p-6">
-                                    <div class="flex justify-between items-start mb-4">
-                                        <div class="flex flex-col">
-                                            <div class="flex items-end gap-3 mb-2">
-                                                <div class="text-5xl font-light leading-none bg-black bg-opacity-20 px-3 py-1 rounded-lg" style="color: #3f2f15;" id="indoorAQI">40</div>
-                                                <div class="text-lg font-semibold pb-1" style="color: #3f2f15;" id="indoorLevel">Good</div>
+        <!-- Quality Information Slideshow with Swiper -->
+        <div class="relative flex-shrink-0 h-[42.1vh]" style="background-color: #929079;">
+            <div class="swiper quality-slideshow">
+                <div class="swiper-wrapper">
+                    <!-- Slide 1: Air Quality -->
+                    <div class="swiper-slide">
+                        <div class="p-8 h-full flex flex-col">
+                            <!-- Header Title -->
+                            <div class="text-center mb-4">
+                                <h2 class="text-xl font-medium tracking-wide" style="color: #3f2f15;">
+                                    <span class="inline-block px-4 py-2 bg-white bg-opacity-20 rounded-full">AIR QUALITY</span>
+                                </h2>
+                            </div>
+                            
+                            <!-- Content Grid -->
+                            <div class="flex gap-8 mb-8">
+                                <!-- Indoor Section -->
+                                <div class="flex-1">
+                                    <div class="text-lg mb-3 font-medium" style="color: #3f2f15;">INDOOR</div>
+                                    <div class="bg-green-500 rounded-xl shadow-lg overflow-hidden">
+                                        <div class="p-6">
+                                            <div class="flex justify-between items-start mb-4">
+                                                <div class="flex flex-col">
+                                                    <div class="flex items-end gap-3 mb-2">
+                                                        <div class="text-5xl font-light leading-none bg-black bg-opacity-20 px-3 py-1 rounded-lg" style="color: #3f2f15;" id="indoorAQI">40</div>
+                                                        <div class="text-lg font-semibold pb-1" style="color: #3f2f15;" id="indoorLevel">Good</div>
+                                                    </div>
+                                                    <div class="text-sm opacity-80" style="color: #3f2f15;">US AQI Index</div>
+                                                </div>
+                                                <div class="w-12 h-12 flex-shrink-0" id="indoorFace">
+                                                    <img src="https://www.iqair.com/dl/assets/aqi/ic-face-green.svg" alt="AQI Face" class="w-full h-full object-contain filter brightness-0">
+                                                </div>
                                             </div>
-                                            <div class="text-sm opacity-80" style="color: #3f2f15;">US AQI Index</div>
-                                        </div>
-                                        <div class="w-12 h-12 flex-shrink-0" id="indoorFace">
-                                            <img src="https://www.iqair.com/dl/assets/aqi/ic-face-green.svg" alt="AQI Face" class="w-full h-full object-contain filter brightness-0">
+                                            <div class="border-t border-white border-opacity-30 pt-3">
+                                                <div class="flex justify-between items-center text-sm" style="color: #3f2f15;">
+                                                    <span class="opacity-80">Main pollutant:</span>
+                                                    <span class="font-semibold" id="indoorPollutant">PM10</span>
+                                                </div>
+                                                <div class="flex justify-between items-center text-sm mt-1" style="color: #3f2f15;">
+                                                    <span class="opacity-80">Concentration:</span>
+                                                    <span class="font-semibold"><span id="indoorConcentration">43.5</span> μg/m³</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="border-t border-white border-opacity-30 pt-3">
-                                        <div class="flex justify-between items-center text-sm" style="color: #3f2f15;">
-                                            <span class="opacity-80">Main pollutant:</span>
-                                            <span class="font-semibold" id="indoorPollutant">PM10</span>
-                                        </div>
-                                        <div class="flex justify-between items-center text-sm mt-1" style="color: #3f2f15;">
-                                            <span class="opacity-80">Concentration:</span>
-                                            <span class="font-semibold"><span id="indoorConcentration">43.5</span> μg/m³</span>
+                                </div>
+                                
+                                <!-- Outdoor Section -->
+                                <div class="flex-1">
+                                    <div class="text-lg mb-3 font-medium" style="color: #3f2f15;">OUTDOOR</div>
+                                    <div class="bg-yellow-500 rounded-xl shadow-lg overflow-hidden">
+                                        <div class="p-6">
+                                            <div class="flex justify-between items-start mb-4">
+                                                <div class="flex flex-col">
+                                                    <div class="flex items-end gap-3 mb-2">
+                                                        <div class="text-5xl font-light leading-none bg-black bg-opacity-20 px-3 py-1 rounded-lg" style="color: #3f2f15;" id="outdoorAQI">84</div>
+                                                        <div class="text-lg font-semibold pb-1" style="color: #3f2f15;" id="outdoorLevel">Moderate</div>
+                                                    </div>
+                                                    <div class="text-sm opacity-80" style="color: #3f2f15;">US AQI Index</div>
+                                                </div>
+                                                <div class="w-12 h-12 flex-shrink-0" id="outdoorFace">
+                                                    <img src="https://www.iqair.com/dl/assets/aqi/ic-face-yellow.svg" alt="AQI Face" class="w-full h-full object-contain filter brightness-0">
+                                                </div>
+                                            </div>
+                                            <div class="border-t border-white border-opacity-30 pt-3">
+                                                <div class="flex justify-between items-center text-sm" style="color: #3f2f15;">
+                                                    <span class="opacity-80">Main pollutant:</span>
+                                                    <span class="font-semibold" id="outdoorPollutant">PM2.5</span>
+                                                </div>
+                                                <div class="flex justify-between items-center text-sm mt-1" style="color: #3f2f15;">
+                                                    <span class="opacity-80">Concentration:</span>
+                                                    <span class="font-semibold"><span id="outdoorConcentration">27</span> μg/m³</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Outdoor Section -->
-                        <div class="flex-1">
-                            <div class="text-lg mb-3 font-medium" style="color: #3f2f15;">OUTDOOR</div>
-                            <div class="bg-yellow-500 rounded-xl shadow-lg overflow-hidden">
-                                <div class="p-6">
-                                    <div class="flex justify-between items-start mb-4">
-                                        <div class="flex flex-col">
-                                            <div class="flex items-end gap-3 mb-2">
-                                                <div class="text-5xl font-light leading-none bg-black bg-opacity-20 px-3 py-1 rounded-lg" style="color: #3f2f15;" id="outdoorAQI">84</div>
-                                                <div class="text-lg font-semibold pb-1" style="color: #3f2f15;" id="outdoorLevel">Moderate</div>
-                                            </div>
-                                            <div class="text-sm opacity-80" style="color: #3f2f15;">US AQI Index</div>
-                                        </div>
-                                        <div class="w-12 h-12 flex-shrink-0" id="outdoorFace">
-                                            <img src="https://www.iqair.com/dl/assets/aqi/ic-face-yellow.svg" alt="AQI Face" class="w-full h-full object-contain filter brightness-0">
-                                        </div>
-                                    </div>
-                                    <div class="border-t border-white border-opacity-30 pt-3">
-                                        <div class="flex justify-between items-center text-sm" style="color: #3f2f15;">
-                                            <span class="opacity-80">Main pollutant:</span>
-                                            <span class="font-semibold" id="outdoorPollutant">PM2.5</span>
-                                        </div>
-                                        <div class="flex justify-between items-center text-sm mt-1" style="color: #3f2f15;">
-                                            <span class="opacity-80">Concentration:</span>
-                                            <span class="font-semibold"><span id="outdoorConcentration">27</span> μg/m³</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
+                            <!-- Bottom Spacer -->
+                            <div class="flex-1"></div>
                         </div>
                     </div>
-                    
-                    <!-- Bottom Spacer -->
-                    <div class="flex-1"></div>
-                </div>
-            </div>
 
-            <!-- Slide 2: Pool Water Quality -->
-            <div class="absolute inset-0 slide-right" id="slide2">
-                <div class="p-8 h-full flex flex-col" style="background-color: #b7a591;">
-                    <!-- Header Title -->
-                    <div class="text-center mb-4">
-                        <h2 class="text-xl font-medium tracking-wide" style="color: #3f2f15;">
-                            <span class="inline-block px-4 py-2 bg-white bg-opacity-20 rounded-full">POOL WATER QUALITY</span>
-                        </h2>
+                    <!-- Slide 2: Pool Water Quality -->
+                    <div class="swiper-slide">
+                        <div class="p-8 h-full flex flex-col" style="background-color: #b7a591;">
+                            <!-- Header Title -->
+                            <div class="text-center mb-4">
+                                <h2 class="text-xl font-medium tracking-wide" style="color: #3f2f15;">
+                                    <span class="inline-block px-4 py-2 bg-white bg-opacity-20 rounded-full">POOL WATER QUALITY</span>
+                                </h2>
+                            </div>
+                            
+                            <!-- Content Grid -->
+                            <div class="grid grid-cols-4 gap-4 mb-6">
+                                <!-- Temperature -->
+                                <div class="flex flex-col">
+                                    <div class="text-sm mb-2 font-medium text-center" style="color: #3f2f15;">
+                                        <span class="inline-block px-2 py-1 bg-white bg-opacity-20 rounded-full text-xs">TEMP</span>
+                                    </div>
+                                    <div class="bg-blue-500 rounded-xl shadow-lg overflow-hidden h-32">
+                                        <div class="p-4">
+                                            <div class="flex flex-col items-center text-center">
+                                                <svg class="w-6 h-6 mb-2" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M15 13V5c0-1.66-1.34-3-3-3S9 3.34 9 5v8c-1.21.91-2 2.37-2 4 0 2.76 2.24 5 5 5s5-2.24 5-5c0-1.63-.79-3.09-2-4zm-4-2V5c0-.55.45-1 1-1s1 .45 1 1v6h-2zm1 9c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+                                                </svg>
+                                                <div class="text-4xl font-bold leading-none" style="color: #3f2f15;" id="poolTemperature">27.5</div>
+                                                <div class="text-sm font-medium" style="color: #3f2f15;">°C</div>
+                                                <div class="text-xs opacity-80 mt-1" style="color: #3f2f15;">OPTIMAL</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- pH Level -->
+                                <div class="flex flex-col">
+                                    <div class="text-sm mb-2 font-medium text-center" style="color: #3f2f15;">
+                                        <span class="inline-block px-2 py-1 bg-white bg-opacity-20 rounded-full text-xs">pH</span>
+                                    </div>
+                                    <div class="bg-green-500 rounded-xl shadow-lg overflow-hidden h-32">
+                                        <div class="p-4">
+                                            <div class="flex flex-col items-center text-center">
+                                                <svg class="w-6 h-6 mb-2" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm0-8h-2V7h2v2zm1 8V7h6v2h-4v2h3v2h-3v2h4v2h-6z"/>
+                                                </svg>
+                                                <div class="text-4xl font-bold leading-none" style="color: #3f2f15;" id="poolPH">7.4</div>
+                                                <div class="text-sm font-medium" style="color: #3f2f15;">pH</div>
+                                                <div class="text-xs opacity-80 mt-1" style="color: #3f2f15;">OPTIMAL</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- ORP -->
+                                <div class="flex flex-col">
+                                    <div class="text-sm mb-2 font-medium text-center" style="color: #3f2f15;">
+                                        <span class="inline-block px-2 py-1 bg-white bg-opacity-20 rounded-full text-xs">ORP</span>
+                                    </div>
+                                    <div class="bg-purple-500 rounded-xl shadow-lg overflow-hidden h-32">
+                                        <div class="p-4">
+                                            <div class="flex flex-col items-center text-center">
+                                                <svg class="w-6 h-6 mb-2" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M12 2L8 6v4h1v10h6V10h1V6l-4-4zm0 2.83L13.17 6H10.83L12 4.83zM10 8h4v1h-4V8zm1 3h2v8h-2v-8z"/>
+                                                    <circle cx="12" cy="20" r="1"/>
+                                                    <path d="M8 16h2v1H8zm6 0h2v1h-2z"/>
+                                                </svg>
+                                                <div class="text-4xl font-bold leading-none" style="color: #3f2f15;" id="poolORP">720</div>
+                                                <div class="text-sm font-medium" style="color: #3f2f15;">mV</div>
+                                                <div class="text-xs opacity-80 mt-1" style="color: #3f2f15;">GOOD</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- TDS -->
+                                <div class="flex flex-col">
+                                    <div class="text-sm mb-2 font-medium text-center" style="color: #3f2f15;">
+                                        <span class="inline-block px-2 py-1 bg-white bg-opacity-20 rounded-full text-xs">TDS</span>
+                                    </div>
+                                    <div class="bg-orange-500 rounded-xl shadow-lg overflow-hidden h-32">
+                                        <div class="p-4">
+                                            <div class="flex flex-col items-center text-center">
+                                                <svg class="w-6 h-6 mb-2" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
+                                                    <rect x="4" y="6" width="16" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                                                    <path d="M8 10h8M8 12h8M8 14h8"/>
+                                                    <circle cx="6" cy="9" r="0.5"/>
+                                                    <circle cx="18" cy="9" r="0.5"/>
+                                                    <circle cx="6" cy="12" r="0.5"/>
+                                                    <circle cx="18" cy="12" r="0.5"/>
+                                                    <circle cx="6" cy="15" r="0.5"/>
+                                                    <circle cx="18" cy="15" r="0.5"/>
+                                                    <path d="M10 3V6M14 3V6M10 18V21M14 18V21"/>
+                                                </svg>
+                                                <div class="text-4xl font-bold leading-none" style="color: #3f2f15;" id="poolTDS">450</div>
+                                                <div class="text-sm font-medium" style="color: #3f2f15;">ppm</div>
+                                                <div class="text-xs opacity-80 mt-1" style="color: #3f2f15;">GOOD</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Water Index Status -->
+                            <div class="mb-6">
+                                <div class="bg-white bg-opacity-20 rounded-xl p-4 text-center">
+                                    <div class="text-lg font-medium mb-1" style="color: #3f2f15;">Water Index</div>
+                                    <div class="text-2xl font-bold text-green-600">OPTIMAL</div>
+                                    <div class="text-sm opacity-80" style="color: #3f2f15;">Safe for swimming</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bottom Spacer -->
+                            <div class="flex-1"></div>
+                        </div>
                     </div>
-                    
-                    <!-- Content Grid -->
-                    <div class="grid grid-cols-4 gap-4 mb-6">
-                        <!-- Temperature -->
-                        <div class="flex flex-col">
-                            <div class="text-sm mb-2 font-medium text-center" style="color: #3f2f15;">
-                                <span class="inline-block px-2 py-1 bg-white bg-opacity-20 rounded-full text-xs">TEMP</span>
-                            </div>
-                            <div class="bg-blue-500 rounded-xl shadow-lg overflow-hidden h-32">
-                                <div class="p-4">
-                                    <div class="flex flex-col items-center text-center">
-                                        <svg class="w-6 h-6 mb-2" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M15 13V5c0-1.66-1.34-3-3-3S9 3.34 9 5v8c-1.21.91-2 2.37-2 4 0 2.76 2.24 5 5 5s5-2.24 5-5c0-1.63-.79-3.09-2-4zm-4-2V5c0-.55.45-1 1-1s1 .45 1 1v6h-2zm1 9c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
-                                        </svg>
-                                        <div class="text-4xl font-bold leading-none" style="color: #3f2f15;" id="poolTemperature">27.5</div>
-                                        <div class="text-sm font-medium" style="color: #3f2f15;">°C</div>
-                                        <div class="text-xs opacity-80 mt-1" style="color: #3f2f15;">OPTIMAL</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- pH Level -->
-                        <div class="flex flex-col">
-                            <div class="text-sm mb-2 font-medium text-center" style="color: #3f2f15;">
-                                <span class="inline-block px-2 py-1 bg-white bg-opacity-20 rounded-full text-xs">pH</span>
-                            </div>
-                            <div class="bg-green-500 rounded-xl shadow-lg overflow-hidden h-32">
-                                <div class="p-4">
-                                    <div class="flex flex-col items-center text-center">
-                                        <svg class="w-6 h-6 mb-2" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm0-8h-2V7h2v2zm1 8V7h6v2h-4v2h3v2h-3v2h4v2h-6z"/>
-                                        </svg>
-                                        <div class="text-4xl font-bold leading-none" style="color: #3f2f15;" id="poolPH">7.4</div>
-                                        <div class="text-sm font-medium" style="color: #3f2f15;">pH</div>
-                                        <div class="text-xs opacity-80 mt-1" style="color: #3f2f15;">OPTIMAL</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- ORP -->
-                        <div class="flex flex-col">
-                            <div class="text-sm mb-2 font-medium text-center" style="color: #3f2f15;">
-                                <span class="inline-block px-2 py-1 bg-white bg-opacity-20 rounded-full text-xs">ORP</span>
-                            </div>
-                            <div class="bg-purple-500 rounded-xl shadow-lg overflow-hidden h-32">
-                                <div class="p-4">
-                                    <div class="flex flex-col items-center text-center">
-                                        <svg class="w-6 h-6 mb-2" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 2L8 6v4h1v10h6V10h1V6l-4-4zm0 2.83L13.17 6H10.83L12 4.83zM10 8h4v1h-4V8zm1 3h2v8h-2v-8z"/>
-                                            <circle cx="12" cy="20" r="1"/>
-                                            <path d="M8 16h2v1H8zm6 0h2v1h-2z"/>
-                                        </svg>
-                                        <div class="text-4xl font-bold leading-none" style="color: #3f2f15;" id="poolORP">720</div>
-                                        <div class="text-sm font-medium" style="color: #3f2f15;">mV</div>
-                                        <div class="text-xs opacity-80 mt-1" style="color: #3f2f15;">GOOD</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- TDS -->
-                        <div class="flex flex-col">
-                            <div class="text-sm mb-2 font-medium text-center" style="color: #3f2f15;">
-                                <span class="inline-block px-2 py-1 bg-white bg-opacity-20 rounded-full text-xs">TDS</span>
-                            </div>
-                            <div class="bg-orange-500 rounded-xl shadow-lg overflow-hidden h-32">
-                                <div class="p-4">
-                                    <div class="flex flex-col items-center text-center">
-                                        <svg class="w-6 h-6 mb-2" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
-                                            <rect x="4" y="6" width="16" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>
-                                            <path d="M8 10h8M8 12h8M8 14h8"/>
-                                            <circle cx="6" cy="9" r="0.5"/>
-                                            <circle cx="18" cy="9" r="0.5"/>
-                                            <circle cx="6" cy="12" r="0.5"/>
-                                            <circle cx="18" cy="12" r="0.5"/>
-                                            <circle cx="6" cy="15" r="0.5"/>
-                                            <circle cx="18" cy="15" r="0.5"/>
-                                            <path d="M10 3V6M14 3V6M10 18V21M14 18V21"/>
-                                        </svg>
-                                        <div class="text-4xl font-bold leading-none" style="color: #3f2f15;" id="poolTDS">450</div>
-                                        <div class="text-sm font-medium" style="color: #3f2f15;">ppm</div>
-                                        <div class="text-xs opacity-80 mt-1" style="color: #3f2f15;">GOOD</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Water Index Status -->
-                    <div class="mb-6">
-                        <div class="bg-white bg-opacity-20 rounded-xl p-4 text-center">
-                            <div class="text-lg font-medium mb-1" style="color: #3f2f15;">Water Index</div>
-                            <div class="text-2xl font-bold text-green-600">OPTIMAL</div>
-                            <div class="text-sm opacity-80" style="color: #3f2f15;">Safe for swimming</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bottom Spacer -->
-                    <div class="flex-1"></div>
                 </div>
             </div>
         </div>
@@ -1632,108 +1606,73 @@
             }
         }
 
-        // Simple slideshow functionality with cleanup tracking
-        let currentSlide = 0;
-        let slideInterval = null;
-        let slideshowInitialized = false;
-        let slideshowRunning = false; // Global running state flag
-        let allTimeouts = []; // Track all timeouts for cleanup
+        // Swiper.js slideshow functionality
+        let swiper = null;
         let slideshowConfig = {
             enabled: true,
             interval: 10000, // 10 seconds default
             autoPlay: true
         };
-        
-        // Complete cleanup function
-        function clearAllSlideshowTimers() {
-            // Clear main interval
-            if (slideInterval) {
-                clearInterval(slideInterval);
-                slideInterval = null;
-            }
-            
-            // Clear all timeouts
-            allTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
-            allTimeouts = [];
-            
-            // Reset running state
-            slideshowRunning = false;
-            
-            console.log('🧹 All slideshow timers cleared, running state reset');
-        }
 
-        function showSlide(slideIndex) {
-            console.log(`🎬 Instant forward carousel to slide: ${slideIndex}`);
+        function initializeSwiper() {
+            console.log('🎬 Initializing Swiper.js slideshow...');
             
-            const slide1 = document.getElementById('slide1');
-            const slide2 = document.getElementById('slide2');
-            
-            if (!slide1 || !slide2) {
-                console.error('❌ Slide elements not found');
+            // Make sure Swiper is available
+            if (typeof Swiper === 'undefined') {
+                console.error('❌ Swiper.js not loaded');
                 return;
             }
-            
-            // Instant positioning - no setTimeout conflicts
-            if (slideIndex === 0) {
-                console.log('📺 Instant show Air Quality');
-                // Show slide 1, hide slide 2 instantly
-                slide1.className = 'absolute inset-0 slide-center';
-                slide2.className = 'absolute inset-0 slide-right'; // Ready for next entrance
-            } else {
-                console.log('🏊‍♂️ Instant show Pool Water');  
-                // Show slide 2, hide slide 1 instantly
-                slide2.className = 'absolute inset-0 slide-center';
-                slide1.className = 'absolute inset-0 slide-right'; // Ready for next entrance
-            }
-            
-            currentSlide = slideIndex;
-            console.log('✅ Instant positioning complete');
-        }
 
-        function nextSlide() {
-            if (!slideshowRunning) {
-                console.log('⚠️ NextSlide called but slideshow not running - IGNORING');
+            const swiperContainer = document.querySelector('.quality-slideshow');
+            if (!swiperContainer) {
+                console.error('❌ Swiper container not found');
                 return;
             }
-            
-            currentSlide = (currentSlide + 1) % 2;
-            console.log(`🔄 NextSlide: Moving to slide ${currentSlide}`);
-            showSlide(currentSlide);
-        }
 
-        // Removed prevSlide - slideshow only moves forward in loop
-        function prevSlide() {
-            // Force forward loop instead of backward
-            nextSlide();
-        }
+            // Initialize Swiper with configuration
+            swiper = new Swiper('.quality-slideshow', {
+                // Basic settings
+                direction: 'horizontal',
+                loop: true,
+                speed: 1000, // 1 second transition
+                
+                // Auto-play configuration
+                autoplay: slideshowConfig.enabled && slideshowConfig.autoPlay ? {
+                    delay: slideshowConfig.interval,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: false
+                } : false,
 
-        function startSlideshow() {
-            if (slideshowRunning) {
-                console.log('⚠️ Slideshow already running - IGNORING start request');
-                return;
-            }
-            
-            // ALWAYS clear everything first to prevent overlaps
-            clearAllSlideshowTimers();
-            
-            if (slideshowConfig.enabled && slideshowConfig.autoPlay) {
-                slideshowRunning = true;
-                slideInterval = setInterval(() => {
-                    console.log('⏰ Auto slideshow trigger');
-                    nextSlide();
-                }, slideshowConfig.interval);
-                console.log(`🎬 SINGLE slideshow started - interval: ${slideshowConfig.interval}ms`);
-            }
-        }
+                // Touch/swipe settings for tablet
+                touchRatio: 1,
+                touchAngle: 45,
+                grabCursor: true,
+                
+                // Smooth transitions
+                effect: 'slide',
+                
+                // No pagination dots needed
+                pagination: false,
+                
+                // No navigation arrows needed
+                navigation: false,
 
-        function stopSlideshow() {
-            clearAllSlideshowTimers();
-            console.log('⏸️ Slideshow completely stopped');
-        }
+                // Events
+                on: {
+                    slideChange: function () {
+                        console.log('🔄 Swiper slide changed to:', this.activeIndex);
+                    },
+                    autoplayStart: function () {
+                        console.log('▶️ Swiper autoplay started');
+                    },
+                    autoplayStop: function () {
+                        console.log('⏸️ Swiper autoplay stopped');
+                    }
+                }
+            });
 
-        function restartSlideshow() {
-            stopSlideshow();
-            startSlideshow();
+            console.log('✅ Swiper slideshow initialized successfully');
+            return swiper;
         }
 
         function updateSlideshowConfig(config) {
@@ -1743,8 +1682,40 @@
                 slideshowConfig.showAirQuality = config.slideshow.showAirQuality;
                 slideshowConfig.showPoolWater = config.slideshow.showPoolWater;
                 
-                console.log('🎬 Slideshow config updated - NO RESTART (initialization handles this)');
-                // Do NOT restart here - let initialization handle it
+                // Update Swiper autoplay if already initialized
+                if (swiper) {
+                    if (slideshowConfig.enabled && slideshowConfig.autoPlay) {
+                        swiper.autoplay.start();
+                        // Update autoplay delay
+                        swiper.params.autoplay.delay = slideshowConfig.interval;
+                    } else {
+                        swiper.autoplay.stop();
+                    }
+                }
+                
+                console.log('🎬 Swiper config updated:', slideshowConfig);
+            }
+        }
+
+        function stopSlideshow() {
+            if (swiper && swiper.autoplay) {
+                swiper.autoplay.stop();
+                console.log('⏸️ Swiper slideshow stopped');
+            }
+        }
+
+        function startSlideshow() {
+            if (swiper && swiper.autoplay && slideshowConfig.enabled && slideshowConfig.autoPlay) {
+                swiper.autoplay.start();
+                console.log('▶️ Swiper slideshow started');
+            }
+        }
+
+        function restartSlideshow() {
+            if (swiper) {
+                stopSlideshow();
+                startSlideshow();
+                console.log('🔄 Swiper slideshow restarted');
             }
         }
 
@@ -1770,34 +1741,16 @@
                 console.error('❌ Error in updateDisplay:', error);
             }
             
-            // Initialize slideshow only once - prevent duplicate initialization
-            if (!slideshowInitialized) {
-                console.log('🎬 Slideshow initializing (FIRST TIME ONLY)...');
-                
-                // Check if slideshow elements exist
-                const slide1 = document.getElementById('slide1');
-                const slide2 = document.getElementById('slide2');
-                
-                if (slide1 && slide2) {
-                    console.log('✅ Slideshow elements found, setting up...');
-                    
-                    // IMPORTANT: Set flag BEFORE doing anything to prevent re-entry
-                    slideshowInitialized = true;
-                    
-                    // Initialize slides - clean slate first, then set positions
-                    slide1.className = 'absolute inset-0 slide-center';
-                    slide2.className = 'absolute inset-0 slide-right';
-                    currentSlide = 0;
-                    
-                    console.log('🎬 Clean slideshow initialized - auto-play only');
-                
-                // No dot navigation - auto slideshow only
-                
-                // Start auto slideshow
-                startSlideshow();
+            // Initialize Swiper.js slideshow
+            try {
+                const swiperInstance = initializeSwiper();
+                if (swiperInstance) {
+                    console.log('✅ Swiper slideshow ready with touch/swipe support for tablets');
                 } else {
-                    console.warn('❌ Slideshow elements not found');
+                    console.warn('❌ Failed to initialize Swiper slideshow');
                 }
+            } catch (error) {
+                console.error('❌ Error initializing Swiper:', error);
             }
             
             // Fullscreen button
