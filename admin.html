@@ -111,8 +111,9 @@
             }
         }
         
-        /* Fix first button spacing completely */
-        nav .space-y-2 > *:first-child {
+        /* Fix first button spacing completely - highest specificity */
+        #sidebar nav .space-y-2 > .sidebar-nav-btn:first-child,
+        #sidebar .sidebar-nav-btn:first-child {
             margin-top: 0 !important;
             padding-top: 0 !important;
         }
