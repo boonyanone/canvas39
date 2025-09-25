@@ -36,15 +36,16 @@
             padding: 0 !important;
         }
         
-        /* Slideshow optimization for tablet */
+        /* Simple slideshow with opacity */
         #slide1, #slide2 {
-            -webkit-transform: translateZ(0);
-            transform: translateZ(0);
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            will-change: transform;
-            -webkit-transition: transform 1s ease-in-out !important;
-            transition: transform 1s ease-in-out !important;
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+            pointer-events: auto;
+        }
+        
+        #slide1.hidden, #slide2.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
         
         /* Hardware acceleration for smooth transitions */
@@ -157,17 +158,14 @@
         
         // Debug function สำหรับ slideshow
         window.debugSlideshow = function() {
-            console.log('🎬 Slideshow Debug Status:');
+            console.log('🎬 Simple Slideshow Debug:');
             console.log('- Current slide:', currentSlide);
             console.log('- Slide interval:', slideInterval);
-            console.log('- Is transitioning:', isTransitioning);
-            console.log('- Slide queue:', slideQueue);
-            console.log('- Active timeouts:', allTimeouts.length);
             console.log('- Slideshow initialized:', slideshowInitialized);
             console.log('- Slideshow config:', slideshowConfig);
             
             // Force stop function for testing
-            window.forceStopSlideshow = forceStopAllSlideshow;
+            window.forceStopSlideshow = stopSlideshow;
         };
     </script>
     
@@ -310,7 +308,7 @@
             </div>
             
             <!-- Slide 1: Air Quality -->
-            <div class="absolute inset-0 transition-transform duration-1000 ease-in-out" id="slide1" style="transform: translateX(0%) !important;">
+            <div class="absolute inset-0" id="slide1">
                 <div class="p-8 h-full flex flex-col">
                     <!-- Header Title -->
                     <div class="text-center mb-4">
@@ -390,7 +388,7 @@
             </div>
 
             <!-- Slide 2: Pool Water Quality -->
-            <div class="absolute inset-0 transition-transform duration-1000 ease-in-out" id="slide2" style="transform: translateX(100%) !important;">
+            <div class="absolute inset-0 hidden" id="slide2">
                 <div class="p-8 h-full flex flex-col" style="background-color: #b7a591;">
                     <!-- Header Title -->
                     <div class="text-center mb-4">
@@ -1612,54 +1610,18 @@
             }
         }
 
-        // Slideshow functionality - Global state
+        // Simple slideshow functionality
         let currentSlide = 0;
         let slideInterval = null;
-        let isTransitioning = false;
         let slideshowInitialized = false;
-        let slideQueue = [];
-        let allTimeouts = []; // Track all timeouts
         let slideshowConfig = {
             enabled: true,
             interval: 10000, // 10 seconds default
-            autoPlay: true,
-            showAirQuality: true,
-            showPoolWater: true
+            autoPlay: true
         };
 
-        // Force stop all slideshow activities
-        function forceStopAllSlideshow() {
-            console.log('🛑 Force stopping ALL slideshow activities...');
-            
-            // Clear main interval
-            if (slideInterval !== null) {
-                clearInterval(slideInterval);
-                slideInterval = null;
-            }
-            
-            // Clear all tracked timeouts
-            allTimeouts.forEach(timeout => clearTimeout(timeout));
-            allTimeouts = [];
-            
-            // Reset all flags
-            isTransitioning = false;
-            slideQueue = [];
-            
-            console.log('🛑 All slideshow activities stopped');
-        }
-
-        function showSlide(slideIndex, force = false) {
-            if (isTransitioning && !force) {
-                console.log('⏸️ Transition in progress, queuing slide request...');
-                // Add to queue instead of ignoring
-                if (slideQueue.indexOf(slideIndex) === -1) {
-                    slideQueue.push(slideIndex);
-                }
-                return;
-            }
-            
-            console.log(`🎬 showSlide called with index: ${slideIndex} (FORWARD-ONLY CAROUSEL) - Queue: [${slideQueue.join(',')}]`);
-            isTransitioning = true;
+        function showSlide(slideIndex) {
+            console.log(`🎬 Simple showSlide: ${slideIndex}`);
             
             const slide1 = document.getElementById('slide1');
             const slide2 = document.getElementById('slide2');
@@ -1668,20 +1630,15 @@
             
             if (!slide1 || !slide2) {
                 console.error('❌ Slide elements not found');
-                isTransitioning = false;
                 return;
             }
             
-            // Forward-only carousel: slides always move from right to left
             if (slideIndex === 0) {
-                console.log('📺 Forward to slide 1 (Air Quality) - slides move left');
-                // Slide 1 slides in from right (100%) to center (0%)
-                // Slide 2 slides out from center (0%) to left (-100%)
-                slide1.style.setProperty('transform', 'translateX(0%)', 'important');
-                slide2.style.setProperty('transform', 'translateX(-100%)', 'important');
-                console.log('🔧 Applied transforms - Slide1:', slide1.style.transform, 'Slide2:', slide2.style.transform);
+                console.log('📺 Show slide 1 (Air Quality)');
+                slide1.classList.remove('hidden');
+                slide2.classList.add('hidden');
                 
-                // Update dot indicators
+                // Update dots
                 if (dot1) {
                     dot1.classList.remove('bg-opacity-30');
                     dot1.classList.add('bg-opacity-60');
@@ -1691,14 +1648,11 @@
                     dot2.classList.add('bg-opacity-30');
                 }
             } else {
-                console.log('🏊‍♂️ Forward to slide 2 (Pool Water) - slides move left');
-                // Slide 2 slides in from right (100%) to center (0%)
-                // Slide 1 slides out from center (0%) to left (-100%)
-                slide2.style.setProperty('transform', 'translateX(0%)', 'important');
-                slide1.style.setProperty('transform', 'translateX(-100%)', 'important');
-                console.log('🔧 Applied transforms - Slide1:', slide1.style.transform, 'Slide2:', slide2.style.transform);
+                console.log('🏊‍♂️ Show slide 2 (Pool Water)');
+                slide2.classList.remove('hidden');
+                slide1.classList.add('hidden');
                 
-                // Update dot indicators
+                // Update dots
                 if (dot2) {
                     dot2.classList.remove('bg-opacity-30');
                     dot2.classList.add('bg-opacity-60');
@@ -1710,39 +1664,9 @@
             }
             
             currentSlide = slideIndex;
-            
-            // Reset transition flag after transition completes
-            const transitionTimeout = setTimeout(() => {
-                isTransitioning = false;
-                
-                // Prepare the next slide for forward movement
-                if (slideIndex === 0) {
-                    // Current: slide1 at center, prepare slide2 at right for next forward movement
-                    slide2.style.setProperty('transform', 'translateX(100%)', 'important');
-                } else {
-                    // Current: slide2 at center, prepare slide1 at right for next forward movement
-                    slide1.style.setProperty('transform', 'translateX(100%)', 'important');
-                }
-                
-                console.log('🔄 Transition complete. Next slide prepared for forward movement');
-                
-                // Process queued slide requests
-                if (slideQueue.length > 0) {
-                    const nextSlideIndex = slideQueue.shift(); // Take first item from queue
-                    console.log(`📋 Processing queued slide: ${nextSlideIndex}, remaining queue: [${slideQueue.join(',')}]`);
-                    const queueTimeout = setTimeout(() => showSlide(nextSlideIndex), 100);
-                    allTimeouts.push(queueTimeout);
-                }
-            }, 1200);
-            allTimeouts.push(transitionTimeout);
         }
 
         function nextSlide() {
-            if (isTransitioning) {
-                console.log('⏸️ NextSlide called during transition, skipping to prevent overlap');
-                return;
-            }
-            
             currentSlide = (currentSlide + 1) % 2;
             console.log(`🔄 NextSlide: Moving to slide ${currentSlide}`);
             showSlide(currentSlide);
@@ -1755,24 +1679,25 @@
         }
 
         function startSlideshow() {
-            // Force stop everything first
-            forceStopAllSlideshow();
+            if (slideInterval) {
+                clearInterval(slideInterval);
+            }
             
             if (slideshowConfig.enabled && slideshowConfig.autoPlay) {
                 slideInterval = setInterval(() => {
-                    console.log('⏰ Auto slideshow trigger');
-                    if (!isTransitioning) {
-                        nextSlide();
-                    } else {
-                        console.log('⏰ Auto trigger skipped - transition in progress');
-                    }
+                    console.log('⏰ Simple auto slideshow trigger');
+                    nextSlide();
                 }, slideshowConfig.interval);
-                console.log(`🎬 Slideshow started - interval: ${slideshowConfig.interval}ms`);
+                console.log(`🎬 Simple slideshow started - interval: ${slideshowConfig.interval}ms`);
             }
         }
 
         function stopSlideshow() {
-            forceStopAllSlideshow();
+            if (slideInterval) {
+                clearInterval(slideInterval);
+                slideInterval = null;
+                console.log('⏸️ Simple slideshow stopped');
+            }
         }
 
         function restartSlideshow() {
@@ -1818,10 +1743,7 @@
             
             // Initialize slideshow only once
             if (!slideshowInitialized) {
-                console.log('🎬 Initializing slideshow...');
-                
-                // Force clean start
-                forceStopAllSlideshow();
+                console.log('🎬 Simple slideshow initializing...');
                 
                 // Check if slideshow elements exist
                 const slide1 = document.getElementById('slide1');
@@ -1831,9 +1753,9 @@
                     console.log('✅ Slideshow elements found, setting up...');
                     slideshowInitialized = true;
                     
-                    // Initialize slides positioning for forward-only loop
-                    slide1.style.setProperty('transform', 'translateX(0%)', 'important');    // Slide 1 starts at center
-                    slide2.style.setProperty('transform', 'translateX(100%)', 'important');  // Slide 2 starts at right
+                    // Initialize slides - simple setup
+                    slide1.classList.remove('hidden');
+                    slide2.classList.add('hidden');
                     currentSlide = 0;
                     
                     // Initialize dots
@@ -1848,58 +1770,24 @@
                         dot2.classList.add('bg-opacity-30');
                     }
                     
-                    console.log('🎬 Slideshow initialized - Slide 1 at center, Slide 2 ready at right');
+                    console.log('🎬 Simple slideshow initialized - Slide 1 visible, Slide 2 hidden');
                 
-                // Setup navigation dots (reuse already defined variables)
-                let dotClickTimeout = null;
-                
+                // Setup navigation dots - simple click handlers
                 if (dot1) {
                     dot1.addEventListener('click', () => {
-                        console.log('🔘 Dot 1 clicked - advance forward');
-                        
-                        // Prevent rapid clicks
-                        if (dotClickTimeout) {
-                            console.log('⚠️ Dot click debounced');
-                            return;
-                        }
-                        
-                        // Always advance to next slide regardless of which dot is clicked
+                        console.log('🔘 Dot 1 clicked - advance to next');
                         nextSlide();
-                        
-                        // Pause slideshow briefly then restart
                         stopSlideshow();
-                        
-                        // Set debounce timeout
-                        dotClickTimeout = setTimeout(() => {
-                            dotClickTimeout = null;
-                            startSlideshow();
-                        }, 2000); // 2 second pause
-                        allTimeouts.push(dotClickTimeout);
+                        setTimeout(() => startSlideshow(), 2000);
                     });
                 }
                 
                 if (dot2) {
                     dot2.addEventListener('click', () => {
-                        console.log('🔘 Dot 2 clicked - advance forward');
-                        
-                        // Prevent rapid clicks
-                        if (dotClickTimeout) {
-                            console.log('⚠️ Dot click debounced');
-                            return;
-                        }
-                        
-                        // Always advance to next slide regardless of which dot is clicked
+                        console.log('🔘 Dot 2 clicked - advance to next');
                         nextSlide();
-                        
-                        // Pause slideshow briefly then restart
                         stopSlideshow();
-                        
-                        // Set debounce timeout
-                        dotClickTimeout = setTimeout(() => {
-                            dotClickTimeout = null;
-                            startSlideshow();
-                        }, 2000); // 2 second pause
-                        allTimeouts.push(dotClickTimeout);
+                        setTimeout(() => startSlideshow(), 2000);
                     });
                 }
                 
