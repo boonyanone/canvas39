@@ -6,6 +6,20 @@
     <title>Canvas 39 - Admin Panel</title>
     
     <!-- Tailwind CSS -->
+    <script>
+        // ปิด warning console
+        (function() {
+            const originalWarn = console.warn;
+            console.warn = function(...args) {
+                const message = args.join(' ');
+                if (message.includes('tailwindcss.com should not be used in production') || 
+                    message.includes('cdn.tailwindcss.com should not be used in production')) {
+                    return; // ซ่อน warning นี้
+                }
+                originalWarn.apply(console, args);
+            };
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -38,12 +52,12 @@
     </style>
 </head>
 <body class="bg-gray-100">
-    <div class="min-h-screen bg-gray-100">
+    <div class="flex h-screen bg-gray-100">
         <!-- Mobile Overlay -->
         <div id="mobileOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
         
         <!-- Sidebar Navigation -->
-        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0" id="sidebar">
+        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:relative lg:transform-none" id="sidebar">
             <!-- Logo Header -->
             <div class="flex items-center justify-center h-16 px-4 bg-amber-900" style="background-color: #3f2f15;">
                 <h1 class="text-lg font-semibold text-white">Canvas 39 Admin</h1>
@@ -81,7 +95,7 @@
         </div>
 
         <!-- Main Content Area -->
-        <div class="lg:pl-64">
+        <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Top Header -->
             <header class="bg-white shadow-sm border-b">
                 <div class="px-4 sm:px-6 lg:px-8">
@@ -124,7 +138,7 @@
             </header>
 
             <!-- Main Content -->
-            <main class="flex-1">
+            <main class="flex-1 overflow-y-auto">
                 <div class="py-6">
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         
