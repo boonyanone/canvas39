@@ -160,9 +160,10 @@
         
         // Debug function สำหรับ slideshow
         window.debugSlideshow = function() {
-            console.log('🎬 Clean Slideshow Debug (No Dots):');
+            console.log('🎬 Protected Slideshow Debug:');
             console.log('- Current slide:', currentSlide);
             console.log('- Slide interval:', slideInterval);
+            console.log('- Running state:', slideshowRunning);
             console.log('- Active timeouts:', allTimeouts.length);
             console.log('- Slideshow initialized:', slideshowInitialized);
             console.log('- Slideshow config:', slideshowConfig);
@@ -171,7 +172,7 @@
             const slide2 = document.getElementById('slide2');
             console.log('- Slide1 classes:', slide1?.className);
             console.log('- Slide2 classes:', slide2?.className);
-            console.log('- Dots removed: No manual navigation');
+            console.log('- Protected: Single instance only');
             
             // Emergency functions for testing
             window.forceStopSlideshow = stopSlideshow;
@@ -1620,6 +1621,7 @@
         let currentSlide = 0;
         let slideInterval = null;
         let slideshowInitialized = false;
+        let slideshowRunning = false; // Global running state flag
         let allTimeouts = []; // Track all timeouts for cleanup
         let slideshowConfig = {
             enabled: true,
@@ -1639,7 +1641,10 @@
             allTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
             allTimeouts = [];
             
-            console.log('🧹 All slideshow timers cleared');
+            // Reset running state
+            slideshowRunning = false;
+            
+            console.log('🧹 All slideshow timers cleared, running state reset');
         }
 
         function showSlide(slideIndex) {
@@ -1688,6 +1693,11 @@
         }
 
         function nextSlide() {
+            if (!slideshowRunning) {
+                console.log('⚠️ NextSlide called but slideshow not running - IGNORING');
+                return;
+            }
+            
             currentSlide = (currentSlide + 1) % 2;
             console.log(`🔄 NextSlide: Moving to slide ${currentSlide}`);
             showSlide(currentSlide);
@@ -1700,15 +1710,21 @@
         }
 
         function startSlideshow() {
+            if (slideshowRunning) {
+                console.log('⚠️ Slideshow already running - IGNORING start request');
+                return;
+            }
+            
             // ALWAYS clear everything first to prevent overlaps
             clearAllSlideshowTimers();
             
             if (slideshowConfig.enabled && slideshowConfig.autoPlay) {
+                slideshowRunning = true;
                 slideInterval = setInterval(() => {
                     console.log('⏰ Auto slideshow trigger');
                     nextSlide();
                 }, slideshowConfig.interval);
-                console.log(`🎬 Clean slideshow started - interval: ${slideshowConfig.interval}ms`);
+                console.log(`🎬 SINGLE slideshow started - interval: ${slideshowConfig.interval}ms`);
             }
         }
 
@@ -1724,21 +1740,13 @@
 
         function updateSlideshowConfig(config) {
             if (config.slideshow) {
-                const oldInterval = slideshowConfig.interval;
                 slideshowConfig.enabled = config.slideshow.enabled;
                 slideshowConfig.interval = config.slideshow.interval * 1000; // Convert to milliseconds
                 slideshowConfig.showAirQuality = config.slideshow.showAirQuality;
                 slideshowConfig.showPoolWater = config.slideshow.showPoolWater;
                 
-                console.log('🎬 Slideshow config updated:', slideshowConfig);
-                
-                // Only restart if interval changed or if not initialized yet
-                if (oldInterval !== slideshowConfig.interval || !slideshowInitialized) {
-                    console.log('🔄 Restarting slideshow due to config change');
-                    restartSlideshow();
-                } else {
-                    console.log('⚠️ Slideshow config update skipped - no significant changes');
-                }
+                console.log('🎬 Slideshow config updated - NO RESTART (initialization handles this)');
+                // Do NOT restart here - let initialization handle it
             }
         }
 
