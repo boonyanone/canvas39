@@ -384,7 +384,7 @@
                                         <svg class="w-6 h-6 mb-2" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M15 13V5c0-1.66-1.34-3-3-3S9 3.34 9 5v8c-1.21.91-2 2.37-2 4 0 2.76 2.24 5 5 5s5-2.24 5-5c0-1.63-.79-3.09-2-4zm-4-2V5c0-.55.45-1 1-1s1 .45 1 1v6h-2zm1 9c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
                                         </svg>
-                                        <div class="text-3xl font-bold leading-none" style="color: #3f2f15;" id="poolTemperature">27.5</div>
+                                        <div class="text-4xl font-bold leading-none" style="color: #3f2f15;" id="poolTemperature">27.5</div>
                                         <div class="text-sm font-medium" style="color: #3f2f15;">°C</div>
                                         <div class="text-xs opacity-80 mt-1" style="color: #3f2f15;">OPTIMAL</div>
                                     </div>
@@ -403,7 +403,7 @@
                                         <svg class="w-6 h-6 mb-2" style="color: #3f2f15;" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm0-8h-2V7h2v2zm1 8V7h6v2h-4v2h3v2h-3v2h4v2h-6z"/>
                                         </svg>
-                                        <div class="text-3xl font-bold leading-none" style="color: #3f2f15;" id="poolPH">7.4</div>
+                                        <div class="text-4xl font-bold leading-none" style="color: #3f2f15;" id="poolPH">7.4</div>
                                         <div class="text-sm font-medium" style="color: #3f2f15;">pH</div>
                                         <div class="text-xs opacity-80 mt-1" style="color: #3f2f15;">OPTIMAL</div>
                                     </div>
@@ -424,7 +424,7 @@
                                             <circle cx="12" cy="20" r="1"/>
                                             <path d="M8 16h2v1H8zm6 0h2v1h-2z"/>
                                         </svg>
-                                        <div class="text-3xl font-bold leading-none" style="color: #3f2f15;" id="poolORP">720</div>
+                                        <div class="text-4xl font-bold leading-none" style="color: #3f2f15;" id="poolORP">720</div>
                                         <div class="text-sm font-medium" style="color: #3f2f15;">mV</div>
                                         <div class="text-xs opacity-80 mt-1" style="color: #3f2f15;">GOOD</div>
                                     </div>
@@ -451,7 +451,7 @@
                                             <circle cx="18" cy="15" r="0.5"/>
                                             <path d="M10 3V6M14 3V6M10 18V21M14 18V21"/>
                                         </svg>
-                                        <div class="text-3xl font-bold leading-none" style="color: #3f2f15;" id="poolTDS">450</div>
+                                        <div class="text-4xl font-bold leading-none" style="color: #3f2f15;" id="poolTDS">450</div>
                                         <div class="text-sm font-medium" style="color: #3f2f15;">ppm</div>
                                         <div class="text-xs opacity-80 mt-1" style="color: #3f2f15;">GOOD</div>
                                     </div>
@@ -1603,7 +1603,7 @@
                 return;
             }
             
-            console.log(`🎬 showSlide called with index: ${slideIndex}`);
+            console.log(`🎬 showSlide called with index: ${slideIndex} (FORWARD LOOP ONLY)`);
             isTransitioning = true;
             
             const slide1 = document.getElementById('slide1');
@@ -1617,14 +1617,14 @@
                 return;
             }
             
-            // Clear all slide classes
-            slide1.classList.remove('slide-active', 'slide-next', 'slide-prev');
-            slide2.classList.remove('slide-active', 'slide-next', 'slide-prev');
-            
+            // Always use forward slide motion - slide from right to left
             if (slideIndex === 0) {
-                console.log('📺 Showing slide 1 (Air Quality)');
+                console.log('📺 Transition to slide 1 (Air Quality) - slide from right');
+                // Slide 2 goes off-screen to left, Slide 1 comes from right
+                slide2.classList.remove('slide-active');
+                slide2.style.transform = 'translateX(-100%)'; // Exit left
+                slide1.classList.remove('slide-next');
                 slide1.classList.add('slide-active');
-                slide2.classList.add('slide-next');
                 if (dot1) {
                     dot1.classList.remove('bg-opacity-30');
                     dot1.classList.add('bg-opacity-60');
@@ -1634,8 +1634,11 @@
                     dot2.classList.add('bg-opacity-30');
                 }
             } else {
-                console.log('🏊‍♂️ Showing slide 2 (Pool Water)');
-                slide1.classList.add('slide-prev');
+                console.log('🏊‍♂️ Transition to slide 2 (Pool Water) - slide from right');
+                // Slide 1 goes off-screen to left, Slide 2 comes from right
+                slide1.classList.remove('slide-active');
+                slide1.style.transform = 'translateX(-100%)'; // Exit left
+                slide2.classList.remove('slide-next');
                 slide2.classList.add('slide-active');
                 if (dot2) {
                     dot2.classList.remove('bg-opacity-30');
@@ -1651,6 +1654,9 @@
             // Reset transition flag after transition completes (1000ms + buffer)
             setTimeout(() => {
                 isTransitioning = false;
+                // Reset transforms after transition
+                slide1.style.transform = '';
+                slide2.style.transform = '';
             }, 1200);
         }
 
