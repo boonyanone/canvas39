@@ -1659,9 +1659,10 @@
             showSlide(currentSlide);
         }
 
+        // Removed prevSlide - slideshow only moves forward in loop
         function prevSlide() {
-            currentSlide = (currentSlide - 1 + 2) % 2;
-            showSlide(currentSlide);
+            // Force forward loop instead of backward
+            nextSlide();
         }
 
         function startSlideshow() {
