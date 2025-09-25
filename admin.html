@@ -477,7 +477,7 @@
 
         // Sidebar Navigation
         function initializeSidebarNavigation() {
-            const navButtons = document.querySelectorAll('.sidebar-nav-btn');
+            const navButtons = document.querySelectorAll('[data-section]');
             const contentSections = document.querySelectorAll('.content-section');
 
             navButtons.forEach(button => {
@@ -485,8 +485,10 @@
                     const targetSection = this.getAttribute('data-section');
                     
                     // Update active button
-                    navButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
+                    navButtons.forEach(btn => {
+                        btn.className = 'text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer';
+                    });
+                    this.className = 'text-gray-700 border-l-4 border-blue-500 bg-blue-50 px-4 py-3 cursor-pointer';
                     
                     // Show target section
                     contentSections.forEach(section => section.classList.remove('active'));
