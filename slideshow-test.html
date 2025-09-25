@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Slideshow Test</title>
+    <style>
+        body { padding: 20px; font-family: Arial, sans-serif; background: #f0f0f0; }
+        .slideshow-container { 
+            width: 400px; height: 300px; background: white; border: 2px solid #ccc; 
+            position: relative; overflow: hidden; margin: 20px 0;
+        }
+        .slide { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            display: flex; align-items: center; justify-content: center;
+            font-size: 48px; font-weight: bold; color: white;
+            transition: transform 1s ease-in-out;
+        }
+        .slide1 { background: #3b82f6; }
+        .slide2 { background: #10b981; }
+        .slide-active { transform: translateX(0); }
+        .slide-next { transform: translateX(100%); }
+        .controls { margin: 20px 0; }
+        button { padding: 10px 20px; margin: 5px; font-size: 16px; }
+        .log { background: #333; color: #0f0; padding: 10px; height: 200px; overflow-y: auto; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>🎬 Slideshow Loop Test</h1>
+    
+    <div class="slideshow-container">
+        <div class="slide slide1 slide-active" id="slide1">SLIDE 1</div>
+        <div class="slide slide2 slide-next" id="slide2">SLIDE 2</div>
+    </div>
+    
+    <div class="controls">
+        <button onclick="nextSlide()">Next Slide</button>
+        <button onclick="prevSlide()">Prev Slide (Should go forward)</button>
+        <button onclick="startAuto()">Start Auto (5s interval)</button>
+        <button onclick="stopAuto()">Stop Auto</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+    
+    <div>Current Slide: <span id="currentDisplay">0</span></div>
+    <div>Expected: Always moves forward in loop: 0→1→0→1→0...</div>
+    
+    <div class="log" id="log"></div>
+
+    <script>
+        let currentSlide = 0;
+        let autoInterval = null;
+        
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+        
+        function showSlide(slideIndex) {
+            log(`🎬 showSlide(${slideIndex}) called`);
+            
+            const slide1 = document.getElementById('slide1');
+            const slide2 = document.getElementById('slide2');
+            
+            if (slideIndex === 0) {
+                slide1.className = 'slide slide1 slide-active';
+                slide2.className = 'slide slide2 slide-next';
+                log('✅ Showing slide 1, slide 2 hidden');
+            } else {
+                slide1.className = 'slide slide1 slide-next';
+                slide2.className = 'slide slide2 slide-active'; 
+                log('✅ Showing slide 2, slide 1 hidden');
+            }
+            
+            document.getElementById('currentDisplay').textContent = slideIndex;
+            currentSlide = slideIndex;
+        }
+        
+        function nextSlide() {
+            const oldSlide = currentSlide;
+            currentSlide = (currentSlide + 1) % 2;
+            log(`➡️ nextSlide: ${oldSlide} → ${currentSlide}`);
+            showSlide(currentSlide);
+        }
+        
+        function prevSlide() {
+            log('⚠️ prevSlide called - forcing forward loop');
+            nextSlide(); // Force forward instead of backward
+        }
+        
+        function startAuto() {
+            if (autoInterval) {
+                clearInterval(autoInterval);
+            }
+            autoInterval = setInterval(nextSlide, 5000);
+            log('🚀 Auto slideshow started (5s interval)');
+        }
+        
+        function stopAuto() {
+            if (autoInterval) {
+                clearInterval(autoInterval);
+                autoInterval = null;
+                log('⏸️ Auto slideshow stopped');
+            }
+        }
+        
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+        
+        // Initialize
+        log('🎯 Slideshow test initialized');
+        log('📍 Current slide: ' + currentSlide);
+    </script>
+</body>
+</html>
