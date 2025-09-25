@@ -133,9 +133,13 @@
             }
         }
         
-        /* Fix space-y-2 first child margin */
-        .space-y-2 > *:first-child {
-            margin-top: 0 !important;
+        /* Sidebar button spacing */
+        .sidebar-nav-btn {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav-btn:last-child {
+            margin-bottom: 0;
         }
         
         /* Modern card styling */
@@ -216,9 +220,9 @@
         <div id="sidebar" class="fixed left-0 z-20 w-72 bg-white border-r border-gray-200 shadow-xl transform -translate-x-full transition-all duration-300 ease-out lg:translate-x-0 lg:relative lg:transform-none" style="top: 4rem; bottom: 0; height: calc(100vh - 4rem);">            
             <!-- Navigation Menu -->
             <nav class="h-full overflow-y-auto custom-scrollbar">
-                <div class="px-4 pb-4 space-y-2">
+                <div style="padding: 1rem 1rem 1rem 1rem; padding-top: 0;">
                     <!-- Theme & Design -->
-                    <button class="sidebar-nav-btn active w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="theme">
+                    <button class="sidebar-nav-btn active w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl mb-2" data-section="theme">
                         <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
                             <i data-lucide="palette" class="w-4 h-4 text-purple-600"></i>
                         </div>
@@ -226,7 +230,7 @@
                     </button>
                     
                     <!-- Media & Assets -->
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="media">
+                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl mb-2" data-section="media">
                         <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
                             <i data-lucide="image" class="w-4 h-4 text-blue-600"></i>
                         </div>
@@ -234,7 +238,7 @@
                     </button>
                     
                     <!-- System Settings -->
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="settings">
+                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl mb-2" data-section="settings">
                         <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center mr-3">
                             <i data-lucide="settings" class="w-4 h-4 text-emerald-600"></i>
                         </div>
@@ -242,7 +246,7 @@
                     </button>
                     
                     <!-- Content Management -->
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="content">
+                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl mb-2" data-section="content">
                         <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
                             <i data-lucide="megaphone" class="w-4 h-4 text-orange-600"></i>
                         </div>
@@ -250,7 +254,7 @@
                     </button>
                     
                     <!-- User Management -->
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="users">
+                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl mb-2" data-section="users">
                         <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
                             <i data-lucide="users" class="w-4 h-4 text-indigo-600"></i>
                         </div>
@@ -258,7 +262,7 @@
                     </button>
                     
                     <!-- System Status -->
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="status">
+                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl mb-2" data-section="status">
                         <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
                             <i data-lucide="activity" class="w-4 h-4 text-green-600"></i>
                         </div>
