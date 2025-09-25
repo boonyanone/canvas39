@@ -150,6 +150,7 @@
             <!-- Simple Navigation Menu -->
             <nav class="custom-scrollbar overflow-y-auto h-full">
                 <div class="text-gray-700 border-l-4 border-blue-500 bg-blue-50 px-4 py-3 cursor-pointer" data-section="theme">Theme & Design</div>
+                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="layout">Layout Configuration</div>
                 <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="media">Media & Assets</div>
                 <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="settings">System Settings</div>
                 <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="content">Content Management</div>
@@ -424,6 +425,250 @@
                                                 <option value="15">ทุก 15 วินาที</option>
                                                 <option value="20">ทุก 20 วินาที</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Layout Configuration Section -->
+                        <div id="layout-section" class="content-section">
+                            <div class="mb-6">
+                                <h2 class="text-2xl font-bold text-gray-900 mb-2">Layout Configuration</h2>
+                                <p class="text-gray-600">ปรับแต่งการจัดวางและขนาดของแต่ละส่วนในหน้าจอแสดงผล</p>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <!-- Header Section Settings -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 border-b border-gray-200">
+                                        <h3 class="text-lg font-medium text-gray-900">การตั้งค่าส่วน Header</h3>
+                                    </div>
+                                    <div class="px-6 py-4 space-y-4">
+                                        <!-- Header Height -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ความสูงของ Header</label>
+                                            <div class="flex items-center space-x-4">
+                                                <input type="range" id="headerHeight" min="60" max="120" value="80" class="flex-1">
+                                                <span id="headerHeightValue" class="text-sm text-gray-600 w-12">80px</span>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1">ความสูงของแถบด้านบน (60-120px)</p>
+                                        </div>
+
+                                        <!-- Header Padding -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Padding ภายใน Header</label>
+                                            <div class="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="block text-xs text-gray-600 mb-1">Left/Right</label>
+                                                    <div class="flex items-center space-x-2">
+                                                        <input type="range" id="headerPaddingX" min="20" max="80" value="40" class="flex-1">
+                                                        <span id="headerPaddingXValue" class="text-xs text-gray-600 w-10">40px</span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-xs text-gray-600 mb-1">Top/Bottom</label>
+                                                    <div class="flex items-center space-x-2">
+                                                        <input type="range" id="headerPaddingY" min="10" max="40" value="20" class="flex-1">
+                                                        <span id="headerPaddingYValue" class="text-xs text-gray-600 w-10">20px</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Logo Size -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ขนาดโลโก้</label>
+                                            <div class="flex items-center space-x-4">
+                                                <input type="range" id="logoSize" min="24" max="60" value="36" class="flex-1">
+                                                <span id="logoSizeValue" class="text-sm text-gray-600 w-12">36px</span>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1">ขนาดของโลโก้ในส่วน Header</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Weather Section Settings -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 border-b border-gray-200">
+                                        <h3 class="text-lg font-medium text-gray-900">การตั้งค่าส่วน Weather</h3>
+                                    </div>
+                                    <div class="px-6 py-4 space-y-4">
+                                        <!-- Weather Card Height -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ความสูงของ Weather Card</label>
+                                            <div class="flex items-center space-x-4">
+                                                <input type="range" id="weatherHeight" min="200" max="400" value="300" class="flex-1">
+                                                <span id="weatherHeightValue" class="text-sm text-gray-600 w-16">300px</span>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1">ความสูงของกล่องข้อมูลสภาพอากาศ</p>
+                                        </div>
+
+                                        <!-- Weather Card Margin -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ระยะห่างรอบ Weather Card</label>
+                                            <div class="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="block text-xs text-gray-600 mb-1">Left/Right</label>
+                                                    <div class="flex items-center space-x-2">
+                                                        <input type="range" id="weatherMarginX" min="10" max="60" value="30" class="flex-1">
+                                                        <span id="weatherMarginXValue" class="text-xs text-gray-600 w-10">30px</span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-xs text-gray-600 mb-1">Top/Bottom</label>
+                                                    <div class="flex items-center space-x-2">
+                                                        <input type="range" id="weatherMarginY" min="10" max="40" value="20" class="flex-1">
+                                                        <span id="weatherMarginYValue" class="text-xs text-gray-600 w-10">20px</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Weather Text Size -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ขนาดตัวอักษรอุณหภูมิ</label>
+                                            <select id="weatherTextSize" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                <option value="text-4xl">เล็ก (4xl)</option>
+                                                <option value="text-5xl" selected>กลาง (5xl)</option>
+                                                <option value="text-6xl">ใหญ่ (6xl)</option>
+                                                <option value="text-7xl">ใหญ่มาก (7xl)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Quality Section Settings -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 border-b border-gray-200">
+                                        <h3 class="text-lg font-medium text-gray-900">การตั้งค่าส่วน Air Quality</h3>
+                                    </div>
+                                    <div class="px-6 py-4 space-y-4">
+                                        <!-- Quality Card Height -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ความสูงของ Quality Card</label>
+                                            <div class="flex items-center space-x-4">
+                                                <input type="range" id="qualityHeight" min="200" max="400" value="300" class="flex-1">
+                                                <span id="qualityHeightValue" class="text-sm text-gray-600 w-16">300px</span>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1">ความสูงของกล่องข้อมูลคุณภาพอากาศ</p>
+                                        </div>
+
+                                        <!-- Quality Card Margin -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ระยะห่างรอบ Quality Card</label>
+                                            <div class="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="block text-xs text-gray-600 mb-1">Left/Right</label>
+                                                    <div class="flex items-center space-x-2">
+                                                        <input type="range" id="qualityMarginX" min="10" max="60" value="30" class="flex-1">
+                                                        <span id="qualityMarginXValue" class="text-xs text-gray-600 w-10">30px</span>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-xs text-gray-600 mb-1">Top/Bottom</label>
+                                                    <div class="flex items-center space-x-2">
+                                                        <input type="range" id="qualityMarginY" min="10" max="40" value="20" class="flex-1">
+                                                        <span id="qualityMarginYValue" class="text-xs text-gray-600 w-10">20px</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Quality Text Size -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ขนาดตัวอักษร AQI</label>
+                                            <select id="qualityTextSize" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                <option value="text-3xl">เล็ก (3xl)</option>
+                                                <option value="text-4xl" selected>กลาง (4xl)</option>
+                                                <option value="text-5xl">ใหญ่ (5xl)</option>
+                                                <option value="text-6xl">ใหญ่มาก (6xl)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Building/Footer Section Settings -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 border-b border-gray-200">
+                                        <h3 class="text-lg font-medium text-gray-900">การตั้งค่าส่วน Building</h3>
+                                    </div>
+                                    <div class="px-6 py-4 space-y-4">
+                                        <!-- Building Section Height -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ความสูงของ Building Section</label>
+                                            <div class="flex items-center space-x-4">
+                                                <input type="range" id="buildingHeight" min="80" max="200" value="120" class="flex-1">
+                                                <span id="buildingHeightValue" class="text-sm text-gray-600 w-16">120px</span>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1">ความสูงของส่วนแสดงข้อมูลอาคาร</p>
+                                        </div>
+
+                                        <!-- Building Text Size -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ขนาดตัวอักษรชื่ออาคาร</label>
+                                            <select id="buildingTextSize" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                <option value="text-lg">เล็ก (lg)</option>
+                                                <option value="text-xl" selected>กลาง (xl)</option>
+                                                <option value="text-2xl">ใหญ่ (2xl)</option>
+                                                <option value="text-3xl">ใหญ่มาก (3xl)</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Building Padding -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Padding ของ Building Section</label>
+                                            <div class="flex items-center space-x-4">
+                                                <input type="range" id="buildingPadding" min="10" max="50" value="30" class="flex-1">
+                                                <span id="buildingPaddingValue" class="text-sm text-gray-600 w-12">30px</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Layout Presets -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 border-b border-gray-200">
+                                        <h3 class="text-lg font-medium text-gray-900">Layout Presets</h3>
+                                    </div>
+                                    <div class="px-6 py-4 space-y-4">
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <button id="layoutCompact" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-3 rounded-lg text-sm font-medium border border-blue-300 transition-colors">
+                                                <div class="font-semibold">Compact</div>
+                                                <div class="text-xs opacity-75">การจัดวางแบบกระชับ</div>
+                                            </button>
+                                            <button id="layoutStandard" class="bg-green-100 hover:bg-green-200 text-green-800 px-4 py-3 rounded-lg text-sm font-medium border border-green-300 transition-colors">
+                                                <div class="font-semibold">Standard</div>
+                                                <div class="text-xs opacity-75">การจัดวางมาตรฐาน</div>
+                                            </button>
+                                            <button id="layoutSpacious" class="bg-purple-100 hover:bg-purple-200 text-purple-800 px-4 py-3 rounded-lg text-sm font-medium border border-purple-300 transition-colors">
+                                                <div class="font-semibold">Spacious</div>
+                                                <div class="text-xs opacity-75">การจัดวางแบบโปร่ง</div>
+                                            </button>
+                                            <button id="layoutMinimal" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-3 rounded-lg text-sm font-medium border border-gray-300 transition-colors">
+                                                <div class="font-semibold">Minimal</div>
+                                                <div class="text-xs opacity-75">การจัดวางแบบเรียบง่าย</div>
+                                            </button>
+                                        </div>
+                                        <p class="text-xs text-gray-500">คลิกเพื่อใช้ Layout แบบสำเร็จรูป</p>
+                                    </div>
+                                </div>
+
+                                <!-- Live Preview Toggle -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 border-b border-gray-200">
+                                        <h3 class="text-lg font-medium text-gray-900">Live Preview</h3>
+                                    </div>
+                                    <div class="px-6 py-4">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <label class="text-sm font-medium text-gray-700">เปิดใช้งาน Live Preview</label>
+                                                <p class="text-xs text-gray-500 mt-1">แสดงผลการเปลี่ยนแปลงทันทีในหน้าจอหลัก</p>
+                                            </div>
+                                            <label class="flex items-center">
+                                                <input type="checkbox" id="livePreview" class="rounded border-gray-300 text-blue-600">
+                                                <span class="ml-2 text-sm text-gray-700">เปิดใช้งาน</span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -875,7 +1120,225 @@
                 }
             }
             
+            // Update layout UI
+            updateLayoutUIFromConfig();
+            
             console.log('🎨 UI updated from config');
+        }
+
+        // Layout Configuration Functions
+        function initializeLayoutConfiguration() {
+            console.log('🎛️ Initializing Layout Configuration...');
+            
+            // Range slider value updates
+            const rangeInputs = [
+                { id: 'headerHeight', valueId: 'headerHeightValue', suffix: 'px' },
+                { id: 'headerPaddingX', valueId: 'headerPaddingXValue', suffix: 'px' },
+                { id: 'headerPaddingY', valueId: 'headerPaddingYValue', suffix: 'px' },
+                { id: 'logoSize', valueId: 'logoSizeValue', suffix: 'px' },
+                { id: 'weatherHeight', valueId: 'weatherHeightValue', suffix: 'px' },
+                { id: 'weatherMarginX', valueId: 'weatherMarginXValue', suffix: 'px' },
+                { id: 'weatherMarginY', valueId: 'weatherMarginYValue', suffix: 'px' },
+                { id: 'qualityHeight', valueId: 'qualityHeightValue', suffix: 'px' },
+                { id: 'qualityMarginX', valueId: 'qualityMarginXValue', suffix: 'px' },
+                { id: 'qualityMarginY', valueId: 'qualityMarginYValue', suffix: 'px' },
+                { id: 'buildingHeight', valueId: 'buildingHeightValue', suffix: 'px' },
+                { id: 'buildingPadding', valueId: 'buildingPaddingValue', suffix: 'px' }
+            ];
+
+            rangeInputs.forEach(({ id, valueId, suffix }) => {
+                const input = document.getElementById(id);
+                const valueSpan = document.getElementById(valueId);
+                
+                if (input && valueSpan) {
+                    input.addEventListener('input', function() {
+                        valueSpan.textContent = this.value + suffix;
+                        updateLayoutConfig(id, this.value);
+                        
+                        // Live preview if enabled
+                        if (document.getElementById('livePreview')?.checked) {
+                            applyLayoutChanges();
+                        }
+                    });
+                }
+            });
+
+            // Select dropdown changes
+            const selectInputs = ['weatherTextSize', 'qualityTextSize', 'buildingTextSize'];
+            selectInputs.forEach(id => {
+                const select = document.getElementById(id);
+                if (select) {
+                    select.addEventListener('change', function() {
+                        updateLayoutConfig(id, this.value);
+                        if (document.getElementById('livePreview')?.checked) {
+                            applyLayoutChanges();
+                        }
+                    });
+                }
+            });
+
+            // Layout presets
+            document.getElementById('layoutCompact')?.addEventListener('click', () => applyLayoutPreset('compact'));
+            document.getElementById('layoutStandard')?.addEventListener('click', () => applyLayoutPreset('standard'));
+            document.getElementById('layoutSpacious')?.addEventListener('click', () => applyLayoutPreset('spacious'));
+            document.getElementById('layoutMinimal')?.addEventListener('click', () => applyLayoutPreset('minimal'));
+
+            console.log('✅ Layout Configuration initialized');
+        }
+
+        function updateLayoutConfig(key, value) {
+            if (!config.layout) {
+                config.layout = {};
+            }
+            config.layout[key] = value;
+            console.log(`🎛️ Layout setting updated: ${key} = ${value}`);
+        }
+
+        function applyLayoutPreset(preset) {
+            console.log(`🎨 Applying layout preset: ${preset}`);
+            
+            const presets = {
+                compact: {
+                    headerHeight: 64,
+                    headerPaddingX: 20,
+                    headerPaddingY: 10,
+                    logoSize: 28,
+                    weatherHeight: 220,
+                    weatherMarginX: 15,
+                    weatherMarginY: 10,
+                    qualityHeight: 220,
+                    qualityMarginX: 15,
+                    qualityMarginY: 10,
+                    buildingHeight: 80,
+                    buildingPadding: 20,
+                    weatherTextSize: 'text-4xl',
+                    qualityTextSize: 'text-3xl',
+                    buildingTextSize: 'text-lg'
+                },
+                standard: {
+                    headerHeight: 80,
+                    headerPaddingX: 40,
+                    headerPaddingY: 20,
+                    logoSize: 36,
+                    weatherHeight: 300,
+                    weatherMarginX: 30,
+                    weatherMarginY: 20,
+                    qualityHeight: 300,
+                    qualityMarginX: 30,
+                    qualityMarginY: 20,
+                    buildingHeight: 120,
+                    buildingPadding: 30,
+                    weatherTextSize: 'text-5xl',
+                    qualityTextSize: 'text-4xl',
+                    buildingTextSize: 'text-xl'
+                },
+                spacious: {
+                    headerHeight: 100,
+                    headerPaddingX: 60,
+                    headerPaddingY: 30,
+                    logoSize: 48,
+                    weatherHeight: 360,
+                    weatherMarginX: 45,
+                    weatherMarginY: 30,
+                    qualityHeight: 360,
+                    qualityMarginX: 45,
+                    qualityMarginY: 30,
+                    buildingHeight: 160,
+                    buildingPadding: 40,
+                    weatherTextSize: 'text-6xl',
+                    qualityTextSize: 'text-5xl',
+                    buildingTextSize: 'text-2xl'
+                },
+                minimal: {
+                    headerHeight: 60,
+                    headerPaddingX: 25,
+                    headerPaddingY: 15,
+                    logoSize: 24,
+                    weatherHeight: 200,
+                    weatherMarginX: 20,
+                    weatherMarginY: 15,
+                    qualityHeight: 200,
+                    qualityMarginX: 20,
+                    qualityMarginY: 15,
+                    buildingHeight: 100,
+                    buildingPadding: 25,
+                    weatherTextSize: 'text-4xl',
+                    qualityTextSize: 'text-3xl',
+                    buildingTextSize: 'text-lg'
+                }
+            };
+
+            const presetConfig = presets[preset];
+            if (presetConfig) {
+                // Update config
+                config.layout = { ...config.layout, ...presetConfig };
+                
+                // Update UI
+                Object.keys(presetConfig).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element) {
+                        element.value = presetConfig[key];
+                        
+                        // Update corresponding value display
+                        const valueElement = document.getElementById(key + 'Value');
+                        if (valueElement) {
+                            valueElement.textContent = presetConfig[key] + (typeof presetConfig[key] === 'number' ? 'px' : '');
+                        }
+                    }
+                });
+
+                // Apply changes if live preview is enabled
+                if (document.getElementById('livePreview')?.checked) {
+                    applyLayoutChanges();
+                }
+                
+                console.log(`✅ Applied ${preset} layout preset`);
+            }
+        }
+
+        function applyLayoutChanges() {
+            console.log('🎨 Applying layout changes to main display...');
+            
+            if (!config.layout) return;
+
+            try {
+                // This function would communicate with the main display (index.html)
+                // For now, we'll just log the changes
+                console.log('Layout changes to apply:', config.layout);
+                
+                // In a real implementation, this could:
+                // 1. Send messages to iframe if main display is embedded
+                // 2. Use localStorage to share config between pages
+                // 3. Use WebSocket or server communication
+                // 4. Post messages to parent window
+                
+                // Store layout config for main display to read
+                localStorage.setItem('canvas39_layout_config', JSON.stringify(config.layout));
+                
+            } catch (error) {
+                console.error('❌ Failed to apply layout changes:', error);
+            }
+        }
+
+        // Update layout UI from saved config
+        function updateLayoutUIFromConfig() {
+            if (!config.layout) return;
+            
+            Object.keys(config.layout).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.value = config.layout[key];
+                    
+                    // Update value display for range inputs
+                    const valueElement = document.getElementById(key + 'Value');
+                    if (valueElement) {
+                        const value = config.layout[key];
+                        valueElement.textContent = value + (typeof value === 'number' ? 'px' : '');
+                    }
+                }
+            });
+            
+            console.log('🎛️ Layout UI updated from config');
         }
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -886,6 +1349,7 @@
             initializeMobileSidebar();
             initializeColorTheme();
             initializeFontSettings();
+            initializeLayoutConfiguration();
             initializeUserMenu();
             
             console.log('✅ Admin Panel initialized successfully');
