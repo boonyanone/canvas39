@@ -36,25 +36,25 @@
             padding: 0 !important;
         }
         
-        /* Simple slide effect with strict positioning */
+        /* Clean slide effect without conflicts */
         .slideshow-container {
             overflow: hidden;
             position: relative;
         }
         
         #slide1, #slide2 {
-            transition: transform 1s ease-in-out;
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            transition: transform 0.8s ease-in-out;
         }
         
-        /* Slide positions - strict positioning */
+        /* Clean slide positions */
         .slide-center { 
             transform: translateX(0%) !important; 
-            z-index: 2;
+            z-index: 10;
         }
         .slide-right { 
             transform: translateX(100%) !important; 
@@ -1663,7 +1663,7 @@
         }
 
         function showSlide(slideIndex) {
-            console.log(`🎬 Forward carousel to slide: ${slideIndex}`);
+            console.log(`🎬 Instant forward carousel to slide: ${slideIndex}`);
             
             const slide1 = document.getElementById('slide1');
             const slide2 = document.getElementById('slide2');
@@ -1673,37 +1673,21 @@
                 return;
             }
             
-            // Forward-only movement: incoming slide comes from RIGHT, outgoing goes to LEFT
+            // Instant positioning - no setTimeout conflicts
             if (slideIndex === 0) {
-                console.log('📺 Forward to Air Quality: slide1 from right → center, slide2 center → left');
-                // Slide 1 comes from right (100%) to center (0%)
-                // Slide 2 goes from center (0%) to left (-100%)
+                console.log('📺 Instant show Air Quality');
+                // Show slide 1, hide slide 2 instantly
                 slide1.className = 'absolute inset-0 slide-center';
-                slide2.className = 'absolute inset-0 slide-left';
+                slide2.className = 'absolute inset-0 slide-right'; // Ready for next entrance
             } else {
-                console.log('🏊‍♂️ Forward to Pool Water: slide2 from right → center, slide1 center → left');
-                // Slide 2 comes from right (100%) to center (0%)  
-                // Slide 1 goes from center (0%) to left (-100%)
+                console.log('🏊‍♂️ Instant show Pool Water');  
+                // Show slide 2, hide slide 1 instantly
                 slide2.className = 'absolute inset-0 slide-center';
-                slide1.className = 'absolute inset-0 slide-left';
+                slide1.className = 'absolute inset-0 slide-right'; // Ready for next entrance
             }
             
             currentSlide = slideIndex;
-            
-            // After transition, move the outgoing slide to right for next forward movement
-            const repositionTimeout = setTimeout(() => {
-                if (slideIndex === 0) {
-                    // Slide2 is now at left, move it to right for next entrance
-                    slide2.classList.remove('slide-left');
-                    slide2.classList.add('slide-right');
-                } else {
-                    // Slide1 is now at left, move it to right for next entrance  
-                    slide1.classList.remove('slide-left');
-                    slide1.classList.add('slide-right');
-                }
-                console.log('🔄 Moved outgoing slide to right for next forward movement');
-            }, 1000); // After CSS transition completes
-            allTimeouts.push(repositionTimeout);
+            console.log('✅ Instant positioning complete');
         }
 
         function nextSlide() {
