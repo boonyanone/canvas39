@@ -25,50 +25,9 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     
     <style>
-        /* Modern Sidebar Navigation Styles */
+        /* Simple sidebar menu styles */
         .sidebar {
             backdrop-filter: blur(8px);
-        }
-        
-        .sidebar-nav-btn {
-            transition: all 0.2s ease-in-out;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .sidebar-nav-btn:hover {
-            background-color: #f8fafc;
-            transform: translateX(2px);
-        }
-        
-        .sidebar-nav-btn.active {
-            background: linear-gradient(135deg, #3f2f15 0%, #5a4a2d 100%);
-            color: white;
-            font-weight: 500;
-            box-shadow: 0 2px 8px rgba(63, 47, 21, 0.2);
-        }
-        
-        .sidebar-nav-btn.active i {
-            color: white;
-        }
-        
-        .sidebar-nav-btn.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 3px;
-            background: #f59e0b;
-        }
-        
-        /* Clean icon styling */
-        .sidebar-nav-btn i {
-            transition: all 0.2s ease-in-out;
-        }
-        
-        .sidebar-nav-btn:hover i {
-            transform: scale(1.1);
         }
         
         /* Content Section Styles */
@@ -111,12 +70,6 @@
             }
         }
         
-        /* Fix first button spacing completely - highest specificity */
-        #sidebar nav .space-y-2 > .sidebar-nav-btn:first-child,
-        #sidebar .sidebar-nav-btn:first-child {
-            margin-top: 0 !important;
-            padding-top: 0 !important;
-        }
         
         /* Modern card styling */
         .modern-card {
@@ -194,57 +147,14 @@
         
         <!-- Modern Sidebar Navigation -->
         <div class="fixed inset-y-0 left-0 z-20 w-72 bg-white border-r border-gray-200 shadow-xl transform -translate-x-full transition-all duration-300 ease-out lg:translate-x-0 lg:relative lg:transform-none sidebar" id="sidebar" style="top: 4rem;">            
-            <!-- Clean Navigation Menu -->
-            <nav class="px-4 pb-4 custom-scrollbar overflow-y-auto" style="height: calc(100vh - 4rem);">
-                <div class="space-y-2">
-                    <!-- Theme & Design -->
-                    <button class="sidebar-nav-btn active w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="theme">
-                        <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                            <i data-lucide="palette" class="w-4 h-4 text-purple-600"></i>
-                        </div>
-                        <span>Theme & Design</span>
-                    </button>
-                    
-                    <!-- Media & Assets -->
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="media">
-                        <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                            <i data-lucide="image" class="w-4 h-4 text-blue-600"></i>
-                        </div>
-                        <span>Media & Assets</span>
-                    </button>
-                    
-                    <!-- System Settings -->
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="settings">
-                        <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center mr-3">
-                            <i data-lucide="settings" class="w-4 h-4 text-emerald-600"></i>
-                        </div>
-                        <span>System Settings</span>
-                    </button>
-                    
-                    <!-- Content Management -->
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="content">
-                        <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
-                            <i data-lucide="megaphone" class="w-4 h-4 text-orange-600"></i>
-                        </div>
-                        <span>Content Management</span>
-                    </button>
-                    
-                    <!-- User Management -->
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="users">
-                        <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
-                            <i data-lucide="users" class="w-4 h-4 text-indigo-600"></i>
-                        </div>
-                        <span>User Management</span>
-                    </button>
-                    
-                    <!-- System Status -->
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="status">
-                        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
-                            <i data-lucide="activity" class="w-4 h-4 text-green-600"></i>
-                        </div>
-                        <span>System Status</span>
-                    </button>
-                </div>
+            <!-- Simple Navigation Menu -->
+            <nav class="custom-scrollbar overflow-y-auto" style="height: calc(100vh - 4rem);">
+                <div class="text-gray-700 border-l-4 border-blue-500 bg-blue-50 px-4 py-3 cursor-pointer" data-section="theme">Theme & Design</div>
+                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="media">Media & Assets</div>
+                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="settings">System Settings</div>
+                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="content">Content Management</div>
+                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="users">User Management</div>
+                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="status">System Status</div>
                 
                 <!-- Bottom User Info -->
                 <div class="mt-8 pt-6 border-t border-gray-200">
