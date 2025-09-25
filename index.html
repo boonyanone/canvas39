@@ -165,6 +165,118 @@
             window.forceStartSlideshow = startSlideshow;
             window.restartSlideshow = restartSlideshow;
         };
+        
+        // Simple monitoring system
+        let monitoringStats = {
+            startTime: Date.now(),
+            configUpdates: 0,
+            weatherUpdates: 0,
+            aqiUpdates: 0,
+            slideshowChanges: 0,
+            errors: [],
+            lastUpdate: null,
+            uptime: 0,
+            averageUpdateTime: 0,
+            updateTimes: []
+        };
+        
+        // Monitor system health
+        function updateMonitoringStats(event, duration = 0) {
+            monitoringStats.lastUpdate = Date.now();
+            monitoringStats.uptime = monitoringStats.lastUpdate - monitoringStats.startTime;
+            
+            switch(event) {
+                case 'config-update':
+                    monitoringStats.configUpdates++;
+                    break;
+                case 'weather-update':
+                    monitoringStats.weatherUpdates++;
+                    if (duration > 0) {
+                        monitoringStats.updateTimes.push(duration);
+                        monitoringStats.averageUpdateTime = monitoringStats.updateTimes.reduce((a, b) => a + b, 0) / monitoringStats.updateTimes.length;
+                    }
+                    break;
+                case 'aqi-update':
+                    monitoringStats.aqiUpdates++;
+                    break;
+                case 'slideshow-change':
+                    monitoringStats.slideshowChanges++;
+                    break;
+                case 'error':
+                    monitoringStats.errors.push({
+                        timestamp: Date.now(),
+                        error: duration // In this case duration is the error message
+                    });
+                    // Keep only last 10 errors
+                    if (monitoringStats.errors.length > 10) {
+                        monitoringStats.errors = monitoringStats.errors.slice(-10);
+                    }
+                    break;
+            }
+            
+            // Log stats every 10 minutes
+            if (monitoringStats.uptime > 0 && monitoringStats.uptime % (10 * 60 * 1000) < 1000) {
+                console.log('📊 System Health Report:', {
+                    uptime: formatUptime(monitoringStats.uptime),
+                    configUpdates: monitoringStats.configUpdates,
+                    weatherUpdates: monitoringStats.weatherUpdates,
+                    aqiUpdates: monitoringStats.aqiUpdates,
+                    slideshowChanges: monitoringStats.slideshowChanges,
+                    recentErrors: monitoringStats.errors.length,
+                    avgUpdateTime: Math.round(monitoringStats.averageUpdateTime) + 'ms'
+                });
+            }
+        }
+        
+        function formatUptime(ms) {
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            
+            if (hours > 0) return `${hours}h ${minutes % 60}m`;
+            if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+            return `${seconds}s`;
+        }
+        
+        // Global error handler
+        window.addEventListener('error', function(e) {
+            updateMonitoringStats('error', `${e.message} at ${e.filename}:${e.lineno}`);
+            console.error('🚨 Global Error:', e.error);
+        });
+        
+        window.addEventListener('unhandledrejection', function(e) {
+            updateMonitoringStats('error', `Unhandled Promise: ${e.reason}`);
+            console.error('🚨 Unhandled Promise Rejection:', e.reason);
+        });
+        
+        // Debug functions for monitoring
+        window.getSystemStats = function() {
+            return {
+                ...monitoringStats,
+                uptimeFormatted: formatUptime(monitoringStats.uptime),
+                memoryUsage: performance.memory ? {
+                    used: Math.round(performance.memory.usedJSHeapSize / 1024 / 1024) + 'MB',
+                    total: Math.round(performance.memory.totalJSHeapSize / 1024 / 1024) + 'MB',
+                    limit: Math.round(performance.memory.jsHeapSizeLimit / 1024 / 1024) + 'MB'
+                } : 'Not available'
+            };
+        };
+        
+        window.clearStats = function() {
+            monitoringStats = {
+                startTime: Date.now(),
+                configUpdates: 0,
+                weatherUpdates: 0,
+                aqiUpdates: 0,
+                slideshowChanges: 0,
+                errors: [],
+                lastUpdate: null,
+                uptime: 0,
+                averageUpdateTime: 0,
+                updateTimes: []
+            };
+            console.log('📊 Monitoring stats cleared');
+        };
     </script>
     
     <!-- Firebase SDK (Backup) -->
@@ -648,7 +760,12 @@
                     'roman': { family: 'Roman', source: 'local' },
                     'kanit': { family: 'Kanit', source: 'google' },
                     'sarabun': { family: 'Sarabun', source: 'google' },
-                    'inter': { family: 'Inter', source: 'google' }
+                    'inter': { family: 'Inter', source: 'google' },
+                    'roboto': { family: 'Roboto', source: 'google' },
+                    'noto-thai': { family: 'Noto Sans Thai', source: 'google' },
+                    'prompt': { family: 'Prompt', source: 'google' },
+                    'mitr': { family: 'Mitr', source: 'google' },
+                    'custom': { family: 'CustomFont', source: 'custom' }
                 };
 
                 const selectedFont = fontMap[config.font];
@@ -657,13 +774,109 @@
                         // Load Google Font
                         const link = document.createElement('link');
                         link.rel = 'stylesheet';
-                        link.href = `https://fonts.googleapis.com/css2?family=${selectedFont.family}:wght@300;400;500;600;700&display=swap`;
+                        link.href = `https://fonts.googleapis.com/css2?family=${selectedFont.family.replace(' ', '+')}:wght@300;400;500;600;700&display=swap`;
                         document.head.appendChild(link);
+                    } else if (selectedFont.source === 'custom') {
+                        // Load custom font from config
+                        if (config.customFont && config.customFont.data) {
+                            const style = document.createElement('style');
+                            style.textContent = `
+                                @font-face {
+                                    font-family: 'CustomFont';
+                                    src: url('${config.customFont.data}') format('${config.customFont.format || 'woff2'}');
+                                    font-weight: normal;
+                                    font-style: normal;
+                                }
+                            `;
+                            document.head.appendChild(style);
+                            console.log('🔤 Custom font loaded:', config.customFont.name);
+                        }
                     }
                     
                     // Apply font to body
                     document.body.style.fontFamily = `'${selectedFont.family}', sans-serif`;
+                    console.log('🔤 Font applied:', selectedFont.family);
                 }
+            }
+
+            // Apply layout configuration
+            if (config.layout) {
+                // Header configuration
+                if (config.layout.header) {
+                    const headerEl = document.querySelector('.bg-amber-900');
+                    if (headerEl && config.layout.header.backgroundColor) {
+                        headerEl.style.backgroundColor = config.layout.header.backgroundColor;
+                    }
+                    
+                    const dateTimeEl = document.querySelector('.text-center.text-white');
+                    if (dateTimeEl && config.layout.header.textColor) {
+                        dateTimeEl.style.color = config.layout.header.textColor;
+                    }
+                    
+                    if (config.layout.header.height) {
+                        const headerEl = document.querySelector('.h-\\[10\\.53vh\\]');
+                        if (headerEl) {
+                            headerEl.style.height = config.layout.header.height + 'vh';
+                        }
+                    }
+                }
+                
+                // Weather section configuration  
+                if (config.layout.weather) {
+                    if (config.layout.weather.backgroundColor) {
+                        const weatherSections = document.querySelectorAll('[style*="background-color: #e8ddd4"], [style*="background-color: #f3efe6"], [style*="background-color: #ddd6cc"]');
+                        weatherSections.forEach(section => {
+                            section.style.backgroundColor = config.layout.weather.backgroundColor;
+                        });
+                    }
+                    
+                    if (config.layout.weather.textColor) {
+                        const weatherTexts = document.querySelectorAll('[style*="color: #3f2f15"]');
+                        weatherTexts.forEach(text => {
+                            text.style.color = config.layout.weather.textColor;
+                        });
+                    }
+                    
+                    if (config.layout.weather.height) {
+                        const weatherEl = document.querySelector('.h-\\[15\\.79vh\\]');
+                        if (weatherEl) {
+                            weatherEl.style.height = config.layout.weather.height + 'vh';
+                        }
+                    }
+                }
+                
+                // Quality section configuration
+                if (config.layout.quality) {
+                    if (config.layout.quality.backgroundColor) {
+                        const qualitySections = document.querySelectorAll('[style*="background-color: #929079"], [style*="background-color: #b7a591"]');
+                        qualitySections.forEach(section => {
+                            section.style.backgroundColor = config.layout.quality.backgroundColor;
+                        });
+                    }
+                    
+                    if (config.layout.quality.height) {
+                        const qualityEl = document.querySelector('.h-\\[42\\.1vh\\]');
+                        if (qualityEl) {
+                            qualityEl.style.height = config.layout.quality.height + 'vh';
+                        }
+                    }
+                }
+                
+                // Building section configuration
+                if (config.layout.building) {
+                    const buildingEl = document.querySelector('.h-\\[31\\.58vh\\]');
+                    if (buildingEl) {
+                        if (config.layout.building.height) {
+                            buildingEl.style.height = config.layout.building.height + 'vh';
+                        }
+                        
+                        if (config.layout.building.backgroundColor) {
+                            buildingEl.style.backgroundColor = config.layout.building.backgroundColor;
+                        }
+                    }
+                }
+                
+                console.log('🎨 Layout configuration applied');
             }
 
             // Apply images
@@ -1354,6 +1567,7 @@
 
         async function updateDisplay(displayConfig = null) {
             console.log('🔄 Updating display...');
+            const startTime = Date.now();
             
             // เลือก API provider ตามการตั้งค่า
             let realWeatherData = null;
@@ -1534,6 +1748,13 @@
             feather.replace();
             
             console.log('✅ Display updated successfully');
+            
+            // Update monitoring stats
+            const duration = Date.now() - startTime;
+            updateMonitoringStats('weather-update', duration);
+            if (airQuality !== mockData.airQuality) {
+                updateMonitoringStats('aqi-update');
+            }
         }
 
         // Initialize
@@ -1597,6 +1818,7 @@
                         
                         // Apply configuration ใหม่
                         applyConfig(newConfig);
+                        updateMonitoringStats('config-update');
                     } else {
                         console.log('✅ Config is up to date');
                     }
@@ -1633,23 +1855,43 @@
             swiper = new Swiper('.quality-slideshow', {
                 // Basic settings
                 direction: 'horizontal',
-                loop: true,
-                speed: 1000, // 1 second transition
+                loop: slideshowConfig.loopMode,
+                speed: slideshowConfig.speed,
                 
                 // Auto-play configuration
                 autoplay: slideshowConfig.enabled && slideshowConfig.autoPlay ? {
                     delay: slideshowConfig.interval,
                     disableOnInteraction: false,
-                    pauseOnMouseEnter: false
+                    pauseOnMouseEnter: false,
+                    reverseDirection: false
                 } : false,
 
                 // Touch/swipe settings for tablet
-                touchRatio: 1,
+                touchRatio: slideshowConfig.touchEnabled ? 1 : 0,
                 touchAngle: 45,
-                grabCursor: true,
+                grabCursor: slideshowConfig.touchEnabled,
+                allowTouchMove: slideshowConfig.touchEnabled,
                 
-                // Smooth transitions
-                effect: 'slide',
+                // Transition effects
+                effect: slideshowConfig.transition,
+                
+                // Effect-specific settings
+                fadeEffect: {
+                    crossFade: true
+                },
+                cubeEffect: {
+                    shadow: true,
+                    slideShadows: true,
+                    shadowOffset: 20,
+                    shadowScale: 0.94
+                },
+                coverflowEffect: {
+                    rotate: 50,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows: true
+                },
                 
                 // No pagination dots needed
                 pagination: false,
@@ -1661,12 +1903,16 @@
                 on: {
                     slideChange: function () {
                         console.log('🔄 Swiper slide changed to:', this.activeIndex);
+                        updateMonitoringStats('slideshow-change');
                     },
                     autoplayStart: function () {
                         console.log('▶️ Swiper autoplay started');
                     },
                     autoplayStop: function () {
                         console.log('⏸️ Swiper autoplay stopped');
+                    },
+                    touchStart: function () {
+                        console.log('👆 Touch interaction detected');
                     }
                 }
             });
@@ -1677,19 +1923,53 @@
 
         function updateSlideshowConfig(config) {
             if (config.slideshow) {
-                slideshowConfig.enabled = config.slideshow.enabled;
-                slideshowConfig.interval = config.slideshow.interval * 1000; // Convert to milliseconds
-                slideshowConfig.showAirQuality = config.slideshow.showAirQuality;
-                slideshowConfig.showPoolWater = config.slideshow.showPoolWater;
+                slideshowConfig.enabled = config.slideshow.enabled !== false; // Default true
+                slideshowConfig.interval = (config.slideshow.interval || 10) * 1000; // Convert to milliseconds
+                slideshowConfig.showAirQuality = config.slideshow.showAirQuality !== false; // Default true
+                slideshowConfig.showPoolWater = config.slideshow.showPoolWater !== false; // Default true
+                slideshowConfig.autoPlay = config.slideshow.autoPlay !== false; // Default true
+                slideshowConfig.touchEnabled = config.slideshow.touchEnabled !== false; // Default true
+                slideshowConfig.loopMode = config.slideshow.loopMode !== false; // Default true
+                slideshowConfig.transition = config.slideshow.transition || 'slide'; // slide, fade, cube, coverflow
+                slideshowConfig.speed = config.slideshow.speed || 1000; // milliseconds
                 
-                // Update Swiper autoplay if already initialized
+                // Hide/show slides based on configuration
+                const airQualitySlide = document.querySelector('.swiper-slide:first-child');
+                const poolWaterSlide = document.querySelector('.swiper-slide:last-child');
+                
+                if (airQualitySlide) {
+                    airQualitySlide.style.display = slideshowConfig.showAirQuality ? 'flex' : 'none';
+                }
+                if (poolWaterSlide) {
+                    poolWaterSlide.style.display = slideshowConfig.showPoolWater ? 'flex' : 'none';
+                }
+                
+                // Update Swiper if already initialized
                 if (swiper) {
-                    if (slideshowConfig.enabled && slideshowConfig.autoPlay) {
-                        swiper.autoplay.start();
-                        // Update autoplay delay
-                        swiper.params.autoplay.delay = slideshowConfig.interval;
+                    // Destroy and recreate for major config changes
+                    const shouldRecreate = swiper.params.effect !== slideshowConfig.transition ||
+                                         swiper.params.speed !== slideshowConfig.speed ||
+                                         swiper.params.touchRatio !== (slideshowConfig.touchEnabled ? 1 : 0);
+                    
+                    if (shouldRecreate) {
+                        swiper.destroy(true, true);
+                        setTimeout(() => {
+                            initializeSwiper();
+                        }, 100);
                     } else {
-                        swiper.autoplay.stop();
+                        // Update existing configuration
+                        if (slideshowConfig.enabled && slideshowConfig.autoPlay) {
+                            if (swiper.params.autoplay) {
+                                swiper.params.autoplay.delay = slideshowConfig.interval;
+                            }
+                            swiper.autoplay.start();
+                        } else {
+                            swiper.autoplay.stop();
+                        }
+                        
+                        // Update touch settings
+                        swiper.params.touchRatio = slideshowConfig.touchEnabled ? 1 : 0;
+                        swiper.allowTouchMove = slideshowConfig.touchEnabled;
                     }
                 }
                 

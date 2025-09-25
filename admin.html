@@ -121,27 +121,74 @@
     </style>
 </head>
 <body class="bg-gray-100">
-    <div class="flex h-screen bg-gray-100">
-        <!-- Mobile Overlay -->
-        <div id="mobileOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
-        
-        <!-- Modern Sidebar Navigation -->
-        <div class="fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-gray-200 shadow-xl transform -translate-x-full transition-all duration-300 ease-out lg:translate-x-0 lg:relative lg:transform-none sidebar" id="sidebar">
-            <!-- Elegant Logo Header -->
-            <div class="flex items-center justify-between h-20 px-6 bg-gradient-to-r from-slate-50 to-gray-100 border-b border-gray-200">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <i data-lucide="layers" class="w-5 h-5 text-white"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-lg font-bold text-gray-900">Canvas 39</h1>
-                        <p class="text-xs text-gray-500 font-medium">Admin Panel</p>
-                    </div>
+    <!-- Unified Top Header (spans full width) -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm border-b border-gray-200">
+        <div class="flex items-center h-16">
+            <!-- Logo Section (Left) -->
+            <div class="w-72 px-6 border-r border-gray-200 flex items-center space-x-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg flex items-center justify-center shadow-md">
+                    <i data-lucide="layers" class="w-4 h-4 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold text-gray-900">Canvas 39</h1>
+                    <p class="text-xs text-gray-500 font-medium -mt-0.5">Admin Panel</p>
                 </div>
             </div>
             
+            <!-- Main Header Content (Right) -->
+            <div class="flex-1 px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center">
+                    <!-- Mobile menu button -->
+                    <button class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100" id="mobileMenuBtn">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                    
+                    <!-- Desktop empty space -->
+                    <div class="hidden lg:block"></div>
+                    
+                    <!-- Right Controls -->
+                    <div class="flex items-center space-x-4">
+                        <!-- User Info -->
+                        <div class="flex items-center space-x-3">
+                            <div class="text-sm text-gray-700">
+                                <span>สวัสดี, </span>
+                                <span id="currentUserName" class="font-medium">Admin</span>
+                            </div>
+                        </div>
+                        
+                        <button id="saveBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center shadow-md transition-all duration-200">
+                            <i data-lucide="save" class="w-4 h-4 mr-2"></i>
+                            บันทึกการตั้งค่า
+                        </button>
+                        
+                        <!-- User Menu -->
+                        <div class="relative">
+                            <button id="userMenuBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm font-medium flex items-center transition-all duration-200">
+                                <i data-lucide="user" class="w-4 h-4 mr-2"></i>
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </button>
+                            <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 border border-gray-200">
+                                <a href="#" onclick="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md mx-1">
+                                    <i data-lucide="log-out" class="w-4 h-4 inline mr-2"></i>
+                                    ออกจากระบบ
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout Container with top padding -->
+    <div class="flex h-screen bg-gray-100" style="padding-top: 4rem;">
+        <!-- Mobile Overlay -->
+        <div id="mobileOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden hidden"></div>
+        
+        <!-- Modern Sidebar Navigation -->
+        <div class="fixed inset-y-0 left-0 z-20 w-72 bg-white border-r border-gray-200 shadow-xl transform -translate-x-full transition-all duration-300 ease-out lg:translate-x-0 lg:relative lg:transform-none sidebar" id="sidebar" style="top: 4rem;">            
             <!-- Clean Navigation Menu -->
-            <nav class="mt-6 px-4 custom-scrollbar overflow-y-auto" style="height: calc(100vh - 5rem);">
+            <nav class="pt-4 px-4 custom-scrollbar overflow-y-auto" style="height: calc(100vh - 4rem);">
                 <div class="space-y-2">
                     <!-- Theme & Design -->
                     <button class="sidebar-nav-btn active w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="theme">
@@ -211,46 +258,6 @@
 
         <!-- Main Content Area -->
         <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Top Header -->
-            <header class="bg-white shadow-sm border-b">
-                <div class="px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between items-center h-16">
-                        <!-- Mobile menu button -->
-                        <button class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100" id="mobileMenuBtn">
-                            <i data-lucide="menu" class="w-6 h-6"></i>
-                        </button>
-                        
-                        <div class="flex items-center space-x-4 ml-auto">
-                            <!-- User Info -->
-                            <div class="flex items-center space-x-3">
-                                <div class="text-sm text-gray-700">
-                                    <span>สวัสดี, </span>
-                                    <span id="currentUserName" class="font-medium">Admin</span>
-                                </div>
-                            </div>
-                            
-                            <button id="saveBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
-                                <i data-lucide="save" class="w-4 h-4 mr-2"></i>
-                                บันทึกการตั้งค่า
-                            </button>
-                            
-                            <!-- User Menu -->
-                            <div class="relative">
-                                <button id="userMenuBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium flex items-center">
-                                    <i data-lucide="user" class="w-4 h-4 mr-2"></i>
-                                    <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                                </button>
-                                <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                                    <a href="#" onclick="logout()" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                        <i data-lucide="log-out" class="w-4 h-4 inline mr-2"></i>
-                                        ออกจากระบบ
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </header>
 
             <!-- Main Content -->
             <main class="flex-1 overflow-y-auto custom-scrollbar bg-gradient-to-br from-gray-50 to-slate-100">
