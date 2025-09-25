@@ -185,6 +185,86 @@
                         </div>
                     </div>
 
+                    <!-- การตั้งค่าสี Theme -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่าสี Theme</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-4">
+                            <!-- สี Header/Navigation Bar -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">สี Header Bar</label>
+                                <div class="flex items-center space-x-3">
+                                    <input type="color" id="headerColor" value="#3f2f15" class="w-12 h-10 border border-gray-300 rounded cursor-pointer">
+                                    <input type="text" id="headerColorText" value="#3f2f15" class="border border-gray-300 rounded px-3 py-2 text-sm font-mono w-24">
+                                    <button id="resetHeaderColor" class="text-xs text-gray-500 hover:text-gray-700">รีเซ็ต</button>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">สีพื้นหลังของแถบด้านบน</p>
+                            </div>
+
+                            <!-- สีพื้นหลังหลัก -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">สีพื้นหลังหลัก</label>
+                                <div class="flex items-center space-x-3">
+                                    <input type="color" id="backgroundColor" value="#929079" class="w-12 h-10 border border-gray-300 rounded cursor-pointer">
+                                    <input type="text" id="backgroundColorText" value="#929079" class="border border-gray-300 rounded px-3 py-2 text-sm font-mono w-24">
+                                    <button id="resetBackgroundColor" class="text-xs text-gray-500 hover:text-gray-700">รีเซ็ต</button>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">สีพื้นหลังส่วนของ slideshow</p>
+                            </div>
+
+                            <!-- สี Weather Section -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">สี Weather Section</label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <!-- Today Section -->
+                                    <div>
+                                        <label class="block text-xs text-gray-600 mb-1">Today</label>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="color" id="weatherTodayColor" value="#f3efe6" class="w-8 h-8 border border-gray-300 rounded cursor-pointer">
+                                            <input type="text" id="weatherTodayColorText" value="#f3efe6" class="border border-gray-300 rounded px-2 py-1 text-xs font-mono w-20">
+                                        </div>
+                                    </div>
+                                    <!-- Outlook Section -->
+                                    <div>
+                                        <label class="block text-xs text-gray-600 mb-1">Outlook</label>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="color" id="weatherOutlookColor" value="#ddd6cc" class="w-8 h-8 border border-gray-300 rounded cursor-pointer">
+                                            <input type="text" id="weatherOutlookColorText" value="#ddd6cc" class="border border-gray-300 rounded px-2 py-1 text-xs font-mono w-20">
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">สีพื้นหลังส่วนข้อมูลสภาพอากาศ</p>
+                            </div>
+
+                            <!-- Theme Presets -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Theme Presets</label>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button id="themeDefault" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-2 rounded text-xs font-medium border border-amber-300">
+                                        Default
+                                    </button>
+                                    <button id="themeBlue" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-2 rounded text-xs font-medium border border-blue-300">
+                                        Blue
+                                    </button>
+                                    <button id="themeGreen" class="bg-green-100 hover:bg-green-200 text-green-800 px-3 py-2 rounded text-xs font-medium border border-green-300">
+                                        Green
+                                    </button>
+                                    <button id="themeDark" class="bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded text-xs font-medium border border-gray-600">
+                                        Dark
+                                    </button>
+                                    <button id="themeModern" class="bg-purple-100 hover:bg-purple-200 text-purple-800 px-3 py-2 rounded text-xs font-medium border border-purple-300">
+                                        Modern
+                                    </button>
+                                    <button id="themeWarm" class="bg-orange-100 hover:bg-orange-200 text-orange-800 px-3 py-2 rounded text-xs font-medium border border-orange-300">
+                                        Warm
+                                    </button>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">คลิกเพื่อใช้ชุดสีสำเร็จรูป</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- API Settings -->
                     <div class="bg-white overflow-hidden shadow rounded-lg">
                         <div class="px-6 py-4 border-b border-gray-200">
@@ -609,6 +689,128 @@
                 showPoolWater: true
             }
         };
+
+        // Initialize Color Theme Controls (เบาและประหยัดพื้นที่)
+        function initializeColorTheme() {
+            // Initialize default theme colors from config
+            if (!config.theme) {
+                config.theme = {
+                    headerColor: '#3f2f15',
+                    backgroundColor: '#929079',
+                    weatherTodayColor: '#f3efe6',
+                    weatherOutlookColor: '#ddd6cc'
+                };
+            }
+
+            // Sync color inputs with text inputs (เบา)
+            const colorSync = [
+                ['headerColor', 'headerColorText'],
+                ['backgroundColor', 'backgroundColorText'],
+                ['weatherTodayColor', 'weatherTodayColorText'],
+                ['weatherOutlookColor', 'weatherOutlookColorText']
+            ];
+
+            colorSync.forEach(([colorId, textId]) => {
+                const colorInput = document.getElementById(colorId);
+                const textInput = document.getElementById(textId);
+                
+                if (colorInput && textInput) {
+                    // Load saved values
+                    const savedColor = config.theme[colorId] || colorInput.value;
+                    colorInput.value = savedColor;
+                    textInput.value = savedColor;
+                    
+                    // Sync color picker to text input
+                    colorInput.addEventListener('input', function() {
+                        textInput.value = this.value;
+                        config.theme[colorId] = this.value;
+                    });
+                    
+                    // Sync text input to color picker
+                    textInput.addEventListener('input', function() {
+                        if (/^#[0-9A-F]{6}$/i.test(this.value)) {
+                            colorInput.value = this.value;
+                            config.theme[colorId] = this.value;
+                        }
+                    });
+                }
+            });
+
+            // Theme preset buttons (เบาๆ)
+            const themes = {
+                'themeDefault': { 
+                    headerColor: '#3f2f15', backgroundColor: '#929079',
+                    weatherTodayColor: '#f3efe6', weatherOutlookColor: '#ddd6cc'
+                },
+                'themeBlue': { 
+                    headerColor: '#1e3a8a', backgroundColor: '#60a5fa',
+                    weatherTodayColor: '#dbeafe', weatherOutlookColor: '#bfdbfe'
+                },
+                'themeGreen': { 
+                    headerColor: '#166534', backgroundColor: '#4ade80',
+                    weatherTodayColor: '#dcfce7', weatherOutlookColor: '#bbf7d0'
+                },
+                'themeDark': { 
+                    headerColor: '#111827', backgroundColor: '#374151',
+                    weatherTodayColor: '#4b5563', weatherOutlookColor: '#6b7280'
+                },
+                'themeModern': { 
+                    headerColor: '#581c87', backgroundColor: '#a855f7',
+                    weatherTodayColor: '#f3e8ff', weatherOutlookColor: '#e9d5ff'
+                },
+                'themeWarm': { 
+                    headerColor: '#c2410c', backgroundColor: '#fb923c',
+                    weatherTodayColor: '#fed7aa', weatherOutlookColor: '#fdba74'
+                }
+            };
+
+            Object.keys(themes).forEach(themeId => {
+                const button = document.getElementById(themeId);
+                if (button) {
+                    button.addEventListener('click', function() {
+                        const theme = themes[themeId];
+                        
+                        // Apply theme to inputs
+                        Object.keys(theme).forEach(key => {
+                            const colorInput = document.getElementById(key);
+                            const textInput = document.getElementById(key + 'Text');
+                            
+                            if (colorInput && textInput) {
+                                colorInput.value = theme[key];
+                                textInput.value = theme[key];
+                                config.theme[key] = theme[key];
+                            }
+                        });
+                        
+                        console.log(`🎨 Applied ${themeId} theme`);
+                    });
+                }
+            });
+
+            // Reset buttons
+            ['resetHeaderColor', 'resetBackgroundColor'].forEach(resetId => {
+                const button = document.getElementById(resetId);
+                if (button) {
+                    button.addEventListener('click', function() {
+                        const defaultTheme = themes.themeDefault;
+                        const key = resetId.replace('reset', '').charAt(0).toLowerCase() + resetId.replace('reset', '').slice(1);
+                        
+                        if (defaultTheme[key]) {
+                            const colorInput = document.getElementById(key);
+                            const textInput = document.getElementById(key + 'Text');
+                            
+                            if (colorInput && textInput) {
+                                colorInput.value = defaultTheme[key];
+                                textInput.value = defaultTheme[key];
+                                config.theme[key] = defaultTheme[key];
+                            }
+                        }
+                    });
+                }
+            });
+
+            console.log('🎨 Color theme controls initialized (lightweight)');
+        }
 
         // Initialize Quill Editor
         function initQuillEditor() {
@@ -1208,6 +1410,9 @@
             document.getElementById('fontSelect').addEventListener('change', function() {
                 config.font = this.value;
             });
+            
+            // Theme Color Controls (เบาและง่าย)
+            initializeColorTheme();
             
             // Weather API selection
             document.getElementById('weatherApiSelect').addEventListener('change', function() {
