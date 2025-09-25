@@ -25,22 +25,83 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     
     <style>
-        /* Sidebar Navigation Styles */
-        .sidebar-nav-btn.active {
-            background-color: #f3f4f6;
-            color: #1f2937;
-            font-weight: 600;
+        /* Modern Sidebar Navigation Styles */
+        .sidebar {
+            backdrop-filter: blur(8px);
         }
+        
+        .sidebar-nav-btn {
+            transition: all 0.2s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-nav-btn:hover {
+            background-color: #f8fafc;
+            transform: translateX(2px);
+        }
+        
+        .sidebar-nav-btn.active {
+            background: linear-gradient(135deg, #3f2f15 0%, #5a4a2d 100%);
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(63, 47, 21, 0.2);
+        }
+        
         .sidebar-nav-btn.active i {
-            color: #3f2f15;
+            color: white;
+        }
+        
+        .sidebar-nav-btn.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: #f59e0b;
+        }
+        
+        /* Clean icon styling */
+        .sidebar-nav-btn i {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .sidebar-nav-btn:hover i {
+            transform: scale(1.1);
         }
         
         /* Content Section Styles */
         .content-section {
             display: none;
+            animation: fadeIn 0.3s ease-in-out;
         }
+        
         .content-section.active {
             display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Modern scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
         
         /* Mobile Sidebar */
@@ -49,6 +110,14 @@
                 transform: translateX(0) !important;
             }
         }
+        
+        /* Modern card styling */
+        .modern-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -56,40 +125,86 @@
         <!-- Mobile Overlay -->
         <div id="mobileOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
         
-        <!-- Sidebar Navigation -->
-        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:relative lg:transform-none" id="sidebar">
-            <!-- Logo Header -->
-            <div class="flex items-center justify-center h-16 px-4 bg-amber-900" style="background-color: #3f2f15;">
-                <h1 class="text-lg font-semibold text-white">Canvas 39 Admin</h1>
+        <!-- Modern Sidebar Navigation -->
+        <div class="fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-gray-200 shadow-xl transform -translate-x-full transition-all duration-300 ease-out lg:translate-x-0 lg:relative lg:transform-none sidebar" id="sidebar">
+            <!-- Elegant Logo Header -->
+            <div class="flex items-center justify-between h-20 px-6 bg-gradient-to-r from-slate-50 to-gray-100 border-b border-gray-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <i data-lucide="layers" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-gray-900">Canvas 39</h1>
+                        <p class="text-xs text-gray-500 font-medium">Admin Panel</p>
+                    </div>
+                </div>
             </div>
             
-            <!-- Navigation Menu -->
-            <nav class="mt-8">
-                <div class="px-4 space-y-2">
-                    <button class="sidebar-nav-btn active w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-50" data-section="theme">
-                        <i data-lucide="palette" class="w-5 h-5 mr-3"></i>
-                        Theme & Design
+            <!-- Clean Navigation Menu -->
+            <nav class="mt-6 px-4 custom-scrollbar overflow-y-auto" style="height: calc(100vh - 5rem);">
+                <div class="space-y-2">
+                    <!-- Theme & Design -->
+                    <button class="sidebar-nav-btn active w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="theme">
+                        <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                            <i data-lucide="palette" class="w-4 h-4 text-purple-600"></i>
+                        </div>
+                        <span>Theme & Design</span>
                     </button>
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-50" data-section="media">
-                        <i data-lucide="image" class="w-5 h-5 mr-3"></i>
-                        Media & Assets
+                    
+                    <!-- Media & Assets -->
+                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="media">
+                        <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                            <i data-lucide="image" class="w-4 h-4 text-blue-600"></i>
+                        </div>
+                        <span>Media & Assets</span>
                     </button>
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-50" data-section="settings">
-                        <i data-lucide="settings" class="w-5 h-5 mr-3"></i>
-                        System Settings
+                    
+                    <!-- System Settings -->
+                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="settings">
+                        <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center mr-3">
+                            <i data-lucide="settings" class="w-4 h-4 text-emerald-600"></i>
+                        </div>
+                        <span>System Settings</span>
                     </button>
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-50" data-section="content">
-                        <i data-lucide="megaphone" class="w-5 h-5 mr-3"></i>
-                        Content Management
+                    
+                    <!-- Content Management -->
+                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="content">
+                        <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
+                            <i data-lucide="megaphone" class="w-4 h-4 text-orange-600"></i>
+                        </div>
+                        <span>Content Management</span>
                     </button>
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-50" data-section="users">
-                        <i data-lucide="users" class="w-5 h-5 mr-3"></i>
-                        User Management
+                    
+                    <!-- User Management -->
+                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="users">
+                        <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                            <i data-lucide="users" class="w-4 h-4 text-indigo-600"></i>
+                        </div>
+                        <span>User Management</span>
                     </button>
-                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-50" data-section="status">
-                        <i data-lucide="activity" class="w-5 h-5 mr-3"></i>
-                        System Status
+                    
+                    <!-- System Status -->
+                    <button class="sidebar-nav-btn w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="status">
+                        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                            <i data-lucide="activity" class="w-4 h-4 text-green-600"></i>
+                        </div>
+                        <span>System Status</span>
                     </button>
+                </div>
+                
+                <!-- Bottom User Info -->
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <div class="px-4 py-3 bg-slate-50 rounded-xl">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                                <i data-lucide="user" class="w-4 h-4 text-white"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 truncate">Admin User</p>
+                                <p class="text-xs text-gray-500">ผู้ดูแลระบบ</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </nav>
         </div>
@@ -138,9 +253,9 @@
             </header>
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto">
-                <div class="py-6">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <main class="flex-1 overflow-y-auto custom-scrollbar bg-gradient-to-br from-gray-50 to-slate-100">
+                <div class="py-8">
+                    <div class="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10">
                         
                         <!-- Theme & Design Section -->
                         <div id="theme-section" class="content-section active">
@@ -151,7 +266,7 @@
                             
                             <div class="space-y-6">
                                 <!-- Color Theme Settings -->
-                                <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="modern-card overflow-hidden rounded-2xl">
                                     <div class="px-6 py-4 border-b border-gray-200">
                                         <h3 class="text-lg font-medium text-gray-900">การตั้งค่าสี Theme</h3>
                                     </div>
@@ -207,7 +322,7 @@
                                 </div>
 
                                 <!-- Font Settings -->
-                                <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <div class="modern-card overflow-hidden rounded-2xl">
                                     <div class="px-6 py-4 border-b border-gray-200">
                                         <h3 class="text-lg font-medium text-gray-900">การตั้งค่า Font</h3>
                                     </div>
