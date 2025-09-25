@@ -160,14 +160,21 @@
         
         // Debug function สำหรับ slideshow
         window.debugSlideshow = function() {
-            console.log('🎬 Simple Slideshow Debug:');
+            console.log('🎬 Slideshow Debug Status:');
             console.log('- Current slide:', currentSlide);
             console.log('- Slide interval:', slideInterval);
+            console.log('- Active timeouts:', allTimeouts.length);
             console.log('- Slideshow initialized:', slideshowInitialized);
             console.log('- Slideshow config:', slideshowConfig);
             
+            const slide1 = document.getElementById('slide1');
+            const slide2 = document.getElementById('slide2');
+            console.log('- Slide1 classes:', slide1?.className);
+            console.log('- Slide2 classes:', slide2?.className);
+            
             // Force stop function for testing
             window.forceStopSlideshow = stopSlideshow;
+            window.emergencyStop = clearAllSlideshowTimers;
         };
     </script>
     
@@ -1612,15 +1619,31 @@
             }
         }
 
-        // Simple slideshow functionality
+        // Simple slideshow functionality with cleanup tracking
         let currentSlide = 0;
         let slideInterval = null;
         let slideshowInitialized = false;
+        let allTimeouts = []; // Track all timeouts for cleanup
         let slideshowConfig = {
             enabled: true,
             interval: 10000, // 10 seconds default
             autoPlay: true
         };
+        
+        // Complete cleanup function
+        function clearAllSlideshowTimers() {
+            // Clear main interval
+            if (slideInterval) {
+                clearInterval(slideInterval);
+                slideInterval = null;
+            }
+            
+            // Clear all timeouts
+            allTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+            allTimeouts = [];
+            
+            console.log('🧹 All slideshow timers cleared');
+        }
 
         function showSlide(slideIndex) {
             console.log(`🎬 Slide to: ${slideIndex}`);
@@ -1674,7 +1697,7 @@
             currentSlide = slideIndex;
             
             // Prepare next slide after transition
-            setTimeout(() => {
+            const prepareTimeout = setTimeout(() => {
                 if (slideIndex === 0) {
                     // Prepare slide 2 on the right for next forward movement
                     slide2.classList.remove('slide-left');
@@ -1684,7 +1707,9 @@
                     slide1.classList.remove('slide-left');
                     slide1.classList.add('slide-right');
                 }
+                console.log('📍 Slide prepared for next movement');
             }, 1000); // After 1s transition
+            allTimeouts.push(prepareTimeout);
         }
 
         function nextSlide() {
@@ -1700,25 +1725,21 @@
         }
 
         function startSlideshow() {
-            if (slideInterval) {
-                clearInterval(slideInterval);
-            }
+            // ALWAYS clear everything first to prevent overlaps
+            clearAllSlideshowTimers();
             
             if (slideshowConfig.enabled && slideshowConfig.autoPlay) {
                 slideInterval = setInterval(() => {
-                    console.log('⏰ Simple auto slideshow trigger');
+                    console.log('⏰ Auto slideshow trigger');
                     nextSlide();
                 }, slideshowConfig.interval);
-                console.log(`🎬 Simple slideshow started - interval: ${slideshowConfig.interval}ms`);
+                console.log(`🎬 Clean slideshow started - interval: ${slideshowConfig.interval}ms`);
             }
         }
 
         function stopSlideshow() {
-            if (slideInterval) {
-                clearInterval(slideInterval);
-                slideInterval = null;
-                console.log('⏸️ Simple slideshow stopped');
-            }
+            clearAllSlideshowTimers();
+            console.log('⏸️ Slideshow completely stopped');
         }
 
         function restartSlideshow() {
@@ -1728,6 +1749,7 @@
 
         function updateSlideshowConfig(config) {
             if (config.slideshow) {
+                const oldInterval = slideshowConfig.interval;
                 slideshowConfig.enabled = config.slideshow.enabled;
                 slideshowConfig.interval = config.slideshow.interval * 1000; // Convert to milliseconds
                 slideshowConfig.showAirQuality = config.slideshow.showAirQuality;
@@ -1735,8 +1757,13 @@
                 
                 console.log('🎬 Slideshow config updated:', slideshowConfig);
                 
-                // Restart slideshow with new settings
-                restartSlideshow();
+                // Only restart if interval changed or if not initialized yet
+                if (oldInterval !== slideshowConfig.interval || !slideshowInitialized) {
+                    console.log('🔄 Restarting slideshow due to config change');
+                    restartSlideshow();
+                } else {
+                    console.log('⚠️ Slideshow config update skipped - no significant changes');
+                }
             }
         }
 
@@ -1762,9 +1789,9 @@
                 console.error('❌ Error in updateDisplay:', error);
             }
             
-            // Initialize slideshow only once
+            // Initialize slideshow only once - prevent duplicate initialization
             if (!slideshowInitialized) {
-                console.log('🎬 Simple slideshow initializing...');
+                console.log('🎬 Slideshow initializing (FIRST TIME ONLY)...');
                 
                 // Check if slideshow elements exist
                 const slide1 = document.getElementById('slide1');
@@ -1772,11 +1799,13 @@
                 
                 if (slide1 && slide2) {
                     console.log('✅ Slideshow elements found, setting up...');
+                    
+                    // IMPORTANT: Set flag BEFORE doing anything to prevent re-entry
                     slideshowInitialized = true;
                     
-                    // Initialize slides - slide 1 at center, slide 2 at right
-                    slide1.classList.add('slide-center');
-                    slide2.classList.add('slide-right');
+                    // Initialize slides - clean slate first, then set positions
+                    slide1.className = 'absolute inset-0 slide-center';
+                    slide2.className = 'absolute inset-0 slide-right';
                     currentSlide = 0;
                     
                     // Initialize dots
@@ -1793,13 +1822,14 @@
                     
                     console.log('🎬 Slide slideshow initialized - Slide 1 center, Slide 2 right');
                 
-                // Setup navigation dots - simple click handlers
+                // Setup navigation dots - tracked timeout handlers
                 if (dot1) {
                     dot1.addEventListener('click', () => {
                         console.log('🔘 Dot 1 clicked - advance to next');
                         nextSlide();
                         stopSlideshow();
-                        setTimeout(() => startSlideshow(), 2000);
+                        const restartTimeout = setTimeout(() => startSlideshow(), 2000);
+                        allTimeouts.push(restartTimeout);
                     });
                 }
                 
@@ -1808,7 +1838,8 @@
                         console.log('🔘 Dot 2 clicked - advance to next');
                         nextSlide();
                         stopSlideshow();
-                        setTimeout(() => startSlideshow(), 2000);
+                        const restartTimeout = setTimeout(() => startSlideshow(), 2000);
+                        allTimeouts.push(restartTimeout);
                     });
                 }
                 
