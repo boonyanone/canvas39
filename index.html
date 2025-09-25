@@ -1663,7 +1663,7 @@
         }
 
         function showSlide(slideIndex) {
-            console.log(`🎬 Clean slide to: ${slideIndex}`);
+            console.log(`🎬 Forward carousel to slide: ${slideIndex}`);
             
             const slide1 = document.getElementById('slide1');
             const slide2 = document.getElementById('slide2');
@@ -1673,21 +1673,37 @@
                 return;
             }
             
-            // Always reset to clean state first
-            slide1.className = 'absolute inset-0';
-            slide2.className = 'absolute inset-0';
-            
+            // Forward-only movement: incoming slide comes from RIGHT, outgoing goes to LEFT
             if (slideIndex === 0) {
-                console.log('📺 Show Air Quality - clean state');
-                slide1.classList.add('slide-center');
-                slide2.classList.add('slide-right'); // Always prepare next slide
+                console.log('📺 Forward to Air Quality: slide1 from right → center, slide2 center → left');
+                // Slide 1 comes from right (100%) to center (0%)
+                // Slide 2 goes from center (0%) to left (-100%)
+                slide1.className = 'absolute inset-0 slide-center';
+                slide2.className = 'absolute inset-0 slide-left';
             } else {
-                console.log('🏊‍♂️ Show Pool Water - clean state');  
-                slide2.classList.add('slide-center');
-                slide1.classList.add('slide-right'); // Always prepare next slide
+                console.log('🏊‍♂️ Forward to Pool Water: slide2 from right → center, slide1 center → left');
+                // Slide 2 comes from right (100%) to center (0%)  
+                // Slide 1 goes from center (0%) to left (-100%)
+                slide2.className = 'absolute inset-0 slide-center';
+                slide1.className = 'absolute inset-0 slide-left';
             }
             
             currentSlide = slideIndex;
+            
+            // After transition, move the outgoing slide to right for next forward movement
+            const repositionTimeout = setTimeout(() => {
+                if (slideIndex === 0) {
+                    // Slide2 is now at left, move it to right for next entrance
+                    slide2.classList.remove('slide-left');
+                    slide2.classList.add('slide-right');
+                } else {
+                    // Slide1 is now at left, move it to right for next entrance  
+                    slide1.classList.remove('slide-left');
+                    slide1.classList.add('slide-right');
+                }
+                console.log('🔄 Moved outgoing slide to right for next forward movement');
+            }, 1000); // After CSS transition completes
+            allTimeouts.push(repositionTimeout);
         }
 
         function nextSlide() {
