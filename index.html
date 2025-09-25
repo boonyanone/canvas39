@@ -154,6 +154,21 @@
                 console.log('❌ Admin logo preview not found');
             }
         };
+        
+        // Debug function สำหรับ slideshow
+        window.debugSlideshow = function() {
+            console.log('🎬 Slideshow Debug Status:');
+            console.log('- Current slide:', currentSlide);
+            console.log('- Slide interval:', slideInterval);
+            console.log('- Is transitioning:', isTransitioning);
+            console.log('- Slide queue:', slideQueue);
+            console.log('- Active timeouts:', allTimeouts.length);
+            console.log('- Slideshow initialized:', slideshowInitialized);
+            console.log('- Slideshow config:', slideshowConfig);
+            
+            // Force stop function for testing
+            window.forceStopSlideshow = forceStopAllSlideshow;
+        };
     </script>
     
     <!-- Firebase SDK (Backup) -->
@@ -1597,12 +1612,13 @@
             }
         }
 
-        // Slideshow functionality
+        // Slideshow functionality - Global state
         let currentSlide = 0;
         let slideInterval = null;
         let isTransitioning = false;
         let slideshowInitialized = false;
         let slideQueue = [];
+        let allTimeouts = []; // Track all timeouts
         let slideshowConfig = {
             enabled: true,
             interval: 10000, // 10 seconds default
@@ -1610,6 +1626,27 @@
             showAirQuality: true,
             showPoolWater: true
         };
+
+        // Force stop all slideshow activities
+        function forceStopAllSlideshow() {
+            console.log('🛑 Force stopping ALL slideshow activities...');
+            
+            // Clear main interval
+            if (slideInterval !== null) {
+                clearInterval(slideInterval);
+                slideInterval = null;
+            }
+            
+            // Clear all tracked timeouts
+            allTimeouts.forEach(timeout => clearTimeout(timeout));
+            allTimeouts = [];
+            
+            // Reset all flags
+            isTransitioning = false;
+            slideQueue = [];
+            
+            console.log('🛑 All slideshow activities stopped');
+        }
 
         function showSlide(slideIndex, force = false) {
             if (isTransitioning && !force) {
@@ -1675,7 +1712,7 @@
             currentSlide = slideIndex;
             
             // Reset transition flag after transition completes
-            setTimeout(() => {
+            const transitionTimeout = setTimeout(() => {
                 isTransitioning = false;
                 
                 // Prepare the next slide for forward movement
@@ -1693,9 +1730,11 @@
                 if (slideQueue.length > 0) {
                     const nextSlideIndex = slideQueue.shift(); // Take first item from queue
                     console.log(`📋 Processing queued slide: ${nextSlideIndex}, remaining queue: [${slideQueue.join(',')}]`);
-                    setTimeout(() => showSlide(nextSlideIndex), 100); // Small delay to prevent rapid transitions
+                    const queueTimeout = setTimeout(() => showSlide(nextSlideIndex), 100);
+                    allTimeouts.push(queueTimeout);
                 }
             }, 1200);
+            allTimeouts.push(transitionTimeout);
         }
 
         function nextSlide() {
@@ -1716,29 +1755,24 @@
         }
 
         function startSlideshow() {
-            if (slideInterval !== null) {
-                console.log('⚠️ Slideshow already running, stopping first...');
-                stopSlideshow();
-            }
+            // Force stop everything first
+            forceStopAllSlideshow();
             
             if (slideshowConfig.enabled && slideshowConfig.autoPlay) {
                 slideInterval = setInterval(() => {
                     console.log('⏰ Auto slideshow trigger');
-                    nextSlide();
+                    if (!isTransitioning) {
+                        nextSlide();
+                    } else {
+                        console.log('⏰ Auto trigger skipped - transition in progress');
+                    }
                 }, slideshowConfig.interval);
                 console.log(`🎬 Slideshow started - interval: ${slideshowConfig.interval}ms`);
             }
         }
 
         function stopSlideshow() {
-            if (slideInterval !== null) {
-                clearInterval(slideInterval);
-                slideInterval = null;
-                console.log('⏸️ Slideshow stopped');
-                // Clear any queued slides when stopping
-                slideQueue.length = 0;
-                console.log('🗑️ Slide queue cleared');
-            }
+            forceStopAllSlideshow();
         }
 
         function restartSlideshow() {
@@ -1785,6 +1819,9 @@
             // Initialize slideshow only once
             if (!slideshowInitialized) {
                 console.log('🎬 Initializing slideshow...');
+                
+                // Force clean start
+                forceStopAllSlideshow();
                 
                 // Check if slideshow elements exist
                 const slide1 = document.getElementById('slide1');
@@ -1837,6 +1874,7 @@
                             dotClickTimeout = null;
                             startSlideshow();
                         }, 2000); // 2 second pause
+                        allTimeouts.push(dotClickTimeout);
                     });
                 }
                 
@@ -1861,6 +1899,7 @@
                             dotClickTimeout = null;
                             startSlideshow();
                         }, 2000); // 2 second pause
+                        allTimeouts.push(dotClickTimeout);
                     });
                 }
                 
