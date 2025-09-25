@@ -36,17 +36,19 @@
             padding: 0 !important;
         }
         
-        /* Simple slideshow with opacity */
-        #slide1, #slide2 {
-            opacity: 1;
-            transition: opacity 1s ease-in-out;
-            pointer-events: auto;
+        /* Simple slide effect */
+        .slideshow-container {
+            overflow: hidden;
         }
         
-        #slide1.hidden, #slide2.hidden {
-            opacity: 0;
-            pointer-events: none;
+        #slide1, #slide2 {
+            transition: transform 1s ease-in-out;
         }
+        
+        /* Slide positions */
+        .slide-center { transform: translateX(0%); }
+        .slide-right { transform: translateX(100%); }
+        .slide-left { transform: translateX(-100%); }
         
         /* Hardware acceleration for smooth transitions */
         .transition-transform {
@@ -300,7 +302,7 @@
         </div>
 
         <!-- Quality Information Slideshow -->
-        <div class="relative flex-shrink-0 h-[42.1vh] overflow-hidden" style="background-color: #929079;">
+        <div class="relative flex-shrink-0 h-[42.1vh] slideshow-container" style="background-color: #929079;">
             <!-- Slide Navigation Dots - Bottom Center -->
             <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-10 flex gap-3">
                 <div class="w-4 h-4 rounded-full bg-white bg-opacity-60 hover:bg-opacity-80 transition-all duration-300 cursor-pointer shadow-lg" id="slideDot1"></div>
@@ -308,7 +310,7 @@
             </div>
             
             <!-- Slide 1: Air Quality -->
-            <div class="absolute inset-0" id="slide1">
+            <div class="absolute inset-0 slide-center" id="slide1">
                 <div class="p-8 h-full flex flex-col">
                     <!-- Header Title -->
                     <div class="text-center mb-4">
@@ -388,7 +390,7 @@
             </div>
 
             <!-- Slide 2: Pool Water Quality -->
-            <div class="absolute inset-0 hidden" id="slide2">
+            <div class="absolute inset-0 slide-right" id="slide2">
                 <div class="p-8 h-full flex flex-col" style="background-color: #b7a591;">
                     <!-- Header Title -->
                     <div class="text-center mb-4">
@@ -1621,7 +1623,7 @@
         };
 
         function showSlide(slideIndex) {
-            console.log(`🎬 Simple showSlide: ${slideIndex}`);
+            console.log(`🎬 Slide to: ${slideIndex}`);
             
             const slide1 = document.getElementById('slide1');
             const slide2 = document.getElementById('slide2');
@@ -1633,10 +1635,15 @@
                 return;
             }
             
+            // Reset all position classes
+            slide1.classList.remove('slide-center', 'slide-left', 'slide-right');
+            slide2.classList.remove('slide-center', 'slide-left', 'slide-right');
+            
             if (slideIndex === 0) {
-                console.log('📺 Show slide 1 (Air Quality)');
-                slide1.classList.remove('hidden');
-                slide2.classList.add('hidden');
+                console.log('📺 Slide to Air Quality (forward movement)');
+                // Slide 1 to center, Slide 2 moves left (out)
+                slide1.classList.add('slide-center');
+                slide2.classList.add('slide-left');
                 
                 // Update dots
                 if (dot1) {
@@ -1648,9 +1655,10 @@
                     dot2.classList.add('bg-opacity-30');
                 }
             } else {
-                console.log('🏊‍♂️ Show slide 2 (Pool Water)');
-                slide2.classList.remove('hidden');
-                slide1.classList.add('hidden');
+                console.log('🏊‍♂️ Slide to Pool Water (forward movement)');
+                // Slide 2 to center, Slide 1 moves left (out)
+                slide2.classList.add('slide-center');
+                slide1.classList.add('slide-left');
                 
                 // Update dots
                 if (dot2) {
@@ -1664,6 +1672,19 @@
             }
             
             currentSlide = slideIndex;
+            
+            // Prepare next slide after transition
+            setTimeout(() => {
+                if (slideIndex === 0) {
+                    // Prepare slide 2 on the right for next forward movement
+                    slide2.classList.remove('slide-left');
+                    slide2.classList.add('slide-right');
+                } else {
+                    // Prepare slide 1 on the right for next forward movement
+                    slide1.classList.remove('slide-left');
+                    slide1.classList.add('slide-right');
+                }
+            }, 1000); // After 1s transition
         }
 
         function nextSlide() {
@@ -1753,9 +1774,9 @@
                     console.log('✅ Slideshow elements found, setting up...');
                     slideshowInitialized = true;
                     
-                    // Initialize slides - simple setup
-                    slide1.classList.remove('hidden');
-                    slide2.classList.add('hidden');
+                    // Initialize slides - slide 1 at center, slide 2 at right
+                    slide1.classList.add('slide-center');
+                    slide2.classList.add('slide-right');
                     currentSlide = 0;
                     
                     // Initialize dots
@@ -1770,7 +1791,7 @@
                         dot2.classList.add('bg-opacity-30');
                     }
                     
-                    console.log('🎬 Simple slideshow initialized - Slide 1 visible, Slide 2 hidden');
+                    console.log('🎬 Slide slideshow initialized - Slide 1 center, Slide 2 right');
                 
                 // Setup navigation dots - simple click handlers
                 if (dot1) {
