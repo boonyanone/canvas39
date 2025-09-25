@@ -51,7 +51,7 @@
             transform: translateZ(0);
         }
         
-        /* Slide positioning classes */
+        /* Slide positioning classes for forward-only carousel */
         .slide-active {
             -webkit-transform: translateX(0) translateZ(0) !important;
             transform: translateX(0) translateZ(0) !important;
@@ -65,6 +65,17 @@
         .slide-prev {
             -webkit-transform: translateX(-100%) translateZ(0) !important;
             transform: translateX(-100%) translateZ(0) !important;
+        }
+        
+        /* Force forward-only movement */
+        .slide-forward-out {
+            -webkit-transform: translateX(-100%) translateZ(0) !important;
+            transform: translateX(-100%) translateZ(0) !important;
+        }
+        
+        .slide-forward-in {
+            -webkit-transform: translateX(0) translateZ(0) !important;
+            transform: translateX(0) translateZ(0) !important;
         }
         
         /* Force remove any background from SVG icons */
@@ -1603,7 +1614,7 @@
                 return;
             }
             
-            console.log(`🎬 showSlide called with index: ${slideIndex} (FORWARD LOOP ONLY)`);
+            console.log(`🎬 showSlide called with index: ${slideIndex} (FORWARD-ONLY CAROUSEL)`);
             isTransitioning = true;
             
             const slide1 = document.getElementById('slide1');
@@ -1617,14 +1628,15 @@
                 return;
             }
             
-            // Always use forward slide motion - slide from right to left
+            // Forward-only carousel: slides always move from right to left
             if (slideIndex === 0) {
-                console.log('📺 Transition to slide 1 (Air Quality) - slide from right');
-                // Slide 2 goes off-screen to left, Slide 1 comes from right
-                slide2.classList.remove('slide-active');
-                slide2.style.transform = 'translateX(-100%)'; // Exit left
-                slide1.classList.remove('slide-next');
-                slide1.classList.add('slide-active');
+                console.log('📺 Forward to slide 1 (Air Quality) - slides move left');
+                // Slide 1 slides in from right (100%) to center (0%)
+                // Slide 2 slides out from center (0%) to left (-100%)
+                slide1.style.transform = 'translateX(0%)';
+                slide2.style.transform = 'translateX(-100%)';
+                
+                // Update dot indicators
                 if (dot1) {
                     dot1.classList.remove('bg-opacity-30');
                     dot1.classList.add('bg-opacity-60');
@@ -1634,12 +1646,13 @@
                     dot2.classList.add('bg-opacity-30');
                 }
             } else {
-                console.log('🏊‍♂️ Transition to slide 2 (Pool Water) - slide from right');
-                // Slide 1 goes off-screen to left, Slide 2 comes from right
-                slide1.classList.remove('slide-active');
-                slide1.style.transform = 'translateX(-100%)'; // Exit left
-                slide2.classList.remove('slide-next');
-                slide2.classList.add('slide-active');
+                console.log('🏊‍♂️ Forward to slide 2 (Pool Water) - slides move left');
+                // Slide 2 slides in from right (100%) to center (0%)
+                // Slide 1 slides out from center (0%) to left (-100%)
+                slide2.style.transform = 'translateX(0%)';
+                slide1.style.transform = 'translateX(-100%)';
+                
+                // Update dot indicators
                 if (dot2) {
                     dot2.classList.remove('bg-opacity-30');
                     dot2.classList.add('bg-opacity-60');
@@ -1649,14 +1662,21 @@
                     dot1.classList.add('bg-opacity-30');
                 }
             }
+            
             currentSlide = slideIndex;
             
-            // Reset transition flag after transition completes (1000ms + buffer)
+            // Reset transition flag after transition completes
             setTimeout(() => {
                 isTransitioning = false;
-                // Reset transforms after transition
-                slide1.style.transform = '';
-                slide2.style.transform = '';
+                // Prepare the next slide for forward movement
+                if (slideIndex === 0) {
+                    // Current: slide1 at center, prepare slide2 at right for next forward movement
+                    slide2.style.transform = 'translateX(100%)';
+                } else {
+                    // Current: slide2 at center, prepare slide1 at right for next forward movement
+                    slide1.style.transform = 'translateX(100%)';
+                }
+                console.log('🔄 Next slide prepared for forward movement');
             }, 1200);
         }
 
@@ -1743,16 +1763,32 @@
                 if (slide1 && slide2) {
                     console.log('✅ Slideshow elements found, setting up...');
                     slideshowInitialized = true;
-                    showSlide(0);
+                    
+                    // Initialize slides positioning for forward-only loop
+                    slide1.style.transform = 'translateX(0%)';    // Slide 1 starts at center
+                    slide2.style.transform = 'translateX(100%)';  // Slide 2 starts at right
+                    currentSlide = 0;
+                    
+                    // Initialize dots
+                    const dot1 = document.getElementById('slideDot1');
+                    const dot2 = document.getElementById('slideDot2');
+                    if (dot1) {
+                        dot1.classList.remove('bg-opacity-30');
+                        dot1.classList.add('bg-opacity-60');
+                    }
+                    if (dot2) {
+                        dot2.classList.remove('bg-opacity-60');
+                        dot2.classList.add('bg-opacity-30');
+                    }
+                    
+                    console.log('🎬 Slideshow initialized - Slide 1 at center, Slide 2 ready at right');
                 
-                // Setup navigation dots
-                const dot1 = document.getElementById('slideDot1');
-                const dot2 = document.getElementById('slideDot2');
-                
+                // Setup navigation dots (reuse already defined variables)
                 if (dot1) {
                     dot1.addEventListener('click', () => {
                         console.log('🔘 Dot 1 clicked - advance forward');
-                        nextSlide(); // Always move forward
+                        // Always advance to next slide regardless of which dot is clicked
+                        nextSlide();
                         // Pause slideshow briefly then restart
                         stopSlideshow();
                         setTimeout(() => {
@@ -1764,7 +1800,8 @@
                 if (dot2) {
                     dot2.addEventListener('click', () => {
                         console.log('🔘 Dot 2 clicked - advance forward');
-                        nextSlide(); // Always move forward
+                        // Always advance to next slide regardless of which dot is clicked
+                        nextSlide();
                         // Pause slideshow briefly then restart
                         stopSlideshow();
                         setTimeout(() => {
