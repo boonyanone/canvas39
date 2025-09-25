@@ -1599,9 +1599,10 @@
 
         // Slideshow functionality
         let currentSlide = 0;
-        let slideInterval;
+        let slideInterval = null;
         let isTransitioning = false;
         let slideshowInitialized = false;
+        let slideQueue = [];
         let slideshowConfig = {
             enabled: true,
             interval: 10000, // 10 seconds default
@@ -1610,13 +1611,17 @@
             showPoolWater: true
         };
 
-        function showSlide(slideIndex) {
-            if (isTransitioning) {
-                console.log('⏸️ Transition in progress, skipping...');
+        function showSlide(slideIndex, force = false) {
+            if (isTransitioning && !force) {
+                console.log('⏸️ Transition in progress, queuing slide request...');
+                // Add to queue instead of ignoring
+                if (slideQueue.indexOf(slideIndex) === -1) {
+                    slideQueue.push(slideIndex);
+                }
                 return;
             }
             
-            console.log(`🎬 showSlide called with index: ${slideIndex} (FORWARD-ONLY CAROUSEL)`);
+            console.log(`🎬 showSlide called with index: ${slideIndex} (FORWARD-ONLY CAROUSEL) - Queue: [${slideQueue.join(',')}]`);
             isTransitioning = true;
             
             const slide1 = document.getElementById('slide1');
@@ -1672,6 +1677,7 @@
             // Reset transition flag after transition completes
             setTimeout(() => {
                 isTransitioning = false;
+                
                 // Prepare the next slide for forward movement
                 if (slideIndex === 0) {
                     // Current: slide1 at center, prepare slide2 at right for next forward movement
@@ -1680,12 +1686,26 @@
                     // Current: slide2 at center, prepare slide1 at right for next forward movement
                     slide1.style.setProperty('transform', 'translateX(100%)', 'important');
                 }
-                console.log('🔄 Next slide prepared for forward movement');
+                
+                console.log('🔄 Transition complete. Next slide prepared for forward movement');
+                
+                // Process queued slide requests
+                if (slideQueue.length > 0) {
+                    const nextSlideIndex = slideQueue.shift(); // Take first item from queue
+                    console.log(`📋 Processing queued slide: ${nextSlideIndex}, remaining queue: [${slideQueue.join(',')}]`);
+                    setTimeout(() => showSlide(nextSlideIndex), 100); // Small delay to prevent rapid transitions
+                }
             }, 1200);
         }
 
         function nextSlide() {
+            if (isTransitioning) {
+                console.log('⏸️ NextSlide called during transition, skipping to prevent overlap');
+                return;
+            }
+            
             currentSlide = (currentSlide + 1) % 2;
+            console.log(`🔄 NextSlide: Moving to slide ${currentSlide}`);
             showSlide(currentSlide);
         }
 
@@ -1696,22 +1716,28 @@
         }
 
         function startSlideshow() {
-            if (slideInterval) {
+            if (slideInterval !== null) {
                 console.log('⚠️ Slideshow already running, stopping first...');
                 stopSlideshow();
             }
             
             if (slideshowConfig.enabled && slideshowConfig.autoPlay) {
-                slideInterval = setInterval(nextSlide, slideshowConfig.interval);
+                slideInterval = setInterval(() => {
+                    console.log('⏰ Auto slideshow trigger');
+                    nextSlide();
+                }, slideshowConfig.interval);
                 console.log(`🎬 Slideshow started - interval: ${slideshowConfig.interval}ms`);
             }
         }
 
         function stopSlideshow() {
-            if (slideInterval) {
+            if (slideInterval !== null) {
                 clearInterval(slideInterval);
                 slideInterval = null;
                 console.log('⏸️ Slideshow stopped');
+                // Clear any queued slides when stopping
+                slideQueue.length = 0;
+                console.log('🗑️ Slide queue cleared');
             }
         }
 
@@ -1788,14 +1814,27 @@
                     console.log('🎬 Slideshow initialized - Slide 1 at center, Slide 2 ready at right');
                 
                 // Setup navigation dots (reuse already defined variables)
+                let dotClickTimeout = null;
+                
                 if (dot1) {
                     dot1.addEventListener('click', () => {
                         console.log('🔘 Dot 1 clicked - advance forward');
+                        
+                        // Prevent rapid clicks
+                        if (dotClickTimeout) {
+                            console.log('⚠️ Dot click debounced');
+                            return;
+                        }
+                        
                         // Always advance to next slide regardless of which dot is clicked
                         nextSlide();
+                        
                         // Pause slideshow briefly then restart
                         stopSlideshow();
-                        setTimeout(() => {
+                        
+                        // Set debounce timeout
+                        dotClickTimeout = setTimeout(() => {
+                            dotClickTimeout = null;
                             startSlideshow();
                         }, 2000); // 2 second pause
                     });
@@ -1804,11 +1843,22 @@
                 if (dot2) {
                     dot2.addEventListener('click', () => {
                         console.log('🔘 Dot 2 clicked - advance forward');
+                        
+                        // Prevent rapid clicks
+                        if (dotClickTimeout) {
+                            console.log('⚠️ Dot click debounced');
+                            return;
+                        }
+                        
                         // Always advance to next slide regardless of which dot is clicked
                         nextSlide();
+                        
                         // Pause slideshow briefly then restart
                         stopSlideshow();
-                        setTimeout(() => {
+                        
+                        // Set debounce timeout
+                        dotClickTimeout = setTimeout(() => {
+                            dotClickTimeout = null;
                             startSlideshow();
                         }, 2000); // 2 second pause
                     });
