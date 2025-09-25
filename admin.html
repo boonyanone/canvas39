@@ -401,30 +401,175 @@
                                     </div>
                                 </div>
 
-                                <!-- Slideshow Settings -->
-                                <div class="bg-white overflow-hidden shadow rounded-lg">
+                                <!-- Advanced Slideshow Settings -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
                                     <div class="px-6 py-4 border-b border-gray-200">
-                                        <h3 class="text-lg font-medium text-gray-900">การตั้งค่า Slideshow</h3>
+                                        <h3 class="text-lg font-medium text-gray-900">Advanced Slideshow Settings</h3>
                                     </div>
-                                    <div class="px-6 py-4 space-y-4">
-                                        <!-- Enable/Disable Slideshow -->
-                                        <div>
-                                            <label class="flex items-center">
-                                                <input type="checkbox" id="slideshowEnabled" checked class="rounded border-gray-300 text-blue-600">
-                                                <span class="ml-2 text-sm font-medium text-gray-700">เปิดใช้งาน Auto Slideshow</span>
-                                            </label>
-                                            <p class="text-xs text-gray-500 mt-1">สลับแสดงข้อมูลอากาศและน้ำอัตโนมัติ</p>
+                                    <div class="px-6 py-4 space-y-6">
+                                        <!-- Basic Controls -->
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" id="slideshowEnabled" checked class="rounded border-gray-300 text-blue-600">
+                                                    <span class="ml-2 text-sm font-medium text-gray-700">เปิดใช้งาน Auto Slideshow</span>
+                                                </label>
+                                                <p class="text-xs text-gray-500 mt-1">สลับแสดงข้อมูลอากาศและคุณภาพน้ำอัตโนมัติ</p>
+                                            </div>
+                                            
+                                            <!-- Slideshow Interval -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">ช่วงเวลาการสลับ (วินาที)</label>
+                                                <div class="flex items-center space-x-4">
+                                                    <input type="range" id="slideshowInterval" min="3" max="60" value="10" class="flex-1">
+                                                    <span id="slideshowIntervalValue" class="text-sm text-gray-600 w-12">10s</span>
+                                                </div>
+                                                <p class="text-xs text-gray-500 mt-1">กำหนดความเร็วการสลับ (3-60 วินาที)</p>
+                                            </div>
                                         </div>
-                                        
-                                        <!-- Slideshow Speed -->
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">ความเร็วการสลับ</label>
-                                            <select id="slideshowInterval" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                                <option value="5">ทุก 5 วินาที</option>
-                                                <option value="10" selected>ทุก 10 วินาที</option>
-                                                <option value="15">ทุก 15 วินาที</option>
-                                                <option value="20">ทุก 20 วินาที</option>
-                                            </select>
+
+                                        <!-- Transition Effects -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">เอฟเฟ็กต์การเปลี่ยนแปลง</h4>
+                                            <div class="space-y-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">ประเภทการเปลี่ยน</label>
+                                                    <select id="transitionType" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                        <option value="fade">Fade In/Out</option>
+                                                        <option value="slide" selected>Slide Left/Right</option>
+                                                        <option value="slideUp">Slide Up/Down</option>
+                                                        <option value="zoom">Zoom In/Out</option>
+                                                        <option value="flip">3D Flip</option>
+                                                        <option value="cube">3D Cube</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">ความเร็วของ Transition (ms)</label>
+                                                    <div class="flex items-center space-x-4">
+                                                        <input type="range" id="transitionSpeed" min="200" max="2000" value="800" class="flex-1">
+                                                        <span id="transitionSpeedValue" class="text-sm text-gray-600 w-16">800ms</span>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Easing Function</label>
+                                                    <select id="transitionEasing" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                        <option value="ease">Ease</option>
+                                                        <option value="ease-in">Ease In</option>
+                                                        <option value="ease-out" selected>Ease Out</option>
+                                                        <option value="ease-in-out">Ease In Out</option>
+                                                        <option value="linear">Linear</option>
+                                                        <option value="bounce">Bounce</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Display Options -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">ตัวเลือกการแสดงผล</h4>
+                                            <div class="space-y-4">
+                                                <!-- Pause on Hover -->
+                                                <div>
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="pauseOnHover" checked class="rounded border-gray-300 text-blue-600">
+                                                        <span class="ml-2 text-sm font-medium text-gray-700">หยุดชั่วคราวเมื่อวางเมาส์</span>
+                                                    </label>
+                                                    <p class="text-xs text-gray-500 mt-1">หยุด slideshow เมื่อวางเมาส์บนหน้าจอ</p>
+                                                </div>
+
+                                                <!-- Show Progress Bar -->
+                                                <div>
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="showProgressBar" class="rounded border-gray-300 text-blue-600">
+                                                        <span class="ml-2 text-sm font-medium text-gray-700">แสดงแถบความคืบหนา</span>
+                                                    </label>
+                                                    <p class="text-xs text-gray-500 mt-1">แสดงแถบแสดงความคืบหนา slideshow</p>
+                                                </div>
+
+                                                <!-- Show Indicators -->
+                                                <div>
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="showIndicators" class="rounded border-gray-300 text-blue-600">
+                                                        <span class="ml-2 text-sm font-medium text-gray-700">แสดงจุดบอกตำแหน่ง</span>
+                                                    </label>
+                                                    <p class="text-xs text-gray-500 mt-1">แสดงจุดเล็กๆ บอกว่าอยู่ slide ไหน</p>
+                                                </div>
+
+                                                <!-- Loop Forever -->
+                                                <div>
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="loopForever" checked class="rounded border-gray-300 text-blue-600">
+                                                        <span class="ml-2 text-sm font-medium text-gray-700">วนซ้ำไม่สิ้นสุด</span>
+                                                    </label>
+                                                    <p class="text-xs text-gray-500 mt-1">เริ่มใหม่เมื่อจบ slide สุดท้าย</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Slide Content Settings -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">การตั้งค่าเนื้อหา Slides</h4>
+                                            <div class="space-y-4">
+                                                <!-- Weather Display Time -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">เวลาแสดง Weather (%)</label>
+                                                    <div class="flex items-center space-x-4">
+                                                        <input type="range" id="weatherDisplayRatio" min="30" max="70" value="50" class="flex-1">
+                                                        <span id="weatherDisplayRatioValue" class="text-sm text-gray-600 w-10">50%</span>
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 mt-1">สัดส่วนเวลาที่แสดงข้อมูลสภาพอากาศ</p>
+                                                </div>
+
+                                                <!-- Quality Display Time -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">เวลาแสดง Air Quality (%)</label>
+                                                    <div class="flex items-center space-x-4">
+                                                        <input type="range" id="qualityDisplayRatio" min="30" max="70" value="50" class="flex-1">
+                                                        <span id="qualityDisplayRatioValue" class="text-sm text-gray-600 w-10">50%</span>
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 mt-1">สัดส่วนเวลาที่แสดงข้อมูลคุณภาพอากาศ</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Auto Play Settings -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">การเล่นอัตโนมัติ</h4>
+                                            <div class="space-y-4">
+                                                <!-- Auto Start -->
+                                                <div>
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="autoStart" checked class="rounded border-gray-300 text-blue-600">
+                                                        <span class="ml-2 text-sm font-medium text-gray-700">เริ่มต้นอัตโนมัติ</span>
+                                                    </label>
+                                                    <p class="text-xs text-gray-500 mt-1">เริ่ม slideshow ทันทีที่โหลดหน้าเว็บ</p>
+                                                </div>
+
+                                                <!-- Start Delay -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">หน่วงเวลาเริ่มต้น (วินาที)</label>
+                                                    <div class="flex items-center space-x-4">
+                                                        <input type="range" id="startDelay" min="0" max="10" value="2" class="flex-1">
+                                                        <span id="startDelayValue" class="text-sm text-gray-600 w-10">2s</span>
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 mt-1">หน่วงเวลาก่อนเริ่ม slideshow</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Preview and Test Controls -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">ทดสอบและตัวอย่าง</h4>
+                                            <div class="grid grid-cols-2 gap-3">
+                                                <button id="previewTransition" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-2 rounded-lg text-sm font-medium border border-blue-300 transition-colors">
+                                                    ดูตัวอย่าง Transition
+                                                </button>
+                                                <button id="testSlideshow" class="bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-lg text-sm font-medium border border-green-300 transition-colors">
+                                                    ทดสอบ Slideshow
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1123,6 +1268,9 @@
             // Update layout UI
             updateLayoutUIFromConfig();
             
+            // Update slideshow UI
+            updateSlideshowUIFromConfig();
+            
             console.log('🎨 UI updated from config');
         }
 
@@ -1341,6 +1489,292 @@
             console.log('🎛️ Layout UI updated from config');
         }
 
+        // Advanced Slideshow Functions
+        function initializeAdvancedSlideshow() {
+            console.log('🎬 Initializing Advanced Slideshow Settings...');
+            
+            // Range slider value updates for slideshow
+            const slideshowRangeInputs = [
+                { id: 'slideshowInterval', valueId: 'slideshowIntervalValue', suffix: 's' },
+                { id: 'transitionSpeed', valueId: 'transitionSpeedValue', suffix: 'ms' },
+                { id: 'weatherDisplayRatio', valueId: 'weatherDisplayRatioValue', suffix: '%' },
+                { id: 'qualityDisplayRatio', valueId: 'qualityDisplayRatioValue', suffix: '%' },
+                { id: 'startDelay', valueId: 'startDelayValue', suffix: 's' }
+            ];
+
+            slideshowRangeInputs.forEach(({ id, valueId, suffix }) => {
+                const input = document.getElementById(id);
+                const valueSpan = document.getElementById(valueId);
+                
+                if (input && valueSpan) {
+                    input.addEventListener('input', function() {
+                        valueSpan.textContent = this.value + suffix;
+                        updateSlideshowConfig(id, this.value);
+                    });
+                }
+            });
+
+            // Select dropdown changes for slideshow
+            const slideshowSelectInputs = ['transitionType', 'transitionEasing'];
+            slideshowSelectInputs.forEach(id => {
+                const select = document.getElementById(id);
+                if (select) {
+                    select.addEventListener('change', function() {
+                        updateSlideshowConfig(id, this.value);
+                    });
+                }
+            });
+
+            // Checkbox changes for slideshow
+            const slideshowCheckboxInputs = [
+                'slideshowEnabled', 'pauseOnHover', 'showProgressBar', 
+                'showIndicators', 'loopForever', 'autoStart'
+            ];
+            slideshowCheckboxInputs.forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox) {
+                    checkbox.addEventListener('change', function() {
+                        updateSlideshowConfig(id, this.checked);
+                    });
+                }
+            });
+
+            // Special handling for display ratios to ensure they add up to 100%
+            document.getElementById('weatherDisplayRatio')?.addEventListener('input', function() {
+                const weatherRatio = parseInt(this.value);
+                const qualityRatio = 100 - weatherRatio;
+                
+                const qualityInput = document.getElementById('qualityDisplayRatio');
+                const qualityValue = document.getElementById('qualityDisplayRatioValue');
+                
+                if (qualityInput && qualityValue) {
+                    qualityInput.value = qualityRatio;
+                    qualityValue.textContent = qualityRatio + '%';
+                    updateSlideshowConfig('qualityDisplayRatio', qualityRatio);
+                }
+            });
+
+            document.getElementById('qualityDisplayRatio')?.addEventListener('input', function() {
+                const qualityRatio = parseInt(this.value);
+                const weatherRatio = 100 - qualityRatio;
+                
+                const weatherInput = document.getElementById('weatherDisplayRatio');
+                const weatherValue = document.getElementById('weatherDisplayRatioValue');
+                
+                if (weatherInput && weatherValue) {
+                    weatherInput.value = weatherRatio;
+                    weatherValue.textContent = weatherRatio + '%';
+                    updateSlideshowConfig('weatherDisplayRatio', weatherRatio);
+                }
+            });
+
+            // Preview and test buttons
+            document.getElementById('previewTransition')?.addEventListener('click', function() {
+                previewSlideshowTransition();
+            });
+
+            document.getElementById('testSlideshow')?.addEventListener('click', function() {
+                testSlideshowSettings();
+            });
+
+            console.log('✅ Advanced Slideshow Settings initialized');
+        }
+
+        function updateSlideshowConfig(key, value) {
+            if (!config.slideshow) {
+                config.slideshow = {};
+            }
+            config.slideshow[key] = value;
+            console.log(`🎬 Slideshow setting updated: ${key} = ${value}`);
+        }
+
+        function previewSlideshowTransition() {
+            console.log('👀 Previewing slideshow transition...');
+            
+            const transitionType = document.getElementById('transitionType')?.value || 'slide';
+            const transitionSpeed = document.getElementById('transitionSpeed')?.value || 800;
+            const transitionEasing = document.getElementById('transitionEasing')?.value || 'ease-out';
+            
+            // Create a temporary demo element
+            const demo = document.createElement('div');
+            demo.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 300px;
+                height: 200px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 18px;
+                font-weight: 600;
+                z-index: 9999;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            `;
+            demo.textContent = `${transitionType.toUpperCase()} Preview`;
+            
+            document.body.appendChild(demo);
+            
+            // Apply transition effect based on type
+            setTimeout(() => {
+                let transform = '';
+                switch(transitionType) {
+                    case 'fade':
+                        demo.style.opacity = '0';
+                        break;
+                    case 'slide':
+                        transform = 'translate(100%, -50%)';
+                        break;
+                    case 'slideUp':
+                        transform = 'translate(-50%, -100%)';
+                        break;
+                    case 'zoom':
+                        transform = 'translate(-50%, -50%) scale(0)';
+                        break;
+                    case 'flip':
+                        transform = 'translate(-50%, -50%) rotateY(90deg)';
+                        break;
+                    case 'cube':
+                        transform = 'translate(-50%, -50%) rotateX(90deg)';
+                        break;
+                }
+                
+                demo.style.transition = `all ${transitionSpeed}ms ${transitionEasing}`;
+                demo.style.transform = transform;
+            }, 100);
+            
+            // Remove demo after animation
+            setTimeout(() => {
+                document.body.removeChild(demo);
+            }, parseInt(transitionSpeed) + 500);
+        }
+
+        function testSlideshowSettings() {
+            console.log('🧪 Testing slideshow settings...');
+            
+            const settings = config.slideshow || {};
+            
+            // Show test results in a modal-like overlay
+            const testOverlay = document.createElement('div');
+            testOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                color: white;
+                font-family: system-ui, sans-serif;
+            `;
+            
+            const testContent = document.createElement('div');
+            testContent.style.cssText = `
+                background: #1f2937;
+                padding: 2rem;
+                border-radius: 12px;
+                max-width: 500px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+            `;
+            
+            testContent.innerHTML = `
+                <h3 style="margin-top: 0; color: #f3f4f6;">🧪 Slideshow Test Results</h3>
+                <div style="font-size: 14px; line-height: 1.6;">
+                    <p><strong>Basic Settings:</strong></p>
+                    <ul style="margin-left: 1rem;">
+                        <li>Enabled: ${settings.slideshowEnabled !== false ? '✅' : '❌'}</li>
+                        <li>Interval: ${settings.slideshowInterval || 10} seconds</li>
+                        <li>Auto Start: ${settings.autoStart !== false ? '✅' : '❌'}</li>
+                        <li>Start Delay: ${settings.startDelay || 2} seconds</li>
+                    </ul>
+                    
+                    <p style="margin-top: 1.5rem;"><strong>Transition Settings:</strong></p>
+                    <ul style="margin-left: 1rem;">
+                        <li>Type: ${settings.transitionType || 'slide'}</li>
+                        <li>Speed: ${settings.transitionSpeed || 800}ms</li>
+                        <li>Easing: ${settings.transitionEasing || 'ease-out'}</li>
+                    </ul>
+                    
+                    <p style="margin-top: 1.5rem;"><strong>Display Options:</strong></p>
+                    <ul style="margin-left: 1rem;">
+                        <li>Pause on Hover: ${settings.pauseOnHover !== false ? '✅' : '❌'}</li>
+                        <li>Progress Bar: ${settings.showProgressBar ? '✅' : '❌'}</li>
+                        <li>Indicators: ${settings.showIndicators ? '✅' : '❌'}</li>
+                        <li>Loop Forever: ${settings.loopForever !== false ? '✅' : '❌'}</li>
+                    </ul>
+                    
+                    <p style="margin-top: 1.5rem;"><strong>Content Ratio:</strong></p>
+                    <ul style="margin-left: 1rem;">
+                        <li>Weather: ${settings.weatherDisplayRatio || 50}%</li>
+                        <li>Air Quality: ${settings.qualityDisplayRatio || 50}%</li>
+                    </ul>
+                </div>
+                <button id="closeTest" style="
+                    background: #3b82f6;
+                    color: white;
+                    border: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: 6px;
+                    margin-top: 1.5rem;
+                    cursor: pointer;
+                ">Close</button>
+            `;
+            
+            testOverlay.appendChild(testContent);
+            document.body.appendChild(testOverlay);
+            
+            // Close button handler
+            document.getElementById('closeTest').addEventListener('click', function() {
+                document.body.removeChild(testOverlay);
+            });
+            
+            // Close on overlay click
+            testOverlay.addEventListener('click', function(e) {
+                if (e.target === testOverlay) {
+                    document.body.removeChild(testOverlay);
+                }
+            });
+        }
+
+        // Update slideshow UI from saved config
+        function updateSlideshowUIFromConfig() {
+            if (!config.slideshow) return;
+            
+            Object.keys(config.slideshow).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    if (element.type === 'checkbox') {
+                        element.checked = config.slideshow[key];
+                    } else {
+                        element.value = config.slideshow[key];
+                    }
+                    
+                    // Update value display for range inputs
+                    const valueElement = document.getElementById(key + 'Value');
+                    if (valueElement) {
+                        const value = config.slideshow[key];
+                        let suffix = '';
+                        if (key.includes('Interval') || key.includes('Delay')) suffix = 's';
+                        else if (key.includes('Speed')) suffix = 'ms';
+                        else if (key.includes('Ratio')) suffix = '%';
+                        
+                        valueElement.textContent = value + suffix;
+                    }
+                }
+            });
+            
+            console.log('🎬 Slideshow UI updated from config');
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Canvas 39 Admin Panel (Sidebar) initializing...');
             
@@ -1350,6 +1784,7 @@
             initializeColorTheme();
             initializeFontSettings();
             initializeLayoutConfiguration();
+            initializeAdvancedSlideshow();
             initializeUserMenu();
             
             console.log('✅ Admin Panel initialized successfully');
