@@ -43,6 +43,8 @@
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
             will-change: transform;
+            -webkit-transition: transform 1s ease-in-out !important;
+            transition: transform 1s ease-in-out !important;
         }
         
         /* Hardware acceleration for smooth transitions */
@@ -293,7 +295,7 @@
             </div>
             
             <!-- Slide 1: Air Quality -->
-            <div class="absolute inset-0 transition-transform duration-1000 ease-in-out slide-active" id="slide1">
+            <div class="absolute inset-0 transition-transform duration-1000 ease-in-out" id="slide1" style="transform: translateX(0%) !important;">
                 <div class="p-8 h-full flex flex-col">
                     <!-- Header Title -->
                     <div class="text-center mb-4">
@@ -373,7 +375,7 @@
             </div>
 
             <!-- Slide 2: Pool Water Quality -->
-            <div class="absolute inset-0 transition-transform duration-1000 ease-in-out slide-next" id="slide2">
+            <div class="absolute inset-0 transition-transform duration-1000 ease-in-out" id="slide2" style="transform: translateX(100%) !important;">
                 <div class="p-8 h-full flex flex-col" style="background-color: #b7a591;">
                     <!-- Header Title -->
                     <div class="text-center mb-4">
@@ -1633,8 +1635,9 @@
                 console.log('📺 Forward to slide 1 (Air Quality) - slides move left');
                 // Slide 1 slides in from right (100%) to center (0%)
                 // Slide 2 slides out from center (0%) to left (-100%)
-                slide1.style.transform = 'translateX(0%)';
-                slide2.style.transform = 'translateX(-100%)';
+                slide1.style.setProperty('transform', 'translateX(0%)', 'important');
+                slide2.style.setProperty('transform', 'translateX(-100%)', 'important');
+                console.log('🔧 Applied transforms - Slide1:', slide1.style.transform, 'Slide2:', slide2.style.transform);
                 
                 // Update dot indicators
                 if (dot1) {
@@ -1649,8 +1652,9 @@
                 console.log('🏊‍♂️ Forward to slide 2 (Pool Water) - slides move left');
                 // Slide 2 slides in from right (100%) to center (0%)
                 // Slide 1 slides out from center (0%) to left (-100%)
-                slide2.style.transform = 'translateX(0%)';
-                slide1.style.transform = 'translateX(-100%)';
+                slide2.style.setProperty('transform', 'translateX(0%)', 'important');
+                slide1.style.setProperty('transform', 'translateX(-100%)', 'important');
+                console.log('🔧 Applied transforms - Slide1:', slide1.style.transform, 'Slide2:', slide2.style.transform);
                 
                 // Update dot indicators
                 if (dot2) {
@@ -1671,10 +1675,10 @@
                 // Prepare the next slide for forward movement
                 if (slideIndex === 0) {
                     // Current: slide1 at center, prepare slide2 at right for next forward movement
-                    slide2.style.transform = 'translateX(100%)';
+                    slide2.style.setProperty('transform', 'translateX(100%)', 'important');
                 } else {
                     // Current: slide2 at center, prepare slide1 at right for next forward movement
-                    slide1.style.transform = 'translateX(100%)';
+                    slide1.style.setProperty('transform', 'translateX(100%)', 'important');
                 }
                 console.log('🔄 Next slide prepared for forward movement');
             }, 1200);
@@ -1765,8 +1769,8 @@
                     slideshowInitialized = true;
                     
                     // Initialize slides positioning for forward-only loop
-                    slide1.style.transform = 'translateX(0%)';    // Slide 1 starts at center
-                    slide2.style.transform = 'translateX(100%)';  // Slide 2 starts at right
+                    slide1.style.setProperty('transform', 'translateX(0%)', 'important');    // Slide 1 starts at center
+                    slide2.style.setProperty('transform', 'translateX(100%)', 'important');  // Slide 2 starts at right
                     currentSlide = 0;
                     
                     // Initialize dots
