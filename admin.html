@@ -111,6 +111,11 @@
             }
         }
         
+        /* Force first button to have no top spacing */
+        .sidebar-nav-container > .space-y-2 > button:first-child {
+            margin-top: 0 !important;
+        }
+        
         /* Modern card styling */
         .modern-card {
             background: rgba(255, 255, 255, 0.95);
@@ -188,10 +193,10 @@
         <!-- Modern Sidebar Navigation -->
         <div class="fixed left-0 z-20 w-72 bg-white border-r border-gray-200 shadow-xl transform -translate-x-full transition-all duration-300 ease-out lg:translate-x-0 lg:relative lg:transform-none sidebar" id="sidebar" style="top: 4rem; bottom: 0; height: calc(100vh - 4rem);">            
             <!-- Clean Navigation Menu -->
-            <nav class="px-4 pb-4 custom-scrollbar overflow-y-auto" style="height: 100%;">
+            <nav class="px-4 pb-4 custom-scrollbar overflow-y-auto sidebar-nav-container" style="height: 100%;">
                 <div class="space-y-2">
                     <!-- Theme & Design -->
-                    <button class="sidebar-nav-btn active w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl !mt-0" data-section="theme">
+                    <button class="sidebar-nav-btn active w-full flex items-center px-4 py-3.5 text-sm font-medium text-gray-700 rounded-xl" data-section="theme">
                         <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
                             <i data-lucide="palette" class="w-4 h-4 text-purple-600"></i>
                         </div>
