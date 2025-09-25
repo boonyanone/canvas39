@@ -414,6 +414,136 @@
                                     </div>
                                 </div>
 
+                                <!-- Export/Import Settings -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 border-b border-gray-200">
+                                        <h3 class="text-lg font-medium text-gray-900">Export/Import Settings</h3>
+                                    </div>
+                                    <div class="px-6 py-4 space-y-6">
+                                        <!-- Export Settings -->
+                                        <div>
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">ส่งออกการตั้งค่า</h4>
+                                            <div class="space-y-4">
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <button id="exportFullConfig" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                        </svg>
+                                                        ส่งออกทุกการตั้งค่า
+                                                    </button>
+                                                    <button id="exportThemeOnly" class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"></path>
+                                                        </svg>
+                                                        ส่งออกเฉพาะธีม
+                                                    </button>
+                                                </div>
+                                                <p class="text-xs text-gray-500">ไฟล์จะถูกดาวน์โหลดในรูปแบบ JSON</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Import Settings -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">นำเข้าการตั้งค่า</h4>
+                                            <div class="space-y-4">
+                                                <!-- File Upload Area -->
+                                                <div class="border-2 border-gray-300 border-dashed rounded-lg p-6">
+                                                    <div class="text-center">
+                                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                                        </svg>
+                                                        <div class="mt-4">
+                                                            <label for="importConfigFile" class="cursor-pointer">
+                                                                <span class="mt-2 block text-sm font-medium text-gray-900">อัปโหลดไฟล์การตั้งค่า</span>
+                                                                <span class="mt-2 block text-xs text-gray-500">รองรับไฟล์ JSON เท่านั้น</span>
+                                                            </label>
+                                                            <input id="importConfigFile" name="importConfigFile" type="file" class="sr-only" accept=".json">
+                                                        </div>
+                                                        <div class="mt-4 flex justify-center">
+                                                            <button id="selectImportFile" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                                                เลือกไฟล์
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Import Options -->
+                                                <div id="importOptions" class="hidden">
+                                                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                                        <h5 class="text-sm font-medium text-blue-900 mb-3">ตัวเลือกการนำเข้า</h5>
+                                                        <div class="space-y-2">
+                                                            <label class="flex items-center">
+                                                                <input type="checkbox" id="importTheme" checked class="rounded border-gray-300 text-blue-600">
+                                                                <span class="ml-2 text-sm text-blue-800">Theme & Colors</span>
+                                                            </label>
+                                                            <label class="flex items-center">
+                                                                <input type="checkbox" id="importFonts" checked class="rounded border-gray-300 text-blue-600">
+                                                                <span class="ml-2 text-sm text-blue-800">Font Settings</span>
+                                                            </label>
+                                                            <label class="flex items-center">
+                                                                <input type="checkbox" id="importLayout" checked class="rounded border-gray-300 text-blue-600">
+                                                                <span class="ml-2 text-sm text-blue-800">Layout Configuration</span>
+                                                            </label>
+                                                            <label class="flex items-center">
+                                                                <input type="checkbox" id="importSlideshow" checked class="rounded border-gray-300 text-blue-600">
+                                                                <span class="ml-2 text-sm text-blue-800">Slideshow Settings</span>
+                                                            </label>
+                                                        </div>
+                                                        <div class="mt-4 flex gap-3">
+                                                            <button id="confirmImport" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                                                นำเข้าการตั้งค่า
+                                                            </button>
+                                                            <button id="cancelImport" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                                                ยกเลิก
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Import Status -->
+                                                <div id="importStatus" class="hidden">
+                                                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                                        <div class="flex items-center">
+                                                            <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                            </svg>
+                                                            <span class="text-sm font-medium text-green-800" id="importStatusText">นำเข้าการตั้งค่าสำเร็จ!</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Backup & Restore -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">สำรองข้อมูลและกู้คืน</h4>
+                                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                                <div class="flex items-start">
+                                                    <svg class="w-5 h-5 text-yellow-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                                    </svg>
+                                                    <div>
+                                                        <h5 class="text-sm font-medium text-yellow-800 mb-2">คำแนะนำ</h5>
+                                                        <ul class="text-sm text-yellow-700 space-y-1">
+                                                            <li>• สำรองการตั้งค่าก่อนทำการเปลี่ยนแปลงใหญ่</li>
+                                                            <li>• เก็บไฟล์สำรองไว้ในที่ปลอดภัย</li>
+                                                            <li>• ตรวจสอบไฟล์ก่อนนำเข้า</li>
+                                                        </ul>
+                                                        <div class="mt-3 flex gap-2">
+                                                            <button id="createBackup" class="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                                                                สร้างไฟล์สำรอง
+                                                            </button>
+                                                            <button id="resetToDefaults" class="bg-red-100 hover:bg-red-200 text-red-800 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                                                                รีเซ็ตเป็นค่าเริ่มต้น
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Real-time Display Preview -->
                                 <div class="modern-card overflow-hidden rounded-2xl">
                                     <div class="px-6 py-4 border-b border-gray-200">
@@ -2122,6 +2252,353 @@
             };
         }
 
+        // Export/Import Functions
+        let importedConfigData = null;
+
+        function initializeExportImport() {
+            console.log('📤 Initializing Export/Import functionality...');
+            
+            // Export buttons
+            document.getElementById('exportFullConfig')?.addEventListener('click', exportFullConfiguration);
+            document.getElementById('exportThemeOnly')?.addEventListener('click', exportThemeConfiguration);
+            document.getElementById('createBackup')?.addEventListener('click', createBackup);
+            
+            // Import file handling
+            document.getElementById('selectImportFile')?.addEventListener('click', function() {
+                document.getElementById('importConfigFile').click();
+            });
+            
+            document.getElementById('importConfigFile')?.addEventListener('change', handleImportFile);
+            document.getElementById('confirmImport')?.addEventListener('click', confirmImport);
+            document.getElementById('cancelImport')?.addEventListener('click', cancelImport);
+            
+            // Reset button
+            document.getElementById('resetToDefaults')?.addEventListener('click', resetToDefaults);
+            
+            console.log('✅ Export/Import functionality initialized');
+        }
+
+        function exportFullConfiguration() {
+            console.log('📤 Exporting full configuration...');
+            
+            try {
+                const fullConfig = {
+                    version: '1.0',
+                    exportDate: new Date().toISOString(),
+                    exportType: 'full',
+                    config: {
+                        ...config,
+                        layout: layoutConfig,
+                        slideshow: config.slideshow || {}
+                    }
+                };
+                
+                downloadConfigFile(fullConfig, 'canvas39-full-config');
+                showExportSuccess('ส่งออกการตั้งค่าทั้งหมดสำเร็จ');
+            } catch (error) {
+                console.error('❌ Export error:', error);
+                showExportError('เกิดข้อผิดพลาดในการส่งออก: ' + error.message);
+            }
+        }
+
+        function exportThemeConfiguration() {
+            console.log('🎨 Exporting theme configuration...');
+            
+            try {
+                const themeConfig = {
+                    version: '1.0',
+                    exportDate: new Date().toISOString(),
+                    exportType: 'theme',
+                    config: {
+                        theme: config.theme,
+                        font: config.font,
+                        customFont: config.customFont
+                    }
+                };
+                
+                downloadConfigFile(themeConfig, 'canvas39-theme-config');
+                showExportSuccess('ส่งออกการตั้งค่าธีมสำเร็จ');
+            } catch (error) {
+                console.error('❌ Theme export error:', error);
+                showExportError('เกิดข้อผิดพลาดในการส่งออกธีม: ' + error.message);
+            }
+        }
+
+        function createBackup() {
+            console.log('💾 Creating backup...');
+            
+            try {
+                const backupConfig = {
+                    version: '1.0',
+                    backupDate: new Date().toISOString(),
+                    exportType: 'backup',
+                    config: {
+                        ...config,
+                        layout: layoutConfig,
+                        slideshow: config.slideshow || {}
+                    },
+                    metadata: {
+                        userAgent: navigator.userAgent,
+                        timestamp: Date.now(),
+                        url: window.location.href
+                    }
+                };
+                
+                downloadConfigFile(backupConfig, 'canvas39-backup');
+                showExportSuccess('สร้างไฟล์สำรองสำเร็จ');
+            } catch (error) {
+                console.error('❌ Backup error:', error);
+                showExportError('เกิดข้อผิดพลาดในการสร้างไฟล์สำรอง: ' + error.message);
+            }
+        }
+
+        function downloadConfigFile(configData, filename) {
+            const dataStr = JSON.stringify(configData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${filename}-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            URL.revokeObjectURL(url);
+        }
+
+        function handleImportFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            console.log('📥 Processing import file:', file.name);
+            
+            if (!file.name.toLowerCase().endsWith('.json')) {
+                showImportError('กรุณาเลือกไฟล์ JSON เท่านั้น');
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                showImportError('ไฟล์ใหญ่เกินไป (สูงสุด 10MB)');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Validate config format
+                    if (!data.config) {
+                        throw new Error('รูปแบบไฟล์ไม่ถูกต้อง: ไม่พบ config');
+                    }
+                    
+                    importedConfigData = data;
+                    showImportOptions(data);
+                    console.log('✅ Config file loaded successfully:', data);
+                    
+                } catch (error) {
+                    console.error('❌ Import file error:', error);
+                    showImportError('ไฟล์การตั้งค่าไม่ถูกต้อง: ' + error.message);
+                }
+            };
+            
+            reader.onerror = function() {
+                showImportError('ไม่สามารถอ่านไฟล์ได้');
+            };
+            
+            reader.readAsText(file);
+        }
+
+        function showImportOptions(data) {
+            document.getElementById('importOptions').classList.remove('hidden');
+            document.getElementById('importStatus').classList.add('hidden');
+            
+            // Update checkbox availability based on imported data
+            const checkboxes = {
+                importTheme: data.config.theme || data.config.font,
+                importFonts: data.config.font || data.config.customFont,
+                importLayout: data.config.layout,
+                importSlideshow: data.config.slideshow
+            };
+            
+            Object.keys(checkboxes).forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox) {
+                    checkbox.disabled = !checkboxes[id];
+                    if (!checkboxes[id]) {
+                        checkbox.checked = false;
+                        checkbox.parentElement.classList.add('opacity-50');
+                    } else {
+                        checkbox.parentElement.classList.remove('opacity-50');
+                    }
+                }
+            });
+        }
+
+        function confirmImport() {
+            if (!importedConfigData) return;
+            
+            console.log('📥 Confirming import...');
+            
+            try {
+                const importOptions = {
+                    theme: document.getElementById('importTheme')?.checked,
+                    fonts: document.getElementById('importFonts')?.checked,
+                    layout: document.getElementById('importLayout')?.checked,
+                    slideshow: document.getElementById('importSlideshow')?.checked
+                };
+                
+                // Import selected configurations
+                if (importOptions.theme && importedConfigData.config.theme) {
+                    config.theme = { ...config.theme, ...importedConfigData.config.theme };
+                }
+                
+                if (importOptions.fonts) {
+                    if (importedConfigData.config.font) {
+                        config.font = importedConfigData.config.font;
+                    }
+                    if (importedConfigData.config.customFont) {
+                        config.customFont = importedConfigData.config.customFont;
+                    }
+                }
+                
+                if (importOptions.layout && importedConfigData.config.layout) {
+                    layoutConfig = { ...layoutConfig, ...importedConfigData.config.layout };
+                    localStorage.setItem('canvas39_layout_config', JSON.stringify(layoutConfig));
+                }
+                
+                if (importOptions.slideshow && importedConfigData.config.slideshow) {
+                    config.slideshow = { ...config.slideshow, ...importedConfigData.config.slideshow };
+                }
+                
+                // Save updated config
+                localStorage.setItem('canvas39_admin_config', JSON.stringify(config));
+                
+                // Update UI
+                updateUIFromConfig();
+                
+                // Show success message
+                showImportSuccess('นำเข้าการตั้งค่าสำเร็จ!');
+                
+                console.log('✅ Import completed successfully');
+                
+            } catch (error) {
+                console.error('❌ Import error:', error);
+                showImportError('เกิดข้อผิดพลาดในการนำเข้า: ' + error.message);
+            }
+        }
+
+        function cancelImport() {
+            document.getElementById('importOptions').classList.add('hidden');
+            document.getElementById('importConfigFile').value = '';
+            importedConfigData = null;
+        }
+
+        function resetToDefaults() {
+            if (!confirm('คุณต้องการรีเซ็ตการตั้งค่าทั้งหมดเป็นค่าเริ่มต้นใช่หรือไม่?\n\nการกระทำนี้ไม่สามารถยกเลิกได้')) {
+                return;
+            }
+            
+            console.log('🔄 Resetting to defaults...');
+            
+            try {
+                // Clear all stored config
+                localStorage.removeItem('canvas39_admin_config');
+                localStorage.removeItem('canvas39_layout_config');
+                
+                // Reset to default config
+                config = {
+                    font: 'default',
+                    weatherApi: 'openmeteo',
+                    updateInterval: 10,
+                    theme: {
+                        headerColor: '#3f2f15',
+                        backgroundColor: '#929079',
+                        weatherTodayColor: '#f3efe6',
+                        weatherOutlookColor: '#ddd6cc'
+                    },
+                    slideshow: {
+                        enabled: true,
+                        interval: 10
+                    }
+                };
+                
+                layoutConfig = {};
+                
+                // Update UI
+                updateUIFromConfig();
+                
+                showImportSuccess('รีเซ็ตการตั้งค่าเป็นค่าเริ่มต้นสำเร็จ');
+                
+                console.log('✅ Reset to defaults completed');
+                
+            } catch (error) {
+                console.error('❌ Reset error:', error);
+                showImportError('เกิดข้อผิดพลาดในการรีเซ็ต: ' + error.message);
+            }
+        }
+
+        function showExportSuccess(message) {
+            // Show temporary success notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    ${message}
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 3000);
+        }
+
+        function showExportError(message) {
+            alert('❌ ' + message);
+        }
+
+        function showImportSuccess(message) {
+            const statusDiv = document.getElementById('importStatus');
+            const statusText = document.getElementById('importStatusText');
+            
+            if (statusDiv && statusText) {
+                statusText.textContent = message;
+                statusDiv.classList.remove('hidden');
+                document.getElementById('importOptions').classList.add('hidden');
+                
+                setTimeout(() => {
+                    statusDiv.classList.add('hidden');
+                    cancelImport();
+                }, 3000);
+            }
+        }
+
+        function showImportError(message) {
+            const statusDiv = document.getElementById('importStatus');
+            if (statusDiv) {
+                statusDiv.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-red-800">${message}</span>
+                        </div>
+                    </div>
+                `;
+                statusDiv.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    statusDiv.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Canvas 39 Admin Panel (Sidebar) initializing...');
             
@@ -2133,6 +2610,7 @@
             initializeLayoutConfiguration();
             initializeAdvancedSlideshow();
             initializeRealTimePreview();
+            initializeExportImport();
             initializeUserMenu();
             
             console.log('✅ Admin Panel initialized successfully');
