@@ -2003,6 +2003,8 @@
         let adminConfig = {};
         let layoutConfig = {};
         let slideshowConfig = {};
+        let customSlides = [];
+        let notifications = [];
 
         // Load admin panel configuration
         async function loadAdminConfig() {
@@ -2023,7 +2025,21 @@
                     console.log('🎛️ Loaded layout config:', layoutConfig);
                 }
 
-                return { adminConfig, layoutConfig };
+                // Load custom slides
+                const savedCustomSlides = localStorage.getItem('canvas39_slides');
+                if (savedCustomSlides) {
+                    customSlides = JSON.parse(savedCustomSlides);
+                    console.log('🎬 Loaded custom slides:', customSlides);
+                }
+
+                // Load notifications
+                const savedNotifications = localStorage.getItem('canvas39_notifications');
+                if (savedNotifications) {
+                    notifications = JSON.parse(savedNotifications);
+                    console.log('🔔 Loaded notifications:', notifications);
+                }
+
+                return { adminConfig, layoutConfig, customSlides, notifications };
             } catch (error) {
                 console.error('❌ Error loading admin config:', error);
                 return {};
@@ -2052,6 +2068,15 @@
             // Apply slideshow configuration
             if (config.slideshow) {
                 applySlideshowConfig(config.slideshow);
+            }
+
+            // Apply custom slides and notifications
+            if (customSlides.length > 0) {
+                integrateCustomSlides();
+            }
+
+            if (notifications.length > 0) {
+                displayActiveNotifications();
             }
 
             console.log('✅ Admin configuration applied successfully');
@@ -2359,6 +2384,212 @@
                 const savedConfig = JSON.parse(localStorage.getItem('canvas39_admin_config') || '{}');
                 await updateDisplay(savedConfig);
             }, UPDATE_INTERVAL);
+
+            // Custom Slides Integration Functions
+            function integrateCustomSlides() {
+                console.log('🎬 Integrating custom slides into slideshow...');
+                
+                if (!customSlides || customSlides.length === 0) {
+                    console.log('ℹ️ No custom slides to integrate');
+                    return;
+                }
+
+                // Find the swiper wrapper to add custom slides
+                const swiperWrapper = document.querySelector('.quality-slideshow .swiper-wrapper');
+                if (!swiperWrapper) {
+                    console.warn('❌ Swiper wrapper not found, cannot integrate custom slides');
+                    return;
+                }
+
+                // Add custom slides to the slideshow
+                customSlides.forEach((slide, index) => {
+                    if (!slide.active) return; // Skip inactive slides
+
+                    const customSlideElement = createCustomSlideElement(slide);
+                    swiperWrapper.appendChild(customSlideElement);
+                    
+                    console.log(`✅ Added custom slide: ${slide.title || 'Untitled'}`);
+                });
+
+                // Reinitialize Swiper to include new slides
+                if (swiper) {
+                    swiper.destroy(true, true);
+                    setTimeout(() => {
+                        initializeSwiper();
+                        console.log('🔄 Swiper reinitialized with custom slides');
+                    }, 100);
+                }
+            }
+
+            function createCustomSlideElement(slide) {
+                const slideElement = document.createElement('div');
+                slideElement.className = 'swiper-slide';
+                
+                let slideContent = '';
+                
+                switch (slide.type) {
+                    case 'text':
+                        slideContent = `
+                            <div class="flex flex-col justify-center items-center h-full w-full p-8 text-center" 
+                                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <h2 class="text-4xl font-bold text-white mb-6">${slide.title || 'Custom Slide'}</h2>
+                                <div class="text-xl text-white opacity-90 leading-relaxed max-w-4xl whitespace-pre-wrap">
+                                    ${slide.content || slide.textContent || 'No content provided'}
+                                </div>
+                                <div class="mt-6 text-sm text-white opacity-70">
+                                    Duration: ${slide.duration || 10} seconds • Order: ${slide.order || 1}
+                                </div>
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'image':
+                        slideContent = `
+                            <div class="relative h-full w-full flex items-center justify-center" 
+                                 style="background: linear-gradient(45deg, #000 0%, #333 100%);">
+                                <img src="${slide.imageUrl}" alt="${slide.title || 'Custom Image'}" 
+                                     class="max-w-full max-h-full object-contain"
+                                     onerror="this.parentElement.innerHTML='<div class=\\'text-white text-center\\'>Image failed to load</div>'">
+                                ${slide.title ? `
+                                    <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 p-4">
+                                        <h2 class="text-2xl font-bold text-white">${slide.title}</h2>
+                                        <div class="text-sm text-white opacity-70 mt-1">
+                                            Duration: ${slide.duration || 10} seconds • Order: ${slide.order || 1}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                        break;
+                        
+                    case 'custom':
+                    case 'html':
+                        slideContent = `
+                            <div class="h-full w-full relative">
+                                ${slide.htmlContent || slide.content || '<div class="flex items-center justify-center h-full"><p class="text-xl">Custom HTML Content</p></div>'}
+                                ${slide.title ? `
+                                    <div class="absolute top-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded text-sm">
+                                        ${slide.title} • ${slide.duration || 10}s
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                        break;
+                        
+                    default:
+                        slideContent = `
+                            <div class="flex flex-col justify-center items-center h-full w-full p-8 text-center bg-gray-500">
+                                <h2 class="text-3xl font-bold text-white mb-4">Unknown Slide Type</h2>
+                                <p class="text-white opacity-75">Slide type "${slide.type}" is not supported</p>
+                            </div>
+                        `;
+                }
+                
+                slideElement.innerHTML = slideContent;
+                return slideElement;
+            }
+
+            // Notification Display Functions
+            function displayActiveNotifications() {
+                console.log('🔔 Displaying active notifications...');
+                
+                const activeNotifications = notifications.filter(notification => {
+                    if (!notification.active) return false;
+                    
+                    const now = Date.now();
+                    const startTime = notification.scheduleDate ? new Date(notification.scheduleDate).getTime() : 0;
+                    const endTime = notification.endDate ? new Date(notification.endDate).getTime() : Infinity;
+                    
+                    return now >= startTime && now <= endTime;
+                });
+
+                if (activeNotifications.length === 0) {
+                    console.log('ℹ️ No active notifications to display');
+                    return;
+                }
+
+                // Display notifications as overlay
+                activeNotifications.forEach((notification, index) => {
+                    setTimeout(() => {
+                        showNotificationOverlay(notification);
+                    }, index * 2000); // Stagger notifications by 2 seconds
+                });
+            }
+
+            function showNotificationOverlay(notification) {
+                // Create notification overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50';
+                overlay.style.animation = 'fadeIn 0.5s ease-in-out';
+
+                const notificationBox = document.createElement('div');
+                notificationBox.className = 'bg-white rounded-lg shadow-2xl max-w-md w-full mx-4 p-6 text-center transform transition-all duration-500';
+                
+                // Notification type styling
+                let bgColor = 'bg-blue-500';
+                let iconSvg = '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+                
+                switch (notification.type) {
+                    case 'warning':
+                        bgColor = 'bg-yellow-500';
+                        iconSvg = '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
+                        break;
+                    case 'error':
+                        bgColor = 'bg-red-500';
+                        iconSvg = '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+                        break;
+                    case 'success':
+                        bgColor = 'bg-green-500';
+                        iconSvg = '<svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+                        break;
+                }
+
+                notificationBox.innerHTML = `
+                    <div class="${bgColor} w-16 h-16 rounded-full flex items-center justify-center text-white mx-auto mb-4">
+                        ${iconSvg}
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">${notification.title}</h3>
+                    <p class="text-gray-600 mb-4">${notification.message}</p>
+                    <div class="text-sm text-gray-500 mb-4">
+                        Priority: ${notification.priority || 'normal'} • 
+                        Type: ${notification.type || 'info'}
+                    </div>
+                    <button onclick="this.closest('.fixed').remove()" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                        OK
+                    </button>
+                `;
+
+                overlay.appendChild(notificationBox);
+                document.body.appendChild(overlay);
+
+                // Auto-remove notification after specified duration
+                const duration = (notification.duration || 10) * 1000;
+                setTimeout(() => {
+                    if (overlay.parentNode) {
+                        overlay.style.animation = 'fadeOut 0.5s ease-in-out';
+                        setTimeout(() => {
+                            overlay.remove();
+                        }, 500);
+                    }
+                }, duration);
+
+                console.log(`✅ Displayed notification: ${notification.title}`);
+            }
+
+            // Add CSS animations for notifications
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: scale(0.9); }
+                    to { opacity: 1; transform: scale(1); }
+                }
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: scale(1); }
+                    to { opacity: 0; transform: scale(0.9); }
+                }
+            `;
+            document.head.appendChild(style);
             
             console.log('✅ GitHub Design version loaded successfully');
             

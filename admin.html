@@ -1040,15 +1040,215 @@
                         <div id="content-section" class="content-section">
                             <div class="mb-6">
                                 <h2 class="text-2xl font-bold text-gray-900 mb-2">Content Management</h2>
-                                <p class="text-gray-600">จัดการเนื้อหาและประกาศต่างๆ</p>
+                                <p class="text-gray-600">จัดการประกาศ notification และเนื้อหา slides</p>
                             </div>
                             
-                            <div class="bg-white overflow-hidden shadow rounded-lg">
-                                <div class="px-6 py-4 border-b border-gray-200">
-                                    <h3 class="text-lg font-medium text-gray-900">จัดการประกาศ</h3>
+                            <div class="space-y-6">
+                                <!-- Notification Management -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 border-b border-gray-200">
+                                        <h3 class="text-lg font-medium text-gray-900">จัดการประกาศ Notifications</h3>
+                                    </div>
+                                    <div class="px-6 py-4 space-y-6">
+                                        <!-- Create New Notification -->
+                                        <div>
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">สร้างประกาศใหม่</h4>
+                                            <div class="space-y-4">
+                                                <!-- Notification Title -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">หัวข้อประกาศ</label>
+                                                    <input type="text" id="notificationTitle" placeholder="เช่น แจ้งปรับปรุงระบบ" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                </div>
+                                                
+                                                <!-- Notification Message -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">ข้อความประกาศ</label>
+                                                    <textarea id="notificationMessage" rows="3" placeholder="เช่น ระบบจะหยุดให้บริการชั่วคราวในวันที่ 1 มกราคม 2567" class="w-full border border-gray-300 rounded-md px-3 py-2"></textarea>
+                                                </div>
+                                                
+                                                <!-- Notification Type -->
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-2">ประเภทประกาศ</label>
+                                                        <select id="notificationType" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                            <option value="info">ข้อมูลทั่วไป (Info)</option>
+                                                            <option value="warning">คำเตือน (Warning)</option>
+                                                            <option value="error">ข้อผิดพลาด (Error)</option>
+                                                            <option value="success">สำเร็จ (Success)</option>
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <!-- Display Duration -->
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-2">ระยะเวลาแสดง (วินาที)</label>
+                                                        <input type="number" id="notificationDuration" value="10" min="5" max="60" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Schedule Options -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">ตั้งเวลาแสดงประกาศ</label>
+                                                    <div class="grid grid-cols-2 gap-4">
+                                                        <div>
+                                                            <label class="block text-xs text-gray-600 mb-1">วันที่เริ่มต้น</label>
+                                                            <input type="datetime-local" id="notificationStartTime" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                                                        </div>
+                                                        <div>
+                                                            <label class="block text-xs text-gray-600 mb-1">วันที่สิ้นสุด</label>
+                                                            <input type="datetime-local" id="notificationEndTime" class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Action Buttons -->
+                                                <div class="flex gap-3">
+                                                    <button id="createNotification" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                        </svg>
+                                                        สร้างประกาศ
+                                                    </button>
+                                                    <button id="previewNotification" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                                        ดูตัวอย่าง
+                                                    </button>
+                                                    <button id="testNotification" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                                        ทดสอบแสดงผล
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Active Notifications -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">ประกาศที่ใช้งานอยู่</h4>
+                                            <div id="activeNotifications" class="space-y-3">
+                                                <!-- Will be populated by JavaScript -->
+                                            </div>
+                                            <div id="noNotifications" class="text-center py-8 text-gray-500">
+                                                <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                                                </svg>
+                                                <p class="text-sm">ไม่มีประกาศที่ใช้งานอยู่</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Notification History -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">ประวัติการแสดงประกาศ</h4>
+                                            <div class="overflow-hidden bg-gray-50 rounded-lg">
+                                                <div class="px-4 py-3 border-b border-gray-200 bg-gray-100">
+                                                    <div class="flex items-center justify-between">
+                                                        <h5 class="text-sm font-medium text-gray-900">รายการประกาศล่าสุด</h5>
+                                                        <button id="clearNotificationHistory" class="text-xs text-red-600 hover:text-red-800">ล้างประวัติ</button>
+                                                    </div>
+                                                </div>
+                                                <div id="notificationHistory" class="max-h-32 overflow-y-auto">
+                                                    <div class="px-4 py-2 text-sm text-gray-500">ไม่มีประวัติการแสดงประกาศ</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="px-6 py-4">
-                                    <p class="text-gray-600">ฟีเจอร์นี้กำลังพัฒนา...</p>
+
+                                <!-- Slide Content Management -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 border-b border-gray-200">
+                                        <h3 class="text-lg font-medium text-gray-900">จัดการเนื้อหา Slides</h3>
+                                    </div>
+                                    <div class="px-6 py-4 space-y-6">
+                                        <!-- Custom Slide Content -->
+                                        <div>
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">เพิ่มเนื้อหา Slide ใหม่</h4>
+                                            <div class="space-y-4">
+                                                <!-- Slide Title -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ Slide</label>
+                                                    <input type="text" id="slideTitle" placeholder="เช่น ข้อมูลการใช้น้ำ" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                </div>
+                                                
+                                                <!-- Slide Type -->
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">ประเภท Slide</label>
+                                                    <select id="slideType" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                        <option value="text">ข้อความธรรมดา</option>
+                                                        <option value="image">รูปภาพ</option>
+                                                        <option value="data">แสดงข้อมูล</option>
+                                                        <option value="chart">กราฟ/แผนภูมิ</option>
+                                                        <option value="custom">กำหนดเอง (HTML)</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <!-- Slide Content -->
+                                                <div id="slideContentArea">
+                                                    <!-- Text Content -->
+                                                    <div id="textSlideContent">
+                                                        <label class="block text-sm font-medium text-gray-700 mb-2">เนื้อหาข้อความ</label>
+                                                        <textarea id="slideTextContent" rows="4" placeholder="ใส่เนื้อหาข้อความที่ต้องการแสดง" class="w-full border border-gray-300 rounded-md px-3 py-2"></textarea>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Display Settings -->
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-2">ระยะเวลาแสดง (วินาที)</label>
+                                                        <input type="number" id="slideDuration" value="15" min="5" max="120" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-2">ลำดับการแสดง</label>
+                                                        <input type="number" id="slideOrder" value="1" min="1" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Slide Actions -->
+                                                <div class="flex gap-3">
+                                                    <button id="createSlide" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                        </svg>
+                                                        เพิ่ม Slide
+                                                    </button>
+                                                    <button id="previewSlide" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                                        ดูตัวอย่าง
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Current Slides -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">Slides ที่มีอยู่</h4>
+                                            <div id="currentSlides" class="space-y-3">
+                                                <!-- Default slides -->
+                                                <div class="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                                    <div class="flex-1">
+                                                        <h5 class="font-medium text-blue-900">Weather Information</h5>
+                                                        <p class="text-sm text-blue-700">แสดงข้อมูลสภาพอากาศ</p>
+                                                        <div class="text-xs text-blue-600 mt-1">ประเภท: ข้อมูลอัตโนมัติ • ระยะเวลา: 15s</div>
+                                                    </div>
+                                                    <div class="flex gap-2">
+                                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">เริ่มต้น</span>
+                                                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">เปิดใช้งาน</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-4">
+                                                    <div class="flex-1">
+                                                        <h5 class="font-medium text-green-900">Air Quality Data</h5>
+                                                        <p class="text-sm text-green-700">แสดงข้อมูลคุณภาพอากาศ</p>
+                                                        <div class="text-xs text-green-600 mt-1">ประเภท: ข้อมูลอัตโนมัติ • ระยะเวลา: 15s</div>
+                                                    </div>
+                                                    <div class="flex gap-2">
+                                                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">เริ่มต้น</span>
+                                                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">เปิดใช้งาน</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div id="customSlides" class="space-y-3 mt-3">
+                                                <!-- Custom slides will be populated here -->
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2599,6 +2799,548 @@
             }
         }
 
+        // Content Management Functions
+        let notifications = [];
+        let slides = [];
+        let notificationHistory = [];
+
+        function initializeContentManagement() {
+            console.log('📝 Initializing Content Management...');
+            
+            // Load saved data
+            loadNotifications();
+            loadSlides();
+            loadNotificationHistory();
+            
+            // Notification management
+            document.getElementById('createNotification')?.addEventListener('click', createNotification);
+            document.getElementById('previewNotification')?.addEventListener('click', previewNotification);
+            document.getElementById('testNotification')?.addEventListener('click', testNotification);
+            document.getElementById('clearNotificationHistory')?.addEventListener('click', clearNotificationHistory);
+            
+            // Slide management
+            document.getElementById('createSlide')?.addEventListener('click', createSlide);
+            document.getElementById('previewSlide')?.addEventListener('click', previewSlide);
+            document.getElementById('slideType')?.addEventListener('change', updateSlideContentArea);
+            
+            // Initialize UI
+            updateNotificationsUI();
+            updateSlidesUI();
+            updateNotificationHistoryUI();
+            
+            console.log('✅ Content Management initialized');
+        }
+
+        // Notification Functions
+        function createNotification() {
+            console.log('📢 Creating notification...');
+            
+            const title = document.getElementById('notificationTitle')?.value;
+            const message = document.getElementById('notificationMessage')?.value;
+            const type = document.getElementById('notificationType')?.value;
+            const duration = parseInt(document.getElementById('notificationDuration')?.value) || 10;
+            const startTime = document.getElementById('notificationStartTime')?.value;
+            const endTime = document.getElementById('notificationEndTime')?.value;
+            
+            if (!title || !message) {
+                alert('กรุณากรอกหัวข้อและข้อความประกาศ');
+                return;
+            }
+            
+            const notification = {
+                id: Date.now(),
+                title,
+                message,
+                type,
+                duration,
+                startTime: startTime ? new Date(startTime) : new Date(),
+                endTime: endTime ? new Date(endTime) : null,
+                createdAt: new Date(),
+                active: true
+            };
+            
+            notifications.push(notification);
+            saveNotifications();
+            updateNotificationsUI();
+            
+            // Clear form
+            clearNotificationForm();
+            
+            showSuccessMessage('สร้างประกาศสำเร็จ!');
+            console.log('✅ Notification created:', notification);
+        }
+
+        function previewNotification() {
+            const title = document.getElementById('notificationTitle')?.value;
+            const message = document.getElementById('notificationMessage')?.value;
+            const type = document.getElementById('notificationType')?.value;
+            
+            if (!title || !message) {
+                alert('กรุณากรอกหัวข้อและข้อความประกาศก่อน');
+                return;
+            }
+            
+            showNotificationPreview({ title, message, type });
+        }
+
+        function testNotification() {
+            const title = document.getElementById('notificationTitle')?.value || 'ทดสอบประกาศ';
+            const message = document.getElementById('notificationMessage')?.value || 'นี่คือข้อความทดสอบการแสดงประกาศ';
+            const type = document.getElementById('notificationType')?.value || 'info';
+            const duration = parseInt(document.getElementById('notificationDuration')?.value) || 10;
+            
+            // Send to main display
+            const testNotification = {
+                id: 'test-' + Date.now(),
+                title,
+                message,
+                type,
+                duration,
+                test: true
+            };
+            
+            // Store for main display to read
+            localStorage.setItem('canvas39_test_notification', JSON.stringify(testNotification));
+            
+            // Add to history
+            addToNotificationHistory(testNotification);
+            
+            showSuccessMessage(`ส่งประกาศทดสอบไปยังหน้าจอหลักแล้ว (${duration} วินาที)`);
+            console.log('🧪 Test notification sent:', testNotification);
+        }
+
+        function deleteNotification(id) {
+            notifications = notifications.filter(n => n.id !== id);
+            saveNotifications();
+            updateNotificationsUI();
+            showSuccessMessage('ลบประกาศสำเร็จ');
+        }
+
+        function toggleNotification(id) {
+            const notification = notifications.find(n => n.id === id);
+            if (notification) {
+                notification.active = !notification.active;
+                saveNotifications();
+                updateNotificationsUI();
+                showSuccessMessage(notification.active ? 'เปิดใช้งานประกาศแล้ว' : 'ปิดใช้งานประกาศแล้ว');
+            }
+        }
+
+        // Slide Functions
+        function createSlide() {
+            console.log('🎬 Creating slide...');
+            
+            const title = document.getElementById('slideTitle')?.value;
+            const type = document.getElementById('slideType')?.value;
+            const duration = parseInt(document.getElementById('slideDuration')?.value) || 15;
+            const order = parseInt(document.getElementById('slideOrder')?.value) || 1;
+            
+            if (!title) {
+                alert('กรุณากรอกชื่อ Slide');
+                return;
+            }
+            
+            let content = '';
+            let imageUrl = '';
+            let htmlContent = '';
+            
+            if (type === 'text') {
+                content = document.getElementById('slideTextContent')?.value;
+                if (!content) {
+                    alert('กรุณากรอกเนื้อหาข้อความ');
+                    return;
+                }
+            } else if (type === 'image') {
+                const imageInput = document.getElementById('slideImageContent');
+                if (!imageInput?.files?.length) {
+                    alert('กรุณาเลือกรูปภาพ');
+                    return;
+                }
+                // Convert image to base64 for storage
+                const file = imageInput.files[0];
+                if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                    alert('ขนาดไฟล์ใหญ่เกินไป (สูงสุด 5MB)');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageUrl = e.target.result;
+                    finalizeSlidCreation();
+                };
+                reader.readAsDataURL(file);
+                return; // Wait for file read to complete
+            } else if (type === 'custom') {
+                htmlContent = document.getElementById('slideCustomContent')?.value;
+                if (!htmlContent) {
+                    alert('กรุณากรอก HTML Content');
+                    return;
+                }
+            }
+            
+            finalizeSlidCreation();
+            
+            function finalizeSlidCreation() {
+            
+                const slide = {
+                    id: Date.now(),
+                    title,
+                    type,
+                    content,
+                    imageUrl,
+                    htmlContent,
+                    duration,
+                    order,
+                    createdAt: new Date(),
+                    active: true
+                };
+            
+                slides.push(slide);
+                
+                // Sort slides by order
+                slides.sort((a, b) => a.order - b.order);
+                
+                saveSlides();
+                updateSlidesUI();
+                
+                // Clear form
+                clearSlideForm();
+                
+                showSuccessMessage('เพิ่ม Slide สำเร็จ!');
+                console.log('✅ Slide created:', slide);
+            }
+        }
+
+        function previewSlide() {
+            const title = document.getElementById('slideTitle')?.value;
+            const type = document.getElementById('slideType')?.value;
+            const content = document.getElementById('slideTextContent')?.value;
+            
+            if (!title) {
+                alert('กรุณากรอกชื่อ Slide ก่อน');
+                return;
+            }
+            
+            showSlidePreview({ title, type, content });
+        }
+
+        function deleteSlide(id) {
+            slides = slides.filter(s => s.id !== id);
+            saveSlides();
+            updateSlidesUI();
+            showSuccessMessage('ลบ Slide สำเร็จ');
+        }
+
+        function toggleSlide(id) {
+            const slide = slides.find(s => s.id === id);
+            if (slide) {
+                slide.active = !slide.active;
+                saveSlides();
+                updateSlidesUI();
+                showSuccessMessage(slide.active ? 'เปิดใช้งาน Slide แล้ว' : 'ปิดใช้งาน Slide แล้ว');
+            }
+        }
+
+        function updateSlideContentArea() {
+            const type = document.getElementById('slideType')?.value;
+            const contentArea = document.getElementById('slideContentArea');
+            
+            if (!contentArea) return;
+            
+            let html = '';
+            switch (type) {
+                case 'text':
+                    html = `
+                        <div id="textSlideContent">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">เนื้อหาข้อความ</label>
+                            <textarea id="slideTextContent" rows="4" placeholder="ใส่เนื้อหาข้อความที่ต้องการแสดง" class="w-full border border-gray-300 rounded-md px-3 py-2"></textarea>
+                        </div>
+                    `;
+                    break;
+                case 'image':
+                    html = `
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">อัปโหลดรูปภาพ</label>
+                            <input type="file" id="slideImageContent" accept="image/*" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                            <p class="text-xs text-gray-500 mt-1">รองรับ JPG, PNG, GIF (สูงสุด 5MB)</p>
+                        </div>
+                    `;
+                    break;
+                case 'custom':
+                    html = `
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">HTML Content</label>
+                            <textarea id="slideCustomContent" rows="6" placeholder="<div>HTML content ของคุณ</div>" class="w-full border border-gray-300 rounded-md px-3 py-2 font-mono text-sm"></textarea>
+                        </div>
+                    `;
+                    break;
+                default:
+                    html = `<div class="text-gray-500">ฟีเจอร์นี้กำลังพัฒนา...</div>`;
+            }
+            
+            contentArea.innerHTML = html;
+        }
+
+        // UI Update Functions
+        function updateNotificationsUI() {
+            const activeContainer = document.getElementById('activeNotifications');
+            const noNotifications = document.getElementById('noNotifications');
+            
+            if (!activeContainer) return;
+            
+            const activeNotifications = notifications.filter(n => n.active);
+            
+            if (activeNotifications.length === 0) {
+                activeContainer.innerHTML = '';
+                noNotifications?.classList.remove('hidden');
+                return;
+            }
+            
+            noNotifications?.classList.add('hidden');
+            
+            activeContainer.innerHTML = activeNotifications.map(notification => `
+                <div class="flex items-center justify-between bg-${getNotificationColor(notification.type)}-50 border border-${getNotificationColor(notification.type)}-200 rounded-lg p-4">
+                    <div class="flex-1">
+                        <h5 class="font-medium text-${getNotificationColor(notification.type)}-900">${notification.title}</h5>
+                        <p class="text-sm text-${getNotificationColor(notification.type)}-700">${notification.message}</p>
+                        <div class="text-xs text-${getNotificationColor(notification.type)}-600 mt-1">
+                            ระยะเวลา: ${notification.duration}s • สร้าง: ${notification.createdAt.toLocaleString('th-TH')}
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="toggleNotification(${notification.id})" class="text-xs px-2 py-1 rounded ${notification.active ? 'bg-red-100 text-red-800 hover:bg-red-200' : 'bg-green-100 text-green-800 hover:bg-green-200'}">
+                            ${notification.active ? 'ปิด' : 'เปิด'}
+                        </button>
+                        <button onclick="deleteNotification(${notification.id})" class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            ลบ
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateSlidesUI() {
+            const customSlidesContainer = document.getElementById('customSlides');
+            if (!customSlidesContainer) return;
+            
+            if (slides.length === 0) {
+                customSlidesContainer.innerHTML = `
+                    <div class="text-center py-4 text-gray-500">
+                        <p class="text-sm">ยังไม่มี Slide ที่สร้างเพิ่ม</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            customSlidesContainer.innerHTML = slides.map(slide => `
+                <div class="flex items-center justify-between bg-purple-50 border border-purple-200 rounded-lg p-4">
+                    <div class="flex-1">
+                        <h5 class="font-medium text-purple-900">${slide.title}</h5>
+                        <p class="text-sm text-purple-700">${slide.type === 'text' ? slide.content : `ประเภท: ${slide.type}`}</p>
+                        <div class="text-xs text-purple-600 mt-1">ลำดับ: ${slide.order} • ระยะเวลา: ${slide.duration}s</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">${slide.active ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}</span>
+                        <button onclick="toggleSlide(${slide.id})" class="text-xs px-2 py-1 rounded ${slide.active ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}">
+                            ${slide.active ? 'ปิด' : 'เปิด'}
+                        </button>
+                        <button onclick="deleteSlide(${slide.id})" class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700">
+                            ลบ
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateNotificationHistoryUI() {
+            const historyContainer = document.getElementById('notificationHistory');
+            if (!historyContainer) return;
+            
+            if (notificationHistory.length === 0) {
+                historyContainer.innerHTML = '<div class="px-4 py-2 text-sm text-gray-500">ไม่มีประวัติการแสดงประกาศ</div>';
+                return;
+            }
+            
+            historyContainer.innerHTML = notificationHistory.slice(-10).reverse().map(item => `
+                <div class="px-4 py-2 border-b border-gray-100 last:border-b-0">
+                    <div class="text-sm font-medium text-gray-900">${item.title}</div>
+                    <div class="text-xs text-gray-500">${item.timestamp.toLocaleString('th-TH')}</div>
+                </div>
+            `).join('');
+        }
+
+        // Helper Functions
+        function getNotificationColor(type) {
+            const colorMap = {
+                'info': 'blue',
+                'warning': 'yellow',
+                'error': 'red',
+                'success': 'green'
+            };
+            return colorMap[type] || 'blue';
+        }
+
+        function showNotificationPreview(notification) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg p-6 max-w-md mx-4 shadow-2xl">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">ตัวอย่างประกาศ</h3>
+                    <div class="bg-${getNotificationColor(notification.type)}-50 border border-${getNotificationColor(notification.type)}-200 rounded-lg p-4">
+                        <h4 class="font-medium text-${getNotificationColor(notification.type)}-900">${notification.title}</h4>
+                        <p class="text-sm text-${getNotificationColor(notification.type)}-700 mt-1">${notification.message}</p>
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <button id="closePreview" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-md text-sm">ปิด</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            document.getElementById('closePreview').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+        }
+
+        function showSlidePreview(slide) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg p-6 max-w-lg mx-4 shadow-2xl">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">ตัวอย่าง Slide</h3>
+                    <div class="bg-gray-100 rounded-lg p-6 min-h-32">
+                        <h4 class="text-xl font-bold text-gray-900 mb-4">${slide.title}</h4>
+                        ${slide.type === 'text' ? `<p class="text-gray-700">${slide.content}</p>` : `<p class="text-gray-500">ประเภท: ${slide.type}</p>`}
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <button id="closeSlidePreview" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-md text-sm">ปิด</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            document.getElementById('closeSlidePreview').addEventListener('click', () => {
+                document.body.removeChild(modal);
+            });
+        }
+
+        function clearNotificationForm() {
+            document.getElementById('notificationTitle').value = '';
+            document.getElementById('notificationMessage').value = '';
+            document.getElementById('notificationType').value = 'info';
+            document.getElementById('notificationDuration').value = 10;
+            document.getElementById('notificationStartTime').value = '';
+            document.getElementById('notificationEndTime').value = '';
+        }
+
+        function clearSlideForm() {
+            document.getElementById('slideTitle').value = '';
+            document.getElementById('slideType').value = 'text';
+            document.getElementById('slideDuration').value = 15;
+            document.getElementById('slideOrder').value = slides.length + 1;
+            updateSlideContentArea();
+        }
+
+        function addToNotificationHistory(notification) {
+            notificationHistory.push({
+                id: notification.id,
+                title: notification.title,
+                timestamp: new Date()
+            });
+            saveNotificationHistory();
+            updateNotificationHistoryUI();
+        }
+
+        function clearNotificationHistory() {
+            if (confirm('คุณต้องการล้างประวัติการแสดงประกาศทั้งหมดใช่หรือไม่?')) {
+                notificationHistory = [];
+                saveNotificationHistory();
+                updateNotificationHistoryUI();
+                showSuccessMessage('ล้างประวัติการแสดงประกาศแล้ว');
+            }
+        }
+
+        // Storage Functions
+        function saveNotifications() {
+            localStorage.setItem('canvas39_notifications', JSON.stringify(notifications));
+        }
+
+        function loadNotifications() {
+            try {
+                const saved = localStorage.getItem('canvas39_notifications');
+                if (saved) {
+                    notifications = JSON.parse(saved).map(n => ({
+                        ...n,
+                        createdAt: new Date(n.createdAt),
+                        startTime: new Date(n.startTime),
+                        endTime: n.endTime ? new Date(n.endTime) : null
+                    }));
+                }
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+            }
+        }
+
+        function saveSlides() {
+            localStorage.setItem('canvas39_slides', JSON.stringify(slides));
+        }
+
+        function loadSlides() {
+            try {
+                const saved = localStorage.getItem('canvas39_slides');
+                if (saved) {
+                    slides = JSON.parse(saved).map(s => ({
+                        ...s,
+                        createdAt: new Date(s.createdAt)
+                    }));
+                }
+            } catch (error) {
+                console.error('Error loading slides:', error);
+            }
+        }
+
+        function saveNotificationHistory() {
+            localStorage.setItem('canvas39_notification_history', JSON.stringify(notificationHistory));
+        }
+
+        function loadNotificationHistory() {
+            try {
+                const saved = localStorage.getItem('canvas39_notification_history');
+                if (saved) {
+                    notificationHistory = JSON.parse(saved).map(h => ({
+                        ...h,
+                        timestamp: new Date(h.timestamp)
+                    }));
+                }
+            } catch (error) {
+                console.error('Error loading notification history:', error);
+            }
+        }
+
+        function showSuccessMessage(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    ${message}
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 3000);
+        }
+
+        // Make functions globally available
+        window.deleteNotification = deleteNotification;
+        window.toggleNotification = toggleNotification;
+        window.deleteSlide = deleteSlide;
+        window.toggleSlide = toggleSlide;
+
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Canvas 39 Admin Panel (Sidebar) initializing...');
             
@@ -2611,6 +3353,7 @@
             initializeAdvancedSlideshow();
             initializeRealTimePreview();
             initializeExportImport();
+            initializeContentManagement();
             initializeUserMenu();
             
             console.log('✅ Admin Panel initialized successfully');
