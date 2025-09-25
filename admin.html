@@ -398,6 +398,92 @@
                                                 <option value="30">ทุก 30 นาที</option>
                                             </select>
                                         </div>
+
+                                        <!-- Font Preview -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ตัวอย่าง Font</label>
+                                            <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                                                <div id="fontPreview" class="text-lg mb-2" style="font-family: system-ui, sans-serif;">
+                                                    Canvas 39 Display System
+                                                </div>
+                                                <div id="fontPreviewThai" class="text-sm text-gray-600" style="font-family: system-ui, sans-serif;">
+                                                    ระบบแสดงผลข้อมูลอากาศและคุณภาพน้ำ
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Real-time Display Preview -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 border-b border-gray-200">
+                                        <div class="flex items-center justify-between">
+                                            <h3 class="text-lg font-medium text-gray-900">Live Display Preview</h3>
+                                            <button id="refreshPreview" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                                                รีเฟรช
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="px-6 py-4">
+                                        <div id="liveDisplayPreview" class="relative bg-gray-100 rounded-xl overflow-hidden border border-gray-200" style="height: 400px;">
+                                            <!-- Mini Display Preview -->
+                                            <div id="previewHeader" class="h-16 flex items-center justify-between px-6 text-white text-sm transition-colors duration-300" style="background-color: #3f2f15;">
+                                                <div id="previewLogo" class="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center transition-all duration-300">
+                                                    <div class="w-4 h-4 bg-white rounded"></div>
+                                                </div>
+                                                <div class="text-center">
+                                                    <div class="text-base font-medium">Canvas 39 Display</div>
+                                                    <div class="text-xs opacity-75">Wednesday, 27 November • 16:41</div>
+                                                </div>
+                                                <div class="w-6 h-6 bg-white bg-opacity-20 rounded flex items-center justify-center">
+                                                    <div class="w-3 h-3 border border-white"></div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Building Section Preview -->
+                                            <div class="h-20 bg-gradient-to-b from-blue-200 to-blue-300 flex items-center justify-center text-gray-700 text-sm font-medium">
+                                                Building Section
+                                            </div>
+                                            
+                                            <!-- Weather Section Preview -->
+                                            <div id="previewWeather" class="h-16 bg-gradient-to-r from-yellow-100 to-yellow-200 flex items-center justify-center text-gray-700 text-sm border-t-2 border-gray-300 transition-all duration-300">
+                                                <div class="flex items-center gap-4">
+                                                    <div class="flex items-center gap-2">
+                                                        <div class="w-6 h-6 bg-yellow-400 rounded-full"></div>
+                                                        <span class="font-medium">26°C / 34°C</span>
+                                                    </div>
+                                                    <div class="text-xs opacity-75">Weather Section</div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Quality Section Preview -->
+                                            <div id="previewQuality" class="flex-1 flex items-center justify-center text-white text-sm font-medium transition-colors duration-300" style="background-color: #929079;">
+                                                <div class="text-center">
+                                                    <div class="text-2xl font-bold mb-1">40</div>
+                                                    <div class="text-xs opacity-90">Air Quality (Good)</div>
+                                                    <div class="text-xs opacity-75 mt-2">Quality Section (Slideshow)</div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Preview Controls Overlay -->
+                                            <div class="absolute top-2 right-2 flex gap-1">
+                                                <div class="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
+                                                    Live Preview
+                                                </div>
+                                                <div id="slideshowIndicator" class="bg-blue-500 bg-opacity-75 text-white px-2 py-1 rounded text-xs hidden">
+                                                    Slideshow: <span id="slideshowSpeed">10s</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Slideshow Progress Bar (when enabled) -->
+                                            <div id="previewProgressBar" class="absolute bottom-0 left-0 right-0 h-1 bg-black bg-opacity-20 hidden">
+                                                <div class="h-full bg-white bg-opacity-60 transition-all duration-300" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
+                                            <span>ตัวอย่างการแสดงผลแบบ Real-time</span>
+                                            <span id="previewLastUpdate">Last updated: Now</span>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -1271,6 +1357,11 @@
             // Update slideshow UI
             updateSlideshowUIFromConfig();
             
+            // Update real-time preview
+            setTimeout(() => {
+                updatePreview();
+            }, 500); // Small delay to ensure all UI elements are updated first
+            
             console.log('🎨 UI updated from config');
         }
 
@@ -1775,6 +1866,262 @@
             console.log('🎬 Slideshow UI updated from config');
         }
 
+        // Real-time Preview Functions
+        function initializeRealTimePreview() {
+            console.log('👁️ Initializing Real-time Preview...');
+            
+            // Refresh preview button
+            document.getElementById('refreshPreview')?.addEventListener('click', function() {
+                updatePreview();
+                this.textContent = 'กำลังอัพเดท...';
+                setTimeout(() => {
+                    this.textContent = 'รีเฟรช';
+                }, 1000);
+            });
+
+            // Auto update preview when config changes
+            setupPreviewUpdates();
+            
+            // Initial preview update
+            updatePreview();
+            
+            console.log('✅ Real-time Preview initialized');
+        }
+
+        function setupPreviewUpdates() {
+            // Monitor config changes and update preview
+            const elementsToWatch = [
+                // Theme elements
+                { id: 'headerColor', type: 'input' },
+                { id: 'headerColorText', type: 'input' },
+                { id: 'backgroundColor', type: 'input' },
+                { id: 'backgroundColorText', type: 'input' },
+                
+                // Font elements
+                { id: 'fontSelect', type: 'change' },
+                
+                // Layout elements (from previous implementation)
+                { id: 'headerHeight', type: 'input' },
+                { id: 'headerPaddingX', type: 'input' },
+                { id: 'headerPaddingY', type: 'input' },
+                { id: 'logoSize', type: 'input' },
+                { id: 'weatherHeight', type: 'input' },
+                { id: 'qualityHeight', type: 'input' },
+                { id: 'weatherTextSize', type: 'change' },
+                { id: 'qualityTextSize', type: 'change' },
+                
+                // Slideshow elements
+                { id: 'slideshowInterval', type: 'input' }
+            ];
+
+            elementsToWatch.forEach(({ id, type }) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener(type, debounce(() => {
+                        updatePreview();
+                        updatePreviewTimestamp();
+                    }, 300));
+                }
+            });
+
+            // Watch theme preset buttons
+            const themeButtons = ['themeDefault', 'themeBlue', 'themeGreen', 'themeDark', 'themeModern', 'themeWarm'];
+            themeButtons.forEach(id => {
+                document.getElementById(id)?.addEventListener('click', () => {
+                    setTimeout(() => {
+                        updatePreview();
+                        updatePreviewTimestamp();
+                    }, 100);
+                });
+            });
+        }
+
+        function updatePreview() {
+            console.log('👁️ Updating real-time preview...');
+
+            try {
+                // Get current config
+                const currentConfig = {
+                    theme: {
+                        headerColor: document.getElementById('headerColor')?.value || '#3f2f15',
+                        backgroundColor: document.getElementById('backgroundColor')?.value || '#929079'
+                    },
+                    font: document.getElementById('fontSelect')?.value || 'default',
+                    layout: layoutConfig || {}
+                };
+
+                // Update preview header
+                updatePreviewHeader(currentConfig);
+                
+                // Update preview sections
+                updatePreviewSections(currentConfig);
+                
+                // Update preview fonts
+                updatePreviewFonts(currentConfig);
+                
+                // Update slideshow preview
+                updatePreviewSlideshow();
+                
+                console.log('✅ Preview updated successfully');
+            } catch (error) {
+                console.error('❌ Error updating preview:', error);
+            }
+        }
+
+        function updatePreviewHeader(config) {
+            const previewHeader = document.getElementById('previewHeader');
+            const previewLogo = document.getElementById('previewLogo');
+            
+            if (previewHeader && config.theme?.headerColor) {
+                previewHeader.style.backgroundColor = config.theme.headerColor;
+            }
+
+            // Update header size based on layout config
+            if (config.layout?.headerHeight && previewHeader) {
+                const scaledHeight = Math.max(40, Math.min(80, config.layout.headerHeight * 0.8));
+                previewHeader.style.height = scaledHeight + 'px';
+            }
+
+            // Update logo size
+            if (config.layout?.logoSize && previewLogo) {
+                const scaledSize = Math.max(24, Math.min(48, config.layout.logoSize * 0.8));
+                previewLogo.style.width = previewLogo.style.height = scaledSize + 'px';
+            }
+        }
+
+        function updatePreviewSections(config) {
+            const previewWeather = document.getElementById('previewWeather');
+            const previewQuality = document.getElementById('previewQuality');
+
+            // Update background color
+            if (previewQuality && config.theme?.backgroundColor) {
+                previewQuality.style.backgroundColor = config.theme.backgroundColor;
+            }
+
+            // Update section heights based on layout
+            if (config.layout?.weatherHeight && previewWeather) {
+                const scaledHeight = Math.max(32, Math.min(80, config.layout.weatherHeight * 0.2));
+                previewWeather.style.height = scaledHeight + 'px';
+            }
+
+            if (config.layout?.qualityHeight) {
+                // Quality section is flex-1, but we can adjust min-height
+                const scaledMinHeight = Math.max(80, Math.min(200, config.layout.qualityHeight * 0.3));
+                if (previewQuality) {
+                    previewQuality.style.minHeight = scaledMinHeight + 'px';
+                }
+            }
+        }
+
+        function updatePreviewFonts(config) {
+            const previewContainer = document.getElementById('liveDisplayPreview');
+            const fontPreview = document.getElementById('fontPreview');
+            const fontPreviewThai = document.getElementById('fontPreviewThai');
+            
+            if (!previewContainer) return;
+
+            let fontFamily = 'system-ui, sans-serif';
+
+            if (config.font && config.font !== 'default') {
+                const fontMap = {
+                    'roman': '"Times New Roman", serif',
+                    'kanit': 'Kanit, sans-serif',
+                    'sarabun': 'Sarabun, sans-serif',
+                    'inter': 'Inter, sans-serif',
+                    'roboto': 'Roboto, sans-serif',
+                    'noto-thai': '"Noto Sans Thai", sans-serif',
+                    'prompt': 'Prompt, sans-serif',
+                    'mitr': 'Mitr, sans-serif'
+                };
+
+                fontFamily = fontMap[config.font] || fontFamily;
+
+                // Load Google Font if needed for preview
+                if (['kanit', 'sarabun', 'inter', 'roboto', 'noto-thai', 'prompt', 'mitr'].includes(config.font)) {
+                    const fontName = fontFamily.split(',')[0].replace(/['"]/g, '');
+                    const existingLink = document.head.querySelector(`link[href*="${fontName.replace(' ', '+')}"]`);
+                    if (!existingLink) {
+                        const link = document.createElement('link');
+                        link.rel = 'stylesheet';
+                        link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(' ', '+')}:wght@300;400;500;600;700&display=swap`;
+                        document.head.appendChild(link);
+                    }
+                }
+            }
+
+            // Apply font to preview
+            previewContainer.style.fontFamily = fontFamily;
+            
+            // Update font preview samples
+            if (fontPreview) fontPreview.style.fontFamily = fontFamily;
+            if (fontPreviewThai) fontPreviewThai.style.fontFamily = fontFamily;
+        }
+
+        function updatePreviewSlideshow() {
+            const slideshowEnabled = document.getElementById('slideshowEnabled')?.checked;
+            const slideshowInterval = document.getElementById('slideshowInterval')?.value || 10;
+            const showProgressBar = document.getElementById('showProgressBar')?.checked;
+            
+            const slideshowIndicator = document.getElementById('slideshowIndicator');
+            const slideshowSpeed = document.getElementById('slideshowSpeed');
+            const previewProgressBar = document.getElementById('previewProgressBar');
+            
+            // Update slideshow indicator
+            if (slideshowIndicator && slideshowSpeed) {
+                if (slideshowEnabled) {
+                    slideshowIndicator.classList.remove('hidden');
+                    slideshowSpeed.textContent = slideshowInterval + 's';
+                } else {
+                    slideshowIndicator.classList.add('hidden');
+                }
+            }
+            
+            // Update progress bar visibility
+            if (previewProgressBar) {
+                if (slideshowEnabled && showProgressBar) {
+                    previewProgressBar.classList.remove('hidden');
+                    // Animate progress bar as demo
+                    const progressBar = previewProgressBar.querySelector('div');
+                    if (progressBar) {
+                        progressBar.style.width = '0%';
+                        progressBar.style.transition = `width ${slideshowInterval}s linear`;
+                        setTimeout(() => {
+                            progressBar.style.width = '100%';
+                        }, 100);
+                        
+                        // Reset after animation
+                        setTimeout(() => {
+                            progressBar.style.width = '0%';
+                            progressBar.style.transition = 'width 0.3s ease';
+                        }, (parseInt(slideshowInterval) + 1) * 1000);
+                    }
+                } else {
+                    previewProgressBar.classList.add('hidden');
+                }
+            }
+        }
+
+        function updatePreviewTimestamp() {
+            const timestamp = document.getElementById('previewLastUpdate');
+            if (timestamp) {
+                const now = new Date();
+                timestamp.textContent = `Last updated: ${now.toLocaleTimeString('th-TH', { hour12: false })}`;
+            }
+        }
+
+        // Utility function for debouncing
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Canvas 39 Admin Panel (Sidebar) initializing...');
             
@@ -1785,6 +2132,7 @@
             initializeFontSettings();
             initializeLayoutConfiguration();
             initializeAdvancedSlideshow();
+            initializeRealTimePreview();
             initializeUserMenu();
             
             console.log('✅ Admin Panel initialized successfully');
