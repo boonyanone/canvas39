@@ -23,6 +23,46 @@
         })();
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* Navigation cards styling */
+        .nav-cards-container {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: white;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-card.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border-color: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+        }
+        
+        .nav-card.active .group-hover\:bg-gray-200,
+        .nav-card.active .group-hover\:bg-blue-200,
+        .nav-card.active .group-hover\:bg-orange-200 {
+            background: rgba(255, 255, 255, 0.2) !important;
+        }
+        
+        .nav-card.active h4,
+        .nav-card.active p {
+            color: white !important;
+        }
+        
+        .nav-card.active svg {
+            color: white !important;
+        }
+        
+        .nav-card.active .bg-green-400,
+        .nav-card.active .bg-blue-400,
+        .nav-card.active .bg-orange-400 {
+            background: rgba(255, 255, 255, 0.8) !important;
+        }
+    </style>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <!-- Quill.js Rich Text Editor -->
@@ -132,10 +172,10 @@
                         </h3>
                         <p class="text-gray-100 text-sm mt-1">คลิกเพื่อไปยังส่วนการตั้งค่าด้านล่าง</p>
                     </div>
-                    <div class="p-6">
+                    <div class="nav-cards-container">
                         <div class="grid grid-cols-3 lg:grid-cols-6 gap-3">
                             <!-- Header & Theme Card -->
-                            <div onclick="scrollToSection('theme')" class="group cursor-pointer bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
+                            <div id="card-theme" data-target="theme" onclick="scrollToSection('theme')" class="nav-card group cursor-pointer bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
                                 <div class="flex flex-col items-center text-center">
                                     <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-gray-200 transition-colors mb-2">
                                         <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
@@ -152,7 +192,7 @@
                             </div>
 
                             <!-- Media Card -->
-                            <div onclick="scrollToSection('media')" class="group cursor-pointer bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
+                            <div id="card-media" data-target="media" onclick="scrollToSection('media')" class="nav-card group cursor-pointer bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
                                 <div class="flex flex-col items-center text-center">
                                     <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-gray-200 transition-colors mb-2">
                                         <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
@@ -169,7 +209,7 @@
                             </div>
 
                             <!-- Weather Card -->
-                            <div onclick="scrollToSection('weather')" class="group cursor-pointer bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
+                            <div id="card-weather" data-target="weather" onclick="scrollToSection('weather')" class="nav-card group cursor-pointer bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
                                 <div class="flex flex-col items-center text-center">
                                     <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-gray-200 transition-colors mb-2">
                                         <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
@@ -186,7 +226,7 @@
                             </div>
 
                             <!-- Text & Typography Card -->
-                            <div onclick="scrollToSection('text')" class="group cursor-pointer bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
+                            <div id="card-text" data-target="text" onclick="scrollToSection('text')" class="nav-card group cursor-pointer bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
                                 <div class="flex flex-col items-center text-center">
                                     <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors mb-2">
                                         <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
@@ -203,7 +243,7 @@
                             </div>
 
                             <!-- Quality Data Card -->
-                            <div onclick="scrollToSection('quality')" class="group cursor-pointer bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
+                            <div id="card-quality" data-target="quality" onclick="scrollToSection('quality')" class="nav-card group cursor-pointer bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
                                 <div class="flex flex-col items-center text-center">
                                     <div class="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-gray-200 transition-colors mb-2">
                                         <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
@@ -220,7 +260,7 @@
                             </div>
 
                             <!-- Notification Card -->
-                            <div onclick="scrollToSection('notification')" class="group cursor-pointer bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
+                            <div id="card-notification" data-target="notification" onclick="scrollToSection('notification')" class="nav-card group cursor-pointer bg-white rounded-lg border border-gray-200 p-3 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
                                 <div class="flex flex-col items-center text-center">
                                     <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center group-hover:bg-orange-200 transition-colors mb-2">
                                         <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
@@ -2207,13 +2247,24 @@
         function scrollToSection(sectionId) {
             const element = document.getElementById(sectionId + '-section');
             if (element) {
-                // Add visual highlight
+                // Remove active state from all cards
+                document.querySelectorAll('.nav-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                
+                // Add active state to clicked card
+                const targetCard = document.querySelector(`[data-target="${sectionId}"]`);
+                if (targetCard) {
+                    targetCard.classList.add('active');
+                }
+                
+                // Scroll to section
                 element.scrollIntoView({ 
                     behavior: 'smooth', 
                     block: 'start' 
                 });
                 
-                // Add temporary highlight effect
+                // Add temporary highlight effect to section
                 element.style.transition = 'box-shadow 0.3s ease';
                 element.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.3)';
                 setTimeout(() => {
