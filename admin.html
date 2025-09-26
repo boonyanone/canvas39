@@ -550,9 +550,76 @@
                                     </div>
                                 </div>
 
-                                <!-- Air Quality Settings -->\n                                <div class=\"modern-card overflow-hidden rounded-2xl\">\n                                    <div class=\"px-6 py-4 bg-gradient-to-r from-green-600 to-teal-600 border-b\">\n                                        <h3 class=\"text-lg font-medium text-white flex items-center gap-2\">\n                                            <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a8.949 8.949 0 008.354-5.646z\"></path>\n                                            </svg>\n                                            Air Quality Configuration\n                                        </h3>\n                                        <p class=\"text-green-100 text-sm mt-1\">\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e\u0e2d\u0e32\u0e01\u0e32\u0e28</p>\n                                    </div>\n                                    <div class=\"px-6 py-4 space-y-4\">\n                                        <div>\n                                            <label class=\"block text-sm font-medium text-gray-700 mb-2\">\u0e2a\u0e16\u0e32\u0e19\u0e35\u0e27\u0e31\u0e14 Indoor AQI</label>\n                                            <input type=\"text\" id=\"indoorAqiStation\" value=\"Canvas 39\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">\n                                            <p class=\"text-xs text-gray-500 mt-1\">\u0e0a\u0e37\u0e48\u0e2d\u0e2a\u0e16\u0e32\u0e19\u0e35\u0e27\u0e31\u0e14\u0e20\u0e32\u0e22\u0e43\u0e19\u0e2d\u0e32\u0e04\u0e32\u0e23</p>\n                                        </div>\n                                        \n                                        <div>\n                                            <label class=\"block text-sm font-medium text-gray-700 mb-2\">\u0e2a\u0e16\u0e32\u0e19\u0e35\u0e27\u0e31\u0e14 Outdoor AQI</label>\n                                            <input type=\"text\" id=\"outdoorAqiLocation\" value=\"Bangkok\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">\n                                            <p class=\"text-xs text-gray-500 mt-1\">\u0e1e\u0e37\u0e49\u0e19\u0e17\u0e35\u0e48\u0e27\u0e31\u0e14\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e\u0e2d\u0e32\u0e01\u0e32\u0e28\u0e20\u0e32\u0e22\u0e19\u0e2d\u0e01</p>\n                                        </div>\n                                        \n                                        <div class=\"mt-4\">\n                                            <button id=\"testAqiConnection\" class=\"bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-lg text-sm font-medium border border-green-300 transition-colors\">\n                                                \u0e17\u0e14\u0e2a\u0e2d\u0e1a\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d AQI\n                                            </button>\n                                        </div>\n                                    </div>\n                                </div>"
+                                <!-- Air Quality Settings -->
+                                <div class=\"modern-card overflow-hidden rounded-2xl\">
+                                    <div class=\"px-6 py-4 bg-gradient-to-r from-green-600 to-teal-600 border-b\">
+                                        <h3 class=\"text-lg font-medium text-white flex items-center gap-2\">
+                                            <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
+                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a8.949 8.949 0 008.354-5.646z\"></path>
+                                            </svg>
+                                            Air Quality Configuration
+                                        </h3>
+                                        <p class=\"text-green-100 text-sm mt-1\">\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e\u0e2d\u0e32\u0e01\u0e32\u0e28</p>
+                                    </div>
+                                    <div class=\"px-6 py-4 space-y-4\">
+                                        <div>
+                                            <label class=\"block text-sm font-medium text-gray-700 mb-2\">\u0e2a\u0e16\u0e32\u0e19\u0e35\u0e27\u0e31\u0e14 Indoor AQI</label>
+                                            <input type=\"text\" id=\"indoorAqiStation\" value=\"Canvas 39\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">
+                                            <p class=\"text-xs text-gray-500 mt-1\">\u0e0a\u0e37\u0e48\u0e2d\u0e2a\u0e16\u0e32\u0e19\u0e35\u0e27\u0e31\u0e14\u0e20\u0e32\u0e22\u0e43\u0e19\u0e2d\u0e32\u0e04\u0e32\u0e23</p>
+                                        </div>
+                                        
+                                        <div>
+                                            <label class=\"block text-sm font-medium text-gray-700 mb-2\">\u0e2a\u0e16\u0e32\u0e19\u0e35\u0e27\u0e31\u0e14 Outdoor AQI</label>
+                                            <input type=\"text\" id=\"outdoorAqiLocation\" value=\"Bangkok\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">
+                                            <p class=\"text-xs text-gray-500 mt-1\">\u0e1e\u0e37\u0e49\u0e19\u0e17\u0e35\u0e48\u0e27\u0e31\u0e14\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e\u0e2d\u0e32\u0e01\u0e32\u0e28\u0e20\u0e32\u0e22\u0e19\u0e2d\u0e01</p>
+                                        </div>
+                                        
+                                        <div class=\"mt-4\">
+                                            <button id=\"testAqiConnection\" class=\"bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-lg text-sm font-medium border border-green-300 transition-colors\">
+                                                \u0e17\u0e14\u0e2a\u0e2d\u0e1a\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d AQI
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>"
 
-                                <!-- Pool Water Settings -->\n                                <div class=\"modern-card overflow-hidden rounded-2xl\">\n                                    <div class=\"px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 border-b\">\n                                        <h3 class=\"text-lg font-medium text-white flex items-center gap-2\">\n                                            <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M8 16l2.879-2.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242zM21 12a9 9 0 11-18 0 9 9 0 0118 0z\"></path>\n                                            </svg>\n                                            Pool Water Quality\n                                        </h3>\n                                        <p class=\"text-purple-100 text-sm mt-1\">\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e\u0e19\u0e49\u0e33\u0e2a\u0e23\u0e30\u0e27\u0e48\u0e32\u0e22\u0e19\u0e49\u0e33</p>\n                                    </div>\n                                    <div class=\"px-6 py-4 space-y-4\">\n                                        <div class=\"grid grid-cols-2 gap-4\">\n                                            <div>\n                                                <label class=\"block text-sm font-medium text-gray-700 mb-2\">Temperature (\u00b0C)</label>\n                                                <input type=\"number\" id=\"poolTemp\" value=\"27.5\" step=\"0.1\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">\n                                            </div>\n                                            <div>\n                                                <label class=\"block text-sm font-medium text-gray-700 mb-2\">pH Level</label>\n                                                <input type=\"number\" id=\"poolPH\" value=\"7.4\" step=\"0.1\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">\n                                            </div>\n                                            <div>\n                                                <label class=\"block text-sm font-medium text-gray-700 mb-2\">ORP (mV)</label>\n                                                <input type=\"number\" id=\"poolORP\" value=\"720\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">\n                                            </div>\n                                            <div>\n                                                <label class=\"block text-sm font-medium text-gray-700 mb-2\">TDS (ppm)</label>\n                                                <input type=\"number\" id=\"poolTDS\" value=\"450\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">\n                                            </div>\n                                        </div>\n                                        \n                                        <div class=\"mt-4\">\n                                            <button id=\"updatePoolData\" class=\"bg-purple-100 hover:bg-purple-200 text-purple-800 px-4 py-2 rounded-lg text-sm font-medium border border-purple-300 transition-colors\">\n                                                \u0e2d\u0e31\u0e1b\u0e40\u0e14\u0e15\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e23\u0e30\u0e27\u0e48\u0e32\u0e22\u0e19\u0e49\u0e33\n                                            </button>\n                                        </div>\n                                    </div>\n                                </div>"
+                                <!-- Pool Water Settings -->
+                                <div class=\"modern-card overflow-hidden rounded-2xl\">
+                                    <div class=\"px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 border-b\">
+                                        <h3 class=\"text-lg font-medium text-white flex items-center gap-2\">
+                                            <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
+                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M8 16l2.879-2.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242zM21 12a9 9 0 11-18 0 9 9 0 0118 0z\"></path>
+                                            </svg>
+                                            Pool Water Quality
+                                        </h3>
+                                        <p class=\"text-purple-100 text-sm mt-1\">\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e\u0e19\u0e49\u0e33\u0e2a\u0e23\u0e30\u0e27\u0e48\u0e32\u0e22\u0e19\u0e49\u0e33</p>
+                                    </div>
+                                    <div class=\"px-6 py-4 space-y-4\">
+                                        <div class=\"grid grid-cols-2 gap-4\">
+                                            <div>
+                                                <label class=\"block text-sm font-medium text-gray-700 mb-2\">Temperature (\u00b0C)</label>
+                                                <input type=\"number\" id=\"poolTemp\" value=\"27.5\" step=\"0.1\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">
+                                            </div>
+                                            <div>
+                                                <label class=\"block text-sm font-medium text-gray-700 mb-2\">pH Level</label>
+                                                <input type=\"number\" id=\"poolPH\" value=\"7.4\" step=\"0.1\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">
+                                            </div>
+                                            <div>
+                                                <label class=\"block text-sm font-medium text-gray-700 mb-2\">ORP (mV)</label>
+                                                <input type=\"number\" id=\"poolORP\" value=\"720\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">
+                                            </div>
+                                            <div>
+                                                <label class=\"block text-sm font-medium text-gray-700 mb-2\">TDS (ppm)</label>
+                                                <input type=\"number\" id=\"poolTDS\" value=\"450\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class=\"mt-4\">
+                                            <button id=\"updatePoolData\" class=\"bg-purple-100 hover:bg-purple-200 text-purple-800 px-4 py-2 rounded-lg text-sm font-medium border border-purple-300 transition-colors\">
+                                                \u0e2d\u0e31\u0e1b\u0e40\u0e14\u0e15\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e23\u0e30\u0e27\u0e48\u0e32\u0e22\u0e19\u0e49\u0e33
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>"
 
                             </div>
                         </div>
@@ -1964,7 +2031,8 @@
             const user = users.find(u => u.id === userId);
             if (!user) return;
             
-            if (confirm(`คุณต้องการลบผู้ใช้งาน "${user.displayName}" ใช่หรือไม่?\nการกระทำนี้ไม่สามารถยกเลิกได้`)) {
+            if (confirm(`คุณต้องการลบผู้ใช้งาน "${user.displayName}" ใช่หรือไม่?
+การกระทำนี้ไม่สามารถยกเลิกได้`)) {
                 users = users.filter(u => u.id !== userId);
                 saveUsers();
                 updateUsersTable();
@@ -3486,7 +3554,9 @@
         }
 
         function resetToDefaults() {
-            if (!confirm('คุณต้องการรีเซ็ตการตั้งค่าทั้งหมดเป็นค่าเริ่มต้นใช่หรือไม่?\n\nการกระทำนี้ไม่สามารถยกเลิกได้')) {
+            if (!confirm('คุณต้องการรีเซ็ตการตั้งค่าทั้งหมดเป็นค่าเริ่มต้นใช่หรือไม่?
+
+การกระทำนี้ไม่สามารถยกเลิกได้')) {
                 return;
             }
             
