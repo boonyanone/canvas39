@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas 39 - Admin Panel</title>
+    
+    <!-- Tailwind CSS -->
+    <script>
+        // ปิด warning console  
+        (function() {
+            const originalWarn = console.warn;
+            console.warn = function(...args) {
+                const message = args.join(' ');
+                if (message.includes('tailwindcss.com should not be used in production') || 
+                    message.includes('cdn.tailwindcss.com should not be used in production') ||
+                    message.includes('Firebase error. Please ensure that you have the URL') ||
+                    message.includes('FIREBASE WARNING')) {
+                    return; // ซ่อน warning เหล่านี้
+                }
+                originalWarn.apply(console, args);
+            };
+        })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Quill.js Rich Text Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    
+    <!-- JSONBin.io + Firebase Configuration -->
+    <script>
+        // JSONBin.io Configuration (Primary)
+        const JSONBIN_CONFIG = {
+            binId: '68d0fd7643b1c97be94b2806',
+            masterKey: '$2a$10$lnTysFoBV2rtQhF5La5LVeRNVW4wRHNmotQgoxvsd2vUL5dB8p4Pq',
+            accessKey: '$2a$10$9izErv0jJeqLJODXAxr15ugm42tS.ibw1QqZdOLFV.3XNeBNVsCda'
+        };
+        
+        console.log('📦 JSONBin.io configured (Primary)');
+    </script>
+    
+    <!-- Firebase SDK (Backup) -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJ2iqJUyjd5m0xe0rz-IyRiNyCD3Ga8XM",
+            authDomain: "canvas39-display.firebaseapp.com",
+            databaseURL: "https://canvas39-display-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "canvas39-display",
+            storageBucket: "canvas39-display.firebasestorage.app",
+            messagingSenderId: "126886607717",
+            appId: "1:126886607717:web:01029a9d874d87dfc5bf8c"
+        };
+        
+        try {
+            const app = initializeApp(firebaseConfig);
+            const database = getDatabase(app);
+            
+            // Make Firebase functions globally available
+            window.firebaseDB = database;
+            window.firebaseRef = ref;
+            window.firebaseSet = set;
+            window.firebaseGet = get;
+            
+            console.log('🔥 Firebase initialized (Backup)');
+        } catch (error) {
+            console.warn('⚠️ Firebase backup not available:', error);
+        }
+    </script>
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center">
+                        <h1 class="text-xl font-semibold text-gray-900">Canvas 39 Admin Panel</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <!-- User Info -->
+                        <div class="flex items-center space-x-3">
+                            <div class="text-sm text-gray-700">
+                                <span>สวัสดี, </span>
+                                <span id="currentUserName" class="font-medium">Admin</span>
+                            </div>
+                            <div class="h-8 w-px bg-gray-300"></div>
+                        </div>
+                        
+                        <button id="saveBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i data-lucide="save" class="w-4 h-4 mr-2"></i>
+                            บันทึกการตั้งค่า
+                        </button>
+                        
+                        <!-- User Menu -->
+                        <div class="relative">
+                            <button id="userMenuBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium flex items-center">
+                                <i data-lucide="user" class="w-4 h-4 mr-2"></i>
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </button>
+                            <div id="userMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                                <a href="#" id="userManagementBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i data-lucide="users" class="w-4 h-4 mr-2 inline"></i>
+                                    จัดการผู้ใช้งาน
+                                </a>
+                                <div class="border-t border-gray-100"></div>
+                                <a href="#" id="logoutBtn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i data-lucide="log-out" class="w-4 h-4 mr-2 inline"></i>
+                                    ออกจากระบบ
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <!-- Visual Section Selector -->
+            <div class="mb-8">
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="px-6 py-4 bg-gradient-to-r from-gray-700 to-gray-800 border-b">
+                        <h3 class="text-lg font-medium text-white flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                            เลือกส่วนที่ต้องการแก้ไข
+                        </h3>
+                        <p class="text-gray-100 text-sm mt-1">คลิกเพื่อไปยังส่วนการตั้งค่าด้านล่าง</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <!-- Header & Theme Card -->
+                            <div onclick="scrollToSection('theme')" class="group cursor-pointer bg-white rounded-xl border border-gray-200 p-4 hover:shadow-lg transition-all duration-200 hover:border-gray-300 hover:-translate-y-1">
+                                <div class="flex flex-col items-center text-center">
+                                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-gray-200 transition-colors mb-3">
+                                        <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M4 2a2 2 0 00-2 2v11a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm0 2v2h12V4H4zm0 4v6h12V8H4z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="font-semibold text-sm text-gray-900 group-hover:text-gray-700 mb-1">Header & Colors</h4>
+                                    <p class="text-xs text-gray-500">สี โลโก้ หัวข้อ</p>
+                                    <div class="text-xs text-gray-400 flex items-center gap-1 mt-2">
+                                        <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                        พร้อมใช้งาน
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Media Card -->
+                            <div onclick="scrollToSection('media')" class="group cursor-pointer bg-white rounded-xl border border-gray-200 p-4 hover:shadow-lg transition-all duration-200 hover:border-gray-300 hover:-translate-y-1">
+                                <div class="flex flex-col items-center text-center">
+                                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-gray-200 transition-colors mb-3">
+                                        <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="font-semibold text-sm text-gray-900 group-hover:text-gray-700 mb-1">รูปภาพ & ฟอนต์</h4>
+                                    <p class="text-xs text-gray-500">โลโก้ รูปอาคาร</p>
+                                    <div class="text-xs text-gray-400 flex items-center gap-1 mt-2">
+                                        <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                        พร้อมใช้งาน
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Weather Card -->
+                            <div onclick="scrollToSection('weather')" class="group cursor-pointer bg-white rounded-xl border border-gray-200 p-4 hover:shadow-lg transition-all duration-200 hover:border-gray-300 hover:-translate-y-1">
+                                <div class="flex flex-col items-center text-center">
+                                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-gray-200 transition-colors mb-3">
+                                        <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="font-semibold text-sm text-gray-900 group-hover:text-gray-700 mb-1">Weather API</h4>
+                                    <p class="text-xs text-gray-500">ข้อมูลอากาศ</p>
+                                    <div class="text-xs text-gray-400 flex items-center gap-1 mt-2">
+                                        <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                        พร้อมใช้งาน
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quality Data Card -->
+                            <div onclick="scrollToSection('quality')" class="group cursor-pointer bg-white rounded-xl border border-gray-200 p-4 hover:shadow-lg transition-all duration-200 hover:border-gray-300 hover:-translate-y-1">
+                                <div class="flex flex-col items-center text-center">
+                                    <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-gray-200 transition-colors mb-3">
+                                        <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03z" clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="font-semibold text-sm text-gray-900 group-hover:text-gray-700 mb-1">Quality Data</h4>
+                                    <p class="text-xs text-gray-500">AQI คุณภาพน้ำ</p>
+                                    <div class="text-xs text-gray-400 flex items-center gap-1 mt-2">
+                                        <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                        พร้อมใช้งาน
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Left Column: Settings -->
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- รูปภาพและโลโก้ -->
+                    <div id="media-section" class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">รูปภาพและโลโก้</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-4">
+                            <!-- โลโก้ -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">โลโก้องค์กร</label>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-16 h-16 bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden border-2 border-gray-600">
+                                        <img id="logoPreview" src="img/logo.png" alt="Logo Preview" class="w-full h-full object-contain">
+                                    </div>
+                                    <div class="flex-1">
+                                        <input type="file" id="logoUpload" accept="image/*" class="hidden">
+                                        <button onclick="document.getElementById('logoUpload').click()" class="bg-white border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                            เลือกไฟล์ใหม่
+                                        </button>
+                                        <p class="text-xs text-gray-500 mt-1">รองรับ: PNG, JPG, SVG (แนะนำ 64x64px)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- รูปอาคาร -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">รูปอาคาร</label>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-24 h-16 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden border-2 border-gray-300">
+                                        <img id="buildingPreview" src="img/FRONT FULL.jpg" alt="Building Preview" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-1">
+                                        <input type="file" id="buildingUpload" accept="image/*" class="hidden">
+                                        <button onclick="document.getElementById('buildingUpload').click()" class="bg-white border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                            เลือกไฟล์ใหม่
+                                        </button>
+                                        <p class="text-xs text-gray-500 mt-1">รองรับ: PNG, JPG (แนะนำ 1920x1080px)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- การตั้งค่า Font -->
+                    <div id="font-section" class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่า Font</h3>
+                        </div>
+                        <div class="px-6 py-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">เลือก Font</label>
+                            <select id="fontSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                <option value="default">Default (System Font)</option>
+                                <option value="roman">Roman (Local Font)</option>
+                                <option value="kanit">Kanit (Google Fonts)</option>
+                                <option value="sarabun">Sarabun (Google Fonts)</option>
+                                <option value="inter">Inter (Google Fonts)</option>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">Font จะมีผลกับข้อความทั้งหมดในหน้าจอ</p>
+                        </div>
+                    </div>
+
+                    <!-- การตั้งค่าสี Theme -->
+                    <div id="theme-section" class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่าสี Theme</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-4">
+                            <!-- สี Header/Navigation Bar -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">สี Header Bar</label>
+                                <div class="flex items-center space-x-3">
+                                    <input type="color" id="headerColor" value="#3f2f15" class="w-12 h-10 border border-gray-300 rounded cursor-pointer">
+                                    <input type="text" id="headerColorText" value="#3f2f15" class="border border-gray-300 rounded px-3 py-2 text-sm font-mono w-24">
+                                    <button id="resetHeaderColor" class="text-xs text-gray-500 hover:text-gray-700">รีเซ็ต</button>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">สีพื้นหลังของแถบด้านบน</p>
+                            </div>
+
+                            <!-- สีพื้นหลังหลัก -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">สีพื้นหลังหลัก</label>
+                                <div class="flex items-center space-x-3">
+                                    <input type="color" id="backgroundColor" value="#929079" class="w-12 h-10 border border-gray-300 rounded cursor-pointer">
+                                    <input type="text" id="backgroundColorText" value="#929079" class="border border-gray-300 rounded px-3 py-2 text-sm font-mono w-24">
+                                    <button id="resetBackgroundColor" class="text-xs text-gray-500 hover:text-gray-700">รีเซ็ต</button>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">สีพื้นหลังส่วนของ slideshow</p>
+                            </div>
+
+                            <!-- สี Weather Section -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">สี Weather Section</label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <!-- Today Section -->
+                                    <div>
+                                        <label class="block text-xs text-gray-600 mb-1">Today</label>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="color" id="weatherTodayColor" value="#f3efe6" class="w-8 h-8 border border-gray-300 rounded cursor-pointer">
+                                            <input type="text" id="weatherTodayColorText" value="#f3efe6" class="border border-gray-300 rounded px-2 py-1 text-xs font-mono w-20">
+                                        </div>
+                                    </div>
+                                    <!-- Outlook Section -->
+                                    <div>
+                                        <label class="block text-xs text-gray-600 mb-1">Outlook</label>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="color" id="weatherOutlookColor" value="#ddd6cc" class="w-8 h-8 border border-gray-300 rounded cursor-pointer">
+                                            <input type="text" id="weatherOutlookColorText" value="#ddd6cc" class="border border-gray-300 rounded px-2 py-1 text-xs font-mono w-20">
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">สีพื้นหลังส่วนข้อมูลสภาพอากาศ</p>
+                            </div>
+
+                            <!-- Theme Presets -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Theme Presets</label>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button id="themeDefault" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-2 rounded text-xs font-medium border border-amber-300">
+                                        Default
+                                    </button>
+                                    <button id="themeBlue" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-2 rounded text-xs font-medium border border-blue-300">
+                                        Blue
+                                    </button>
+                                    <button id="themeGreen" class="bg-green-100 hover:bg-green-200 text-green-800 px-3 py-2 rounded text-xs font-medium border border-green-300">
+                                        Green
+                                    </button>
+                                    <button id="themeDark" class="bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded text-xs font-medium border border-gray-600">
+                                        Dark
+                                    </button>
+                                    <button id="themeModern" class="bg-purple-100 hover:bg-purple-200 text-purple-800 px-3 py-2 rounded text-xs font-medium border border-purple-300">
+                                        Modern
+                                    </button>
+                                    <button id="themeWarm" class="bg-orange-100 hover:bg-orange-200 text-orange-800 px-3 py-2 rounded text-xs font-medium border border-orange-300">
+                                        Warm
+                                    </button>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">คลิกเพื่อใช้ชุดสีสำเร็จรูป</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- API Settings -->
+                    <div id="weather-section" class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่า Weather API</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-4">
+                            <!-- Weather API -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Weather API Provider</label>
+                                <select id="weatherApiSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option value="openmeteo">OpenMeteo (ฟรี, แนะนำ)</option>
+                                    <option value="wttr">wttr.in (ฟรี, สำรอง)</option>
+                                    <option value="openweather">OpenWeatherMap</option>
+                                </select>
+                            </div>
+                            
+                            <!-- OpenWeatherMap API Key -->
+                            <div id="openweatherKeyDiv" class="hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">OpenWeatherMap API Key</label>
+                                <input type="text" id="openweatherKey" value="db61b712294c46506059042663feeac6" class="w-full border border-gray-300 rounded-md px-3 py-2 font-mono text-sm">
+                                <p class="text-xs text-gray-500 mt-1">ใส่ API Key สำหรับ OpenWeatherMap</p>
+                            </div>
+                            
+                            <!-- AQI Data Source -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">AQI Data Source</label>
+                                <select id="aqiSourceSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option value="mock">Mock Data (เร็ว, สำหรับทดสอบ)</option>
+                                    <option value="scraping">Canvas 39 Scraping (ข้อมูลจริง)</option>
+                                    <option value="iqair">IQAir API</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Update Interval -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ความถี่การอัปเดต (นาที)</label>
+                                <select id="updateInterval" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option value="5">ทุก 5 นาที</option>
+                                    <option value="10" selected>ทุก 10 นาที</option>
+                                    <option value="15">ทุก 15 นาที</option>
+                                    <option value="30">ทุก 30 นาที</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quality Data Settings -->
+                    <div id="quality-section" class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่าข้อมูลคุณภาพ (AQI & Pool)</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-6">
+                            <!-- AQI Settings -->
+                            <div>
+                                <h4 class="text-md font-medium text-gray-900 mb-3">🌬️ Air Quality Index (AQI)</h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">สถานีวัด Indoor AQI</label>
+                                        <input type="text" id="indoorAqiStation" value="Canvas 39" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                        <p class="text-xs text-gray-500 mt-1">ชื่อสถานีวัดภายในอาคาร</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">สถานีวัด Outdoor AQI</label>
+                                        <input type="text" id="outdoorAqiLocation" value="Bangkok" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                        <p class="text-xs text-gray-500 mt-1">พื้นที่วัดคุณภาพอากาศภายนอก</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Pool Water Settings -->
+                            <div>
+                                <h4 class="text-md font-medium text-gray-900 mb-3">🏊 Pool Water Quality</h4>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Temperature (°C)</label>
+                                        <input type="number" id="poolTemp" value="27.5" step="0.1" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">pH Level</label>
+                                        <input type="number" id="poolPH" value="7.4" step="0.1" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">ORP (mV)</label>
+                                        <input type="number" id="poolORP" value="720" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">TDS (ppm)</label>
+                                        <input type="number" id="poolTDS" value="450" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- การตั้งค่า Slideshow -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่า Slideshow</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-4">
+                            <!-- เปิด/ปิด Slideshow -->
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="slideshowEnabled" checked class="rounded border-gray-300 text-blue-600">
+                                    <span class="ml-2 text-sm font-medium text-gray-700">เปิดใช้งาน Auto Slideshow</span>
+                                </label>
+                                <p class="text-xs text-gray-500 mt-1">สลับแสดงข้อมูลอากาศและน้ำอัตโนมัติ</p>
+                            </div>
+                            
+                            <!-- ความเร็วการสลับ -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ความเร็วการสลับ</label>
+                                <select id="slideshowInterval" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option value="5">ทุก 5 วินาที</option>
+                                    <option value="10" selected>ทุก 10 วินาที</option>
+                                    <option value="15">ทุก 15 วินาที</option>
+                                    <option value="20">ทุก 20 วินาที</option>
+                                    <option value="30">ทุก 30 วินาที</option>
+                                </select>
+                            </div>
+                            
+                            <!-- แสดง Slides ที่เปิดใช้งาน -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Slides ที่แสดง</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="showAirQuality" checked class="rounded border-gray-300 text-blue-600">
+                                        <span class="ml-2 text-sm text-gray-700">🌬️ คุณภาพอากาศ (Indoor/Outdoor AQI)</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="checkbox" id="showPoolWater" checked class="rounded border-gray-300 text-blue-600">
+                                        <span class="ml-2 text-sm text-gray-700">🏊‍♂️ คุณภาพน้ำสระ (pH, คลอรีน, ORP, อุณหภูมิ)</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- จัดการประกาศ -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-lg font-medium text-gray-900">จัดการประกาศ</h3>
+                                <button id="addNoticeBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                                    เพิ่มประกาศ
+                                </button>
+                            </div>
+                        </div>
+                        <div class="px-6 py-4">
+                            <!-- Notices List -->
+                            <div id="noticesList" class="space-y-4">
+                                <!-- Notices will be populated here -->
+                            </div>
+                            
+                            <!-- Empty State -->
+                            <div id="emptyNotices" class="text-center py-8 text-gray-500">
+                                <i data-lucide="message-square" class="w-12 h-12 mx-auto mb-4 text-gray-300"></i>
+                                <p>ยังไม่มีประกาศ กดปุ่ม "เพิ่มประกาศ" เพื่อสร้างประกาศใหม่</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Preview & Status -->
+                <div class="space-y-6">
+                    
+                    <!-- คำแนะนำการใช้งาน -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">การใช้งาน</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-3">
+                            <div class="flex items-start space-x-3">
+                                <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span class="text-blue-600 text-xs font-medium">1</span>
+                                </div>
+                                <p class="text-sm text-gray-600">แก้ไขการตั้งค่าตามต้องการ</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span class="text-blue-600 text-xs font-medium">2</span>
+                                </div>
+                                <p class="text-sm text-gray-600">กดปุ่ม "บันทึกการตั้งค่า"</p>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <span class="text-blue-600 text-xs font-medium">3</span>
+                                </div>
+                                <p class="text-sm text-gray-600">เปิดไฟล์ <code class="bg-gray-100 px-1 rounded text-xs">index.html</code> เพื่อดูผลลัพธ์</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- สถานะระบบ -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">สถานะระบบ</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">Weather API</span>
+                                <span id="weatherStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    <div class="w-1.5 h-1.5 bg-green-400 rounded-full mr-1"></div>
+                                    ทำงานปกติ
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">AQI Data</span>
+                                <span id="aqiStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    <div class="w-1.5 h-1.5 bg-yellow-400 rounded-full mr-1"></div>
+                                    Mock Data
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">อัปเดตล่าสุด</span>
+                                <span id="lastUpdate" class="text-sm text-gray-900">--:--:--</span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">Display Status</span>
+                                <span id="displayStatus" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    <div class="w-1.5 h-1.5 bg-blue-400 rounded-full mr-1"></div>
+                                    พร้อมใช้งาน
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ข้อมูลปัจจุบัน -->
+                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">ข้อมูลปัจจุบัน</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">อุณหภูมิ</span>
+                                <span id="currentTemp" class="text-sm font-medium text-gray-900">--°C</span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">AQI ภายใน</span>
+                                <span id="currentIndoorAQI" class="text-sm font-medium text-gray-900">--</span>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-600">AQI ภายนอก</span>
+                                <span id="currentOutdoorAQI" class="text-sm font-medium text-gray-900">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Management Modal -->
+    <div id="userManagementModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-4xl shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between pb-4 border-b">
+                    <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                        <i data-lucide="users" class="w-5 h-5 mr-2"></i>
+                        จัดการผู้ใช้งาน
+                    </h3>
+                    <button id="closeUserModal" class="text-gray-400 hover:text-gray-600">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Content -->
+                <div class="py-4">
+                    <!-- Add User Button -->
+                    <div class="mb-4 flex justify-between items-center">
+                        <h4 class="text-md font-medium text-gray-700">รายชื่อผู้ใช้งาน</h4>
+                        <button id="addUserBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center">
+                            <i data-lucide="user-plus" class="w-4 h-4 mr-2"></i>
+                            เพิ่มผู้ใช้งาน
+                        </button>
+                    </div>
+
+                    <!-- Users Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">ชื่อผู้ใช้</th>
+                                    <th scope="col" class="px-6 py-3">ชื่อ-นามสกุล</th>
+                                    <th scope="col" class="px-6 py-3">อีเมล</th>
+                                    <th scope="col" class="px-6 py-3">สิทธิ์</th>
+                                    <th scope="col" class="px-6 py-3">วันที่สร้าง</th>
+                                    <th scope="col" class="px-6 py-3">การจัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Users will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit User Modal -->
+    <div id="userFormModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-md shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between pb-4 border-b">
+                    <h3 id="userFormTitle" class="text-lg font-semibold text-gray-900">เพิ่มผู้ใช้งาน</h3>
+                    <button id="closeUserFormModal" class="text-gray-400 hover:text-gray-600">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <!-- User Form -->
+                <form id="userForm" class="py-4 space-y-4">
+                    <input type="hidden" id="userId" name="userId">
+                    
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">ชื่อผู้ใช้</label>
+                        <input type="text" id="userFormUsername" name="username" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">ชื่อ-นามสกุล</label>
+                        <input type="text" id="userFormName" name="name" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">อีเมล</label>
+                        <input type="email" id="userFormEmail" name="email" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่าน</label>
+                        <input type="password" id="userFormPassword" name="password"
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <p class="text-xs text-gray-500 mt-1">เว้นว่างไว้หากไม่ต้องการเปลี่ยนรหัสผ่าน</p>
+                    </div>
+
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-gray-700 mb-2">สิทธิ์</label>
+                        <select id="userFormRole" name="role" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="admin">ผู้ดูแลระบบ</option>
+                            <option value="user">ผู้ใช้งานทั่วไป</option>
+                        </select>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" id="cancelUserForm" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">
+                            ยกเลิก
+                        </button>
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">
+                            บันทึก
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notice Form Modal -->
+    <div id="noticeFormModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-10 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between pb-4 border-b">
+                    <h3 id="noticeFormTitle" class="text-lg font-semibold text-gray-900">เพิ่มประกาศใหม่</h3>
+                    <button id="closeNoticeFormModal" class="text-gray-400 hover:text-gray-600">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <!-- Notice Form -->
+                <form id="noticeForm" class="py-4 space-y-4">
+                    <input type="hidden" id="noticeId" name="noticeId">
+                    
+                    <div>
+                        <label for="noticeTitle" class="block text-sm font-medium text-gray-700 mb-2">หัวข้อประกาศ</label>
+                        <input type="text" id="noticeTitle" name="title" required
+                            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="ระบุหัวข้อประกาศ">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เนื้อหาประกาศ</label>
+                        <div class="bg-white rounded-md">
+                            <div id="noticeToolbar" class="border border-gray-300 rounded-t-md">
+                                <span class="ql-formats">
+                                    <select class="ql-font"></select>
+                                    <select class="ql-size"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <select class="ql-color"></select>
+                                    <select class="ql-background"></select>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                    <button class="ql-indent" value="-1"></button>
+                                    <button class="ql-indent" value="+1"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-align" value=""></button>
+                                    <button class="ql-align" value="center"></button>
+                                    <button class="ql-align" value="right"></button>
+                                    <button class="ql-align" value="justify"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-link"></button>
+                                    <button class="ql-clean"></button>
+                                </span>
+                            </div>
+                            <div id="noticeContent" class="border-l border-r border-b border-gray-300 rounded-b-md" style="height: 200px;"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">รองรับ Rich Text formatting สำหรับการจัดรูปแบบข้อความ</p>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" id="cancelNoticeForm" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">
+                            ยกเลิก
+                        </button>
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">
+                            บันทึก
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Global variables
+        let quillEditor = null;
+        
+        // Configuration object to store all settings
+        const config = {
+            font: 'default',
+            weatherApi: 'openmeteo',
+            openweatherKey: 'db61b712294c46506059042663feeac6',
+            aqiSource: 'mock',
+            updateInterval: 10,
+            notices: [],
+            images: {
+                logo: 'img/logo.png',
+                building: 'img/FRONT FULL.jpg'
+            },
+            slideshow: {
+                enabled: true,
+                interval: 10, // seconds
+                showAirQuality: true,
+                showPoolWater: true
+            }
+        };
+
+        // Initialize Color Theme Controls (เบาและประหยัดพื้นที่)
+        function initializeColorTheme() {
+            // Initialize default theme colors from config
+            if (!config.theme) {
+                config.theme = {
+                    headerColor: '#3f2f15',
+                    backgroundColor: '#929079',
+                    weatherTodayColor: '#f3efe6',
+                    weatherOutlookColor: '#ddd6cc'
+                };
+            }
+
+            // Sync color inputs with text inputs (เบา)
+            const colorSync = [
+                ['headerColor', 'headerColorText'],
+                ['backgroundColor', 'backgroundColorText'],
+                ['weatherTodayColor', 'weatherTodayColorText'],
+                ['weatherOutlookColor', 'weatherOutlookColorText']
+            ];
+
+            colorSync.forEach(([colorId, textId]) => {
+                const colorInput = document.getElementById(colorId);
+                const textInput = document.getElementById(textId);
+                
+                if (colorInput && textInput) {
+                    // Load saved values
+                    const savedColor = config.theme[colorId] || colorInput.value;
+                    colorInput.value = savedColor;
+                    textInput.value = savedColor;
+                    
+                    // Sync color picker to text input
+                    colorInput.addEventListener('input', function() {
+                        textInput.value = this.value;
+                        config.theme[colorId] = this.value;
+                    });
+                    
+                    // Sync text input to color picker
+                    textInput.addEventListener('input', function() {
+                        if (/^#[0-9A-F]{6}$/i.test(this.value)) {
+                            colorInput.value = this.value;
+                            config.theme[colorId] = this.value;
+                        }
+                    });
+                }
+            });
+
+            // Theme preset buttons (เบาๆ)
+            const themes = {
+                'themeDefault': { 
+                    headerColor: '#3f2f15', backgroundColor: '#929079',
+                    weatherTodayColor: '#f3efe6', weatherOutlookColor: '#ddd6cc'
+                },
+                'themeBlue': { 
+                    headerColor: '#1e3a8a', backgroundColor: '#60a5fa',
+                    weatherTodayColor: '#dbeafe', weatherOutlookColor: '#bfdbfe'
+                },
+                'themeGreen': { 
+                    headerColor: '#166534', backgroundColor: '#4ade80',
+                    weatherTodayColor: '#dcfce7', weatherOutlookColor: '#bbf7d0'
+                },
+                'themeDark': { 
+                    headerColor: '#111827', backgroundColor: '#374151',
+                    weatherTodayColor: '#4b5563', weatherOutlookColor: '#6b7280'
+                },
+                'themeModern': { 
+                    headerColor: '#581c87', backgroundColor: '#a855f7',
+                    weatherTodayColor: '#f3e8ff', weatherOutlookColor: '#e9d5ff'
+                },
+                'themeWarm': { 
+                    headerColor: '#c2410c', backgroundColor: '#fb923c',
+                    weatherTodayColor: '#fed7aa', weatherOutlookColor: '#fdba74'
+                }
+            };
+
+            Object.keys(themes).forEach(themeId => {
+                const button = document.getElementById(themeId);
+                if (button) {
+                    button.addEventListener('click', function() {
+                        const theme = themes[themeId];
+                        
+                        // Apply theme to inputs
+                        Object.keys(theme).forEach(key => {
+                            const colorInput = document.getElementById(key);
+                            const textInput = document.getElementById(key + 'Text');
+                            
+                            if (colorInput && textInput) {
+                                colorInput.value = theme[key];
+                                textInput.value = theme[key];
+                                config.theme[key] = theme[key];
+                            }
+                        });
+                        
+                        console.log(`🎨 Applied ${themeId} theme`);
+                    });
+                }
+            });
+
+            // Reset buttons
+            ['resetHeaderColor', 'resetBackgroundColor'].forEach(resetId => {
+                const button = document.getElementById(resetId);
+                if (button) {
+                    button.addEventListener('click', function() {
+                        const defaultTheme = themes.themeDefault;
+                        const key = resetId.replace('reset', '').charAt(0).toLowerCase() + resetId.replace('reset', '').slice(1);
+                        
+                        if (defaultTheme[key]) {
+                            const colorInput = document.getElementById(key);
+                            const textInput = document.getElementById(key + 'Text');
+                            
+                            if (colorInput && textInput) {
+                                colorInput.value = defaultTheme[key];
+                                textInput.value = defaultTheme[key];
+                                config.theme[key] = defaultTheme[key];
+                            }
+                        }
+                    });
+                }
+            });
+
+            console.log('🎨 Color theme controls initialized (lightweight)');
+        }
+
+        // Initialize Quill Editor
+        function initQuillEditor() {
+            if (typeof Quill !== 'undefined') {
+                quillEditor = new Quill('#noticeContent', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: '#noticeToolbar'
+                    },
+                    placeholder: 'พิมพ์เนื้อหาประกาศที่ต้องการแสดง...',
+                    formats: ['font', 'size', 'bold', 'italic', 'underline', 'strike', 'color', 'background', 'list', 'indent', 'align', 'link']
+                });
+                console.log('✅ Quill Editor initialized');
+            } else {
+                console.error('❌ Quill library not loaded');
+            }
+        }
+
+        // Load saved configuration
+        async function loadConfig() {
+            // ลองโหลดจาก JSONBin.io ก่อน (Primary)
+            try {
+                console.log('📦 Loading config from JSONBin.io (Primary)...');
+                
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}/latest`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Access-Key': JSONBIN_CONFIG.accessKey
+                    }
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    const configData = result.record;
+                    Object.assign(config, configData);
+                    console.log('✅ Configuration loaded from JSONBin.io:', config);
+                    
+                    // บันทึกลง localStorage สำหรับ cache
+                    localStorage.setItem('canvas39_admin_config', JSON.stringify(config));
+                    updateUI();
+                    return;
+                }
+            } catch (error) {
+                console.error('❌ Failed to load from JSONBin.io:', error);
+            }
+            
+            // ลอง Firebase backup
+            if (window.firebaseDB && window.firebaseGet && window.firebaseRef) {
+                try {
+                    console.log('🔥 Loading config from Firebase (Backup)...');
+                    const snapshot = await window.firebaseGet(window.firebaseRef(window.firebaseDB, 'canvas39-config'));
+                    
+                    if (snapshot.exists()) {
+                        const configData = snapshot.val();
+                        Object.assign(config, configData);
+                        console.log('✅ Configuration loaded from Firebase backup:', config);
+                        
+                        // บันทึกลง localStorage สำหรับ cache
+                        localStorage.setItem('canvas39_admin_config', JSON.stringify(config));
+                        updateUI();
+                        return;
+                    }
+                } catch (error) {
+                    console.error('❌ Failed to load from Firebase backup:', error);
+                }
+            }
+            
+            // Fallback: โหลดจาก localStorage
+            const saved = localStorage.getItem('canvas39_admin_config');
+            if (saved) {
+                Object.assign(config, JSON.parse(saved));
+                console.log('📄 Configuration loaded from localStorage (fallback)');
+                updateUI();
+            }
+        }
+
+        // Save configuration
+        let isSaving = false; // ป้องกันการกดซ้ำ
+        async function saveConfig() {
+            // ป้องกันการกดซ้ำ
+            if (isSaving) {
+                console.log('⚠️ Save already in progress, ignoring...');
+                return;
+            }
+            
+            isSaving = true;
+            const saveBtn = document.getElementById('saveBtn');
+            const originalText = saveBtn.innerHTML;
+            
+            // แสดง loading state
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 mr-2 animate-spin"></i>กำลังบันทึก...';
+            saveBtn.className = saveBtn.className.replace('bg-green-600 hover:bg-green-700', 'bg-blue-600');
+            lucide.createIcons();
+            
+            let jsonbinSuccess = false;
+            let firebaseSuccess = false;
+            
+            // ลองบันทึกไป JSONBin.io ก่อน (Primary)
+            try {
+                console.log('📦 Saving config to JSONBin.io (Primary)...');
+                
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.binId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': JSONBIN_CONFIG.masterKey,
+                        'X-Bin-Versioning': 'false'
+                    },
+                    body: JSON.stringify(config)
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('✅ Config saved to JSONBin.io successfully:', result);
+                    jsonbinSuccess = true;
+                } else {
+                    throw new Error(`JSONBin error: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('❌ JSONBin.io failed:', error);
+            }
+            
+            // ลองบันทึกไป Firebase เป็น backup (with timeout)
+            if (window.firebaseDB && window.firebaseSet && window.firebaseRef) {
+                try {
+                    console.log('🔥 Saving config to Firebase (Backup)...');
+                    
+                    // เพิ่ม timeout สำหรับ Firebase (3 วินาที - เร็วขึ้น)
+                    const firebasePromise = window.firebaseSet(window.firebaseRef(window.firebaseDB, 'canvas39-config'), config);
+                    const timeoutPromise = new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Firebase timeout')), 3000)
+                    );
+                    
+                    await Promise.race([firebasePromise, timeoutPromise]);
+                    console.log('✅ Config saved to Firebase backup successfully');
+                    firebaseSuccess = true;
+                } catch (error) {
+                    console.error('❌ Firebase backup failed:', error.message);
+                    // ไม่ block การทำงาน ถ้า Firebase ล้มเหลว
+                }
+            } else {
+                console.log('⚠️ Firebase not available - skipping backup');
+            }
+            
+            // บันทึกลง localStorage สำหรับ cache
+            localStorage.setItem('canvas39_admin_config', JSON.stringify(config));
+            
+            // ส่ง broadcast ไปยัง display tabs (same origin)
+            broadcastConfigUpdate(config);
+            
+            // รอนิดนึงแล้วค่อย reset ปุ่ม (ลดเวลารอ)
+            setTimeout(() => {
+                saveBtn.disabled = false;
+                
+                if (jsonbinSuccess && firebaseSuccess) {
+                    saveBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4 mr-2"></i>บันทึกสำเร็จ!';
+                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
+                    showNotification('🎉 บันทึกสำเร็จทั้ง JSONBin.io และ Firebase backup!', 'success');
+                } else if (jsonbinSuccess) {
+                    saveBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4 mr-2"></i>บันทึกสำเร็จ!';
+                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-green-600 hover:bg-green-700');
+                    showNotification('📦 บันทึกไป JSONBin.io สำเร็จ! (Firebase backup ไม่พร้อม)', 'success');
+                } else if (firebaseSuccess) {
+                    saveBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4 mr-2"></i>บันทึกแล้ว';
+                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-yellow-600 hover:bg-yellow-700');
+                    showNotification('🔥 บันทึกไป Firebase สำเร็จ! (JSONBin.io ไม่พร้อม)', 'warning');
+                } else {
+                    saveBtn.innerHTML = '<i data-lucide="x-circle" class="w-4 h-4 mr-2"></i>บันทึกล้มเหลว';
+                    saveBtn.className = saveBtn.className.replace('bg-blue-600', 'bg-red-600 hover:bg-red-700');
+                    showNotification('❌ ไม่สามารถบันทึกไป cloud ได้ - บันทึกเฉพาะ localStorage', 'error');
+                }
+                
+                lucide.createIcons();
+                
+                // รีเซ็ตปุ่มเป็นสถานะปกติหลัง 3 วินาที
+                setTimeout(() => {
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.className = saveBtn.className.replace(/bg-(green|yellow|red)-600 hover:bg-(green|yellow|red)-700/, 'bg-green-600 hover:bg-green-700');
+                    lucide.createIcons();
+                    isSaving = false; // ปลดล็อคการบันทึก
+                }, 3000);
+            }, 500);
+        }
+
+        // Broadcast config updates using BroadcastChannel
+        function broadcastConfigUpdate(configData) {
+            try {
+                // Create broadcast channel for same-origin communication
+                const channel = new BroadcastChannel('canvas39-config');
+                channel.postMessage({
+                    type: 'config-update',
+                    config: configData,
+                    timestamp: Date.now()
+                });
+                console.log('📡 Config broadcast to other windows');
+            } catch (error) {
+                console.warn('BroadcastChannel not supported:', error);
+            }
+        }
+
+        // Update UI with current config
+        function updateUI() {
+            document.getElementById('fontSelect').value = config.font;
+            document.getElementById('weatherApiSelect').value = config.weatherApi;
+            document.getElementById('openweatherKey').value = config.openweatherKey;
+            document.getElementById('aqiSourceSelect').value = config.aqiSource;
+            document.getElementById('updateInterval').value = config.updateInterval;
+            
+            // Update slideshow settings
+            if (config.slideshow) {
+                document.getElementById('slideshowEnabled').checked = config.slideshow.enabled;
+                document.getElementById('slideshowInterval').value = config.slideshow.interval;
+                document.getElementById('showAirQuality').checked = config.slideshow.showAirQuality;
+                document.getElementById('showPoolWater').checked = config.slideshow.showPoolWater;
+            }
+            
+            // Update image previews
+            if (config.images) {
+                if (config.images.logo) {
+                    document.getElementById('logoPreview').src = config.images.logo;
+                    console.log('🖼️ Logo preview updated from config');
+                }
+                if (config.images.building) {
+                    document.getElementById('buildingPreview').src = config.images.building;
+                    console.log('🏢 Building preview updated from config');
+                }
+            }
+            
+            // Load notices
+            loadNoticesList();
+            
+            // Show/hide OpenWeather API key field
+            toggleOpenWeatherKey();
+        }
+
+        // Toggle OpenWeather API key field
+        function toggleOpenWeatherKey() {
+            const weatherApi = document.getElementById('weatherApiSelect').value;
+            const keyDiv = document.getElementById('openweatherKeyDiv');
+            keyDiv.classList.toggle('hidden', weatherApi !== 'openweather');
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-md shadow-lg ${
+                type === 'success' ? 'bg-green-500 text-white' : 
+                type === 'error' ? 'bg-red-500 text-white' : 
+                'bg-blue-500 text-white'
+            }`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize Quill Rich Text Editor
+        function initQuillEditor() {
+            quillEditor = new Quill('#noticeContent', {
+                theme: 'snow',
+                modules: {
+                    toolbar: '#noticeToolbar'
+                },
+                placeholder: 'พิมพ์เนื้อหาประกาศที่ต้องการแสดง...',
+                formats: ['font', 'size', 'bold', 'italic', 'underline', 'strike', 'color', 'background', 'list', 'indent', 'align', 'link']
+            });
+        }
+
+        // Notice Management Functions
+        function generateNoticeId() {
+            return Date.now().toString();
+        }
+
+        function loadNoticesList() {
+            const noticesList = document.getElementById('noticesList');
+            const emptyNotices = document.getElementById('emptyNotices');
+            
+            if (config.notices.length === 0) {
+                noticesList.innerHTML = '';
+                emptyNotices.classList.remove('hidden');
+            } else {
+                emptyNotices.classList.add('hidden');
+                noticesList.innerHTML = config.notices.map(notice => `
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-3">
+                                <h4 class="text-md font-medium text-gray-900">${notice.title}</h4>
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" ${notice.active ? 'checked' : ''} 
+                                           onchange="toggleNotice('${notice.id}')"
+                                           class="rounded border-gray-300 text-blue-600">
+                                    <span class="ml-2 text-sm text-gray-700">แสดงในหน้าจอ</span>
+                                </label>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="editNotice('${notice.id}')" class="text-blue-600 hover:text-blue-900">
+                                    <i data-lucide="edit-2" class="w-4 h-4"></i>
+                                </button>
+                                <button onclick="deleteNotice('${notice.id}')" class="text-red-600 hover:text-red-900">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-600 prose max-w-none">
+                            ${notice.content}
+                        </div>
+                        <div class="text-xs text-gray-500 mt-2">
+                            สร้างเมื่อ: ${new Date(notice.createdAt).toLocaleDateString('th-TH')}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Re-initialize Lucide icons
+            lucide.createIcons();
+        }
+
+        function openNoticeForm(notice = null) {
+            const modal = document.getElementById('noticeFormModal');
+            const title = document.getElementById('noticeFormTitle');
+            const form = document.getElementById('noticeForm');
+            
+            if (notice) {
+                title.textContent = 'แก้ไขประกาศ';
+                document.getElementById('noticeId').value = notice.id;
+                document.getElementById('noticeTitle').value = notice.title;
+                if (quillEditor) {
+                    quillEditor.root.innerHTML = notice.content;
+                }
+            } else {
+                title.textContent = 'เพิ่มประกาศใหม่';
+                form.reset();
+                if (quillEditor) {
+                    quillEditor.root.innerHTML = '';
+                }
+            }
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeNoticeForm() {
+            document.getElementById('noticeFormModal').classList.add('hidden');
+        }
+
+        function editNotice(noticeId) {
+            const notice = config.notices.find(n => n.id === noticeId);
+            if (notice) {
+                openNoticeForm(notice);
+            }
+        }
+
+        function deleteNotice(noticeId) {
+            if (confirm('คุณแน่ใจหรือไม่ที่จะลบประกาศนี้?')) {
+                config.notices = config.notices.filter(n => n.id !== noticeId);
+                loadNoticesList();
+                
+                showNotification('ลบประกาศเรียบร้อยแล้ว (กรุณากดบันทึกการตั้งค่า)', 'success');
+            }
+        }
+
+        function toggleNotice(noticeId) {
+            const notice = config.notices.find(n => n.id === noticeId);
+            if (notice) {
+                notice.active = !notice.active;
+                
+                showNotification(notice.active ? 'เปิดการแสดงประกาศแล้ว (กรุณากดบันทึกการตั้งค่า)' : 'ปิดการแสดงประกาศแล้ว (กรุณากดบันทึกการตั้งค่า)', 'success');
+            }
+        }
+
+        function saveNotice(formData) {
+            const noticeId = formData.get('noticeId');
+            const content = quillEditor.root.innerHTML;
+            
+            if (noticeId) {
+                // Edit existing notice
+                const noticeIndex = config.notices.findIndex(n => n.id === noticeId);
+                if (noticeIndex !== -1) {
+                    config.notices[noticeIndex] = {
+                        ...config.notices[noticeIndex],
+                        title: formData.get('title'),
+                        content: content
+                    };
+                }
+            } else {
+                // Add new notice
+                const newNotice = {
+                    id: generateNoticeId(),
+                    title: formData.get('title'),
+                    content: content,
+                    active: false,
+                    createdAt: new Date().toISOString()
+                };
+                config.notices.push(newNotice);
+            }
+            
+            closeNoticeForm();
+            loadNoticesList();
+            
+            showNotification(noticeId ? 'แก้ไขประกาศเรียบร้อยแล้ว (กรุณากดบันทึกการตั้งค่า)' : 'เพิ่มประกาศเรียบร้อยแล้ว (กรุณากดบันทึกการตั้งค่า)', 'success');
+        }
+
+        // Authentication functions
+        function checkAuthentication() {
+            const session = localStorage.getItem('canvas39_session') || sessionStorage.getItem('canvas39_session');
+            if (!session) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            
+            try {
+                return JSON.parse(session);
+            } catch (error) {
+                localStorage.removeItem('canvas39_session');
+                sessionStorage.removeItem('canvas39_session');
+                window.location.href = 'login.html';
+                return null;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('canvas39_session');
+            sessionStorage.removeItem('canvas39_session');
+            window.location.href = 'login.html';
+        }
+
+        function updateUserInfo(session) {
+            if (session) {
+                document.getElementById('currentUserName').textContent = session.name || session.username;
+            }
+        }
+
+        // User Management Functions
+        function getUsers() {
+            const users = localStorage.getItem('canvas39_users');
+            return users ? JSON.parse(users) : [];
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('canvas39_users', JSON.stringify(users));
+        }
+
+        function generateUserId() {
+            const users = getUsers();
+            return users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+        }
+
+        function loadUsersTable() {
+            const users = getUsers();
+            const tbody = document.getElementById('usersTableBody');
+            
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${user.username}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.email}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            user.role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                        }">
+                            ${user.role === 'admin' ? 'ผู้ดูแลระบบ' : 'ผู้ใช้งานทั่วไป'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${new Date(user.createdAt).toLocaleDateString('th-TH')}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="editUser(${user.id})" class="text-blue-600 hover:text-blue-900 mr-3">
+                            <i data-lucide="edit-2" class="w-4 h-4"></i>
+                        </button>
+                        ${users.length > 1 ? `
+                            <button onclick="deleteUser(${user.id})" class="text-red-600 hover:text-red-900">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Re-initialize Lucide icons
+            lucide.createIcons();
+        }
+
+        function openUserModal() {
+            document.getElementById('userManagementModal').classList.remove('hidden');
+            loadUsersTable();
+        }
+
+        function closeUserModal() {
+            document.getElementById('userManagementModal').classList.add('hidden');
+        }
+
+        function openUserForm(user = null) {
+            const modal = document.getElementById('userFormModal');
+            const title = document.getElementById('userFormTitle');
+            const form = document.getElementById('userForm');
+            
+            if (user) {
+                title.textContent = 'แก้ไขผู้ใช้งาน';
+                document.getElementById('userId').value = user.id;
+                document.getElementById('userFormUsername').value = user.username;
+                document.getElementById('userFormName').value = user.name;
+                document.getElementById('userFormEmail').value = user.email;
+                document.getElementById('userFormPassword').value = '';
+                document.getElementById('userFormRole').value = user.role;
+                document.getElementById('userFormPassword').required = false;
+            } else {
+                title.textContent = 'เพิ่มผู้ใช้งาน';
+                form.reset();
+                document.getElementById('userFormPassword').required = true;
+            }
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeUserForm() {
+            document.getElementById('userFormModal').classList.add('hidden');
+        }
+
+        function editUser(userId) {
+            const users = getUsers();
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                openUserForm(user);
+            }
+        }
+
+        function deleteUser(userId) {
+            if (confirm('คุณแน่ใจหรือไม่ที่จะลบผู้ใช้งานนี้?')) {
+                let users = getUsers();
+                users = users.filter(u => u.id !== userId);
+                saveUsers(users);
+                loadUsersTable();
+                showNotification('ลบผู้ใช้งานเรียบร้อยแล้ว', 'success');
+            }
+        }
+
+        function saveUser(formData) {
+            let users = getUsers();
+            const userId = formData.get('userId');
+            
+            if (userId) {
+                // Edit existing user
+                const userIndex = users.findIndex(u => u.id === parseInt(userId));
+                if (userIndex !== -1) {
+                    users[userIndex] = {
+                        ...users[userIndex],
+                        username: formData.get('username'),
+                        name: formData.get('name'),
+                        email: formData.get('email'),
+                        role: formData.get('role')
+                    };
+                    
+                    // Update password if provided
+                    if (formData.get('password')) {
+                        users[userIndex].password = formData.get('password');
+                    }
+                }
+            } else {
+                // Add new user
+                const newUser = {
+                    id: generateUserId(),
+                    username: formData.get('username'),
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    password: formData.get('password'),
+                    role: formData.get('role'),
+                    createdAt: new Date().toISOString()
+                };
+                users.push(newUser);
+            }
+            
+            saveUsers(users);
+            closeUserForm();
+            loadUsersTable();
+            showNotification(userId ? 'แก้ไขผู้ใช้งานเรียบร้อยแล้ว' : 'เพิ่มผู้ใช้งานเรียบร้อยแล้ว', 'success');
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check authentication first
+            const session = checkAuthentication();
+            if (!session) return;
+            
+            updateUserInfo(session);
+            await loadConfig();
+            
+            // Initialize Quill Editor after a short delay
+            setTimeout(initQuillEditor, 500);
+            
+            // Font selection
+            document.getElementById('fontSelect').addEventListener('change', function() {
+                config.font = this.value;
+            });
+            
+            // Theme Color Controls (เบาและง่าย)
+            initializeColorTheme();
+            
+            // Weather API selection
+            document.getElementById('weatherApiSelect').addEventListener('change', function() {
+                config.weatherApi = this.value;
+                toggleOpenWeatherKey();
+            });
+            
+            // OpenWeather API key
+            document.getElementById('openweatherKey').addEventListener('input', function() {
+                config.openweatherKey = this.value;
+            });
+            
+            // AQI source selection
+            document.getElementById('aqiSourceSelect').addEventListener('change', function() {
+                config.aqiSource = this.value;
+                updateAQIStatus();
+            });
+            
+            // Update interval
+            document.getElementById('updateInterval').addEventListener('change', function() {
+                config.updateInterval = parseInt(this.value);
+            });
+            
+            // Slideshow settings
+            document.getElementById('slideshowEnabled').addEventListener('change', function() {
+                config.slideshow.enabled = this.checked;
+            });
+            
+            document.getElementById('slideshowInterval').addEventListener('change', function() {
+                config.slideshow.interval = parseInt(this.value);
+            });
+            
+            document.getElementById('showAirQuality').addEventListener('change', function() {
+                config.slideshow.showAirQuality = this.checked;
+            });
+            
+            document.getElementById('showPoolWater').addEventListener('change', function() {
+                config.slideshow.showPoolWater = this.checked;
+            });
+            
+            // File uploads
+            document.getElementById('logoUpload').addEventListener('change', handleLogoUpload);
+            document.getElementById('buildingUpload').addEventListener('change', handleBuildingUpload);
+            
+            // Buttons
+            document.getElementById('saveBtn').addEventListener('click', function(e) {
+                console.log('💾 Save button clicked!');
+                e.preventDefault();
+                saveConfig();
+            });
+            
+            // User Menu
+            document.getElementById('userMenuBtn').addEventListener('click', function() {
+                const menu = document.getElementById('userMenu');
+                menu.classList.toggle('hidden');
+            });
+            
+            // User Management
+            document.getElementById('userManagementBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('userMenu').classList.add('hidden');
+                openUserModal();
+            });
+            
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                logout();
+            });
+            
+            // User Management Modal
+            document.getElementById('closeUserModal').addEventListener('click', closeUserModal);
+            document.getElementById('addUserBtn').addEventListener('click', () => openUserForm());
+            
+            // User Form Modal
+            document.getElementById('closeUserFormModal').addEventListener('click', closeUserForm);
+            document.getElementById('cancelUserForm').addEventListener('click', closeUserForm);
+            
+            document.getElementById('userForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                // Validate username uniqueness
+                const users = getUsers();
+                const userId = formData.get('userId');
+                const username = formData.get('username');
+                const existingUser = users.find(u => u.username === username && u.id !== parseInt(userId));
+                
+                if (existingUser) {
+                    showNotification('ชื่อผู้ใช้นี้มีอยู่แล้ว', 'error');
+                    return;
+                }
+                
+                saveUser(formData);
+            });
+            
+            // Close modals when clicking outside
+            document.getElementById('userManagementModal').addEventListener('click', function(e) {
+                if (e.target === this) closeUserModal();
+            });
+            
+            document.getElementById('userFormModal').addEventListener('click', function(e) {
+                if (e.target === this) closeUserForm();
+            });
+            
+            // Notice Management
+            document.getElementById('addNoticeBtn').addEventListener('click', () => openNoticeForm());
+            document.getElementById('closeNoticeFormModal').addEventListener('click', closeNoticeForm);
+            document.getElementById('cancelNoticeForm').addEventListener('click', closeNoticeForm);
+            
+            document.getElementById('noticeForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                saveNotice(formData);
+            });
+            
+            document.getElementById('noticeFormModal').addEventListener('click', function(e) {
+                if (e.target === this) closeNoticeForm();
+            });
+            
+            // Close user menu when clicking outside
+            document.addEventListener('click', function(e) {
+                const userMenu = document.getElementById('userMenu');
+                const userMenuBtn = document.getElementById('userMenuBtn');
+                
+                if (!userMenuBtn.contains(e.target) && !userMenu.contains(e.target)) {
+                    userMenu.classList.add('hidden');
+                }
+            });
+            
+            // Initial status update
+            updateStatus();
+            
+            // Update status every 30 seconds
+            setInterval(updateStatus, 30000);
+        });
+
+        // Handle logo upload
+        function handleLogoUpload(event) {
+            console.log('🖼️ Logo upload started');
+            const file = event.target.files[0];
+            if (file) {
+                console.log('📁 Logo file selected:', file.name, 'Size:', file.size);
+                
+                // เช็คขนาดไฟล์ (จำกัด 500KB)
+                if (file.size > 500000) {
+                    showNotification('❌ ไฟล์ใหญ่เกินไป! กรุณาเลือกรูปที่มีขนาดไม่เกิน 500KB', 'error');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    console.log('✅ Logo read successfully');
+                    
+                    // ลดขนาดรูปภาพ
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // กำหนดขนาดสูงสุดสำหรับ logo (เล็กลง)
+                        const maxWidth = 100;
+                        const maxHeight = 100;
+                        let { width, height } = img;
+                        
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = height * (maxWidth / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = width * (maxHeight / height);
+                                height = maxHeight;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        // ไม่เติมพื้นหลัง - เก็บความโปร่งใส
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // ใช้ PNG เสมอสำหรับ logo เพื่อเก็บความโปร่งใส (quality ต่ำลง)
+                        const compressedDataUrl = canvas.toDataURL('image/png', 0.5);
+                        console.log('🗜️ Logo compressed from', file.size, 'to', compressedDataUrl.length);
+                        
+                        document.getElementById('logoPreview').src = compressedDataUrl;
+                        config.images.logo = compressedDataUrl;
+                        const originalFormat = file.type === 'image/png' ? 'PNG' : 'JPEG→PNG';
+                        showNotification(`🖼️ อัปโหลดโลโก้เรียบร้อยแล้ว (${originalFormat} โปร่งใส) - กรุณากดบันทึกการตั้งค่า`, 'success');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Handle building upload
+        function handleBuildingUpload(event) {
+            console.log('🏢 Building upload started');
+            const file = event.target.files[0];
+            if (file) {
+                console.log('📁 Building file selected:', file.name, 'Size:', file.size);
+                
+                // เช็คขนาดไฟล์ (จำกัด 800KB)
+                if (file.size > 800000) {
+                    showNotification('❌ ไฟล์ใหญ่เกินไป! กรุณาเลือกรูปที่มีขนาดไม่เกิน 800KB', 'error');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    console.log('✅ Building image read successfully');
+                    
+                    // ลดขนาดรูปภาพ
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // กำหนดขนาดสูงสุดสำหรับ building (เล็กลง)
+                        const maxWidth = 400;
+                        const maxHeight = 300;
+                        let { width, height } = img;
+                        
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = height * (maxWidth / width);
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = width * (maxHeight / height);
+                                height = maxHeight;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        // สำหรับ building - เติมพื้นหลังสีขาวเพื่อไม่ให้โปร่งใส
+                        if (file.type === 'image/png') {
+                            ctx.fillStyle = 'white';
+                            ctx.fillRect(0, 0, width, height);
+                        }
+                        
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // ใช้ JPEG สำหรับ building image เพื่อลดขนาด
+                        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        console.log('🗜️ Building image compressed from', file.size, 'to', compressedDataUrl.length);
+                        
+                        document.getElementById('buildingPreview').src = compressedDataUrl;
+                        config.images.building = compressedDataUrl;
+                        showNotification('🏢 อัปโหลดรูปอาคารเรียบร้อยแล้ว (ถูกลดขนาดแล้ว) - กรุณากดบันทึกการตั้งค่า', 'success');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Update AQI status
+        function updateAQIStatus() {
+            const aqiStatus = document.getElementById('aqiStatus');
+            const source = config.aqiSource;
+            
+            if (source === 'mock') {
+                aqiStatus.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800';
+                aqiStatus.innerHTML = '<div class="w-1.5 h-1.5 bg-yellow-400 rounded-full mr-1"></div>Mock Data';
+            } else if (source === 'scraping') {
+                aqiStatus.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800';
+                aqiStatus.innerHTML = '<div class="w-1.5 h-1.5 bg-green-400 rounded-full mr-1"></div>ข้อมูลจริง';
+            } else {
+                aqiStatus.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800';
+                aqiStatus.innerHTML = '<div class="w-1.5 h-1.5 bg-blue-400 rounded-full mr-1"></div>IQAir API';
+            }
+        }
+
+        // Update system status
+        function updateStatus() {
+            // Update last update time
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('th-TH');
+            
+            // Mock current data (in real system, this would fetch from APIs)
+            document.getElementById('currentTemp').textContent = '31°C';
+            document.getElementById('currentIndoorAQI').textContent = '40 (Good)';
+            document.getElementById('currentOutdoorAQI').textContent = '84 (Moderate)';
+        }
+        
+        // Smooth scroll to section function
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId + '-section');
+            if (element) {
+                // Add visual highlight
+                element.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+                
+                // Add temporary highlight effect
+                element.style.transition = 'box-shadow 0.3s ease';
+                element.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.3)';
+                setTimeout(() => {
+                    element.style.boxShadow = '';
+                }, 2000);
+                
+                console.log(`📍 Navigated to ${sectionId} section`);
+            }
+        }
+
+    </script>
+</body>
+</html>
