@@ -3134,7 +3134,7 @@
                         backgroundColor: document.getElementById('backgroundColor')?.value || '#929079'
                     },
                     font: document.getElementById('fontSelect')?.value || 'default',
-                    layout: layoutConfig || {}
+                    layout: config.layout || {}
                 };
 
                 // Update preview header
@@ -3345,7 +3345,7 @@
                     exportType: 'full',
                     config: {
                         ...config,
-                        layout: layoutConfig,
+                        layout: config.layout,
                         slideshow: config.slideshow || {}
                     }
                 };
@@ -3391,7 +3391,7 @@
                     exportType: 'backup',
                     config: {
                         ...config,
-                        layout: layoutConfig,
+                        layout: config.layout,
                         slideshow: config.slideshow || {}
                     },
                     metadata: {
@@ -3521,8 +3521,8 @@
                 }
                 
                 if (importOptions.layout && importedConfigData.config.layout) {
-                    layoutConfig = { ...layoutConfig, ...importedConfigData.config.layout };
-                    localStorage.setItem('canvas39_layout_config', JSON.stringify(layoutConfig));
+                    config.layout = { ...config.layout, ...importedConfigData.config.layout };
+                    localStorage.setItem('canvas39_layout_config', JSON.stringify(config.layout));
                 }
                 
                 if (importOptions.slideshow && importedConfigData.config.slideshow) {
@@ -3581,7 +3581,7 @@
                     }
                 };
                 
-                layoutConfig = {};
+                config.layout = {};
                 
                 // Update UI
                 updateUIFromConfig();
