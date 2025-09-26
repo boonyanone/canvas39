@@ -379,6 +379,52 @@
                         </div>
                     </div>
 
+                    <!-- การตั้งค่า Weather API -->
+                    <div id="weather-section" class="bg-white overflow-hidden shadow rounded-lg">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่า Weather API</h3>
+                        </div>
+                        <div class="px-6 py-4 space-y-4">
+                            <!-- Weather API -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Weather API Provider</label>
+                                <select id="weatherApiSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option value="openmeteo">OpenMeteo (ฟรี, แนะนำ)</option>
+                                    <option value="wttr">wttr.in (ฟรี, สำรอง)</option>
+                                    <option value="openweather">OpenWeatherMap</option>
+                                </select>
+                            </div>
+                            
+                            <!-- OpenWeatherMap API Key -->
+                            <div id="openweatherKeyDiv" class="hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">OpenWeatherMap API Key</label>
+                                <input type="text" id="openweatherKey" value="db61b712294c46506059042663feeac6" class="w-full border border-gray-300 rounded-md px-3 py-2 font-mono text-sm">
+                                <p class="text-xs text-gray-500 mt-1">ใส่ API Key สำหรับ OpenWeatherMap</p>
+                            </div>
+                            
+                            <!-- AQI Data Source -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">AQI Data Source</label>
+                                <select id="aqiSourceSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option value="mock">Mock Data (เร็ว, สำหรับทดสอบ)</option>
+                                    <option value="scraping">Canvas 39 Scraping (ข้อมูลจริง)</option>
+                                    <option value="iqair">IQAir API</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Update Interval -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ความถี่การอัปเดต (นาที)</label>
+                                <select id="updateInterval" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option value="5">ทุก 5 นาที</option>
+                                    <option value="10" selected>ทุก 10 นาที</option>
+                                    <option value="15">ทุก 15 นาที</option>
+                                    <option value="30">ทุก 30 นาที</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- การตั้งค่า Font -->
                     <div id="font-section" class="bg-white overflow-hidden shadow rounded-lg">
                         <div class="px-6 py-4 border-b border-gray-200">
@@ -522,10 +568,10 @@
                         </div>
                     </div>
 
-                    <!-- การตั้งค่าสี Theme -->
-                    <div id="theme-section" class="bg-white overflow-hidden shadow rounded-lg">
+                    <!-- Quality Data Settings -->
+                    <div id="quality-section" class="bg-white overflow-hidden shadow rounded-lg">
                         <div class="px-6 py-4 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่าสี Theme</h3>
+                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่าข้อมูลคุณภาพ (AQI & Pool)</h3>
                         </div>
                         <div class="px-6 py-4 space-y-4">
                             <!-- สี Header/Navigation Bar -->
@@ -598,52 +644,6 @@
                                     </button>
                                 </div>
                                 <p class="text-xs text-gray-500 mt-1">คลิกเพื่อใช้ชุดสีสำเร็จรูป</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- API Settings -->
-                    <div id="weather-section" class="bg-white overflow-hidden shadow rounded-lg">
-                        <div class="px-6 py-4 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่า Weather API</h3>
-                        </div>
-                        <div class="px-6 py-4 space-y-4">
-                            <!-- Weather API -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Weather API Provider</label>
-                                <select id="weatherApiSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                    <option value="openmeteo">OpenMeteo (ฟรี, แนะนำ)</option>
-                                    <option value="wttr">wttr.in (ฟรี, สำรอง)</option>
-                                    <option value="openweather">OpenWeatherMap</option>
-                                </select>
-                            </div>
-                            
-                            <!-- OpenWeatherMap API Key -->
-                            <div id="openweatherKeyDiv" class="hidden">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">OpenWeatherMap API Key</label>
-                                <input type="text" id="openweatherKey" value="db61b712294c46506059042663feeac6" class="w-full border border-gray-300 rounded-md px-3 py-2 font-mono text-sm">
-                                <p class="text-xs text-gray-500 mt-1">ใส่ API Key สำหรับ OpenWeatherMap</p>
-                            </div>
-                            
-                            <!-- AQI Data Source -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">AQI Data Source</label>
-                                <select id="aqiSourceSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                    <option value="mock">Mock Data (เร็ว, สำหรับทดสอบ)</option>
-                                    <option value="scraping">Canvas 39 Scraping (ข้อมูลจริง)</option>
-                                    <option value="iqair">IQAir API</option>
-                                </select>
-                            </div>
-                            
-                            <!-- Update Interval -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">ความถี่การอัปเดต (นาที)</label>
-                                <select id="updateInterval" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                    <option value="5">ทุก 5 นาที</option>
-                                    <option value="10" selected>ทุก 10 นาที</option>
-                                    <option value="15">ทุก 15 นาที</option>
-                                    <option value="30">ทุก 30 นาที</option>
-                                </select>
                             </div>
                         </div>
                     </div>
