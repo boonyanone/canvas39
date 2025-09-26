@@ -1260,12 +1260,281 @@
                                 <p class="text-gray-600">จัดการผู้ใช้งานและสิทธิ์การเข้าถึง</p>
                             </div>
                             
-                            <div class="bg-white overflow-hidden shadow rounded-lg">
-                                <div class="px-6 py-4 border-b border-gray-200">
-                                    <h3 class="text-lg font-medium text-gray-900">ผู้ใช้งาน</h3>
+                            <div class="space-y-6">
+                                <!-- User Authentication Section -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 border-b">
+                                        <h3 class="text-lg font-medium text-white flex items-center gap-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                            </svg>
+                                            Authentication Status
+                                        </h3>
+                                        <p class="text-purple-100 text-sm mt-1">สถานะการเข้าสู่ระบบและความปลอดภัย</p>
+                                    </div>
+                                    <div class="p-6">
+                                        <!-- Current Session Info -->
+                                        <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-3">
+                                                    <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+                                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                                        </svg>
+                                                    </div>
+                                                    <div>
+                                                        <h4 class="font-semibold text-green-900">เข้าสู่ระบบแล้ว</h4>
+                                                        <p class="text-sm text-green-700">Admin User - สิทธิ์ผู้ดูแลระบบ</p>
+                                                        <p class="text-xs text-green-600 mt-1" id="sessionInfo">เข้าสู่ระบบเมื่อ: กำลังโหลด...</p>
+                                                    </div>
+                                                </div>
+                                                <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                                    ออกจากระบบ
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Login Security Settings -->
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <!-- Session Settings -->
+                                            <div class="space-y-4">
+                                                <h4 class="font-medium text-gray-900">การตั้งค่า Session</h4>
+                                                
+                                                <div>
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="autoLogout" checked class="rounded border-gray-300 text-purple-600">
+                                                        <span class="ml-2 text-sm text-gray-700">Auto Logout เมื่อไม่มีการใช้งาน</span>
+                                                    </label>
+                                                    <p class="text-xs text-gray-500 mt-1 ml-6">ออกจากระบบอัตโนมัติหลังไม่ใช้งาน 30 นาที</p>
+                                                </div>
+
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Session Timeout (นาที)</label>
+                                                    <div class="flex items-center space-x-4">
+                                                        <input type="range" id="sessionTimeout" min="10" max="480" value="30" class="flex-1">
+                                                        <span id="sessionTimeoutValue" class="text-sm text-gray-600 w-12">30m</span>
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="rememberSession" class="rounded border-gray-300 text-purple-600">
+                                                        <span class="ml-2 text-sm text-gray-700">จดจำการเข้าสู่ระบบ</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <!-- Security Settings -->
+                                            <div class="space-y-4">
+                                                <h4 class="font-medium text-gray-900">การรักษาความปลอดภัย</h4>
+                                                
+                                                <div>
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="requirePasswordChange" class="rounded border-gray-300 text-purple-600">
+                                                        <span class="ml-2 text-sm text-gray-700">บังคับเปลี่ยนรหัสผ่านทุก 90 วัน</span>
+                                                    </label>
+                                                </div>
+
+                                                <div>
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="logSecurityEvents" checked class="rounded border-gray-300 text-purple-600">
+                                                        <span class="ml-2 text-sm text-gray-700">บันทึก Security Events</span>
+                                                    </label>
+                                                    <p class="text-xs text-gray-500 mt-1 ml-6">บันทึกการเข้าสู่ระบบ และกิจกรรมที่สำคัญ</p>
+                                                </div>
+
+                                                <div>
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="showLoginActivity" class="rounded border-gray-300 text-purple-600">
+                                                        <span class="ml-2 text-sm text-gray-700">แสดงประวัติการเข้าสู่ระบบ</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Change Password Section -->
+                                        <div class="mt-6 pt-6 border-t border-gray-200">
+                                            <h4 class="font-medium text-gray-900 mb-4">เปลี่ยนรหัสผ่าน</h4>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่านปัจจุบัน</label>
+                                                    <input type="password" id="currentPassword" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่านใหม่</label>
+                                                    <input type="password" id="newPassword" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                </div>
+                                            </div>
+                                            <div class="mt-4">
+                                                <button id="changePasswordBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                                    เปลี่ยนรหัสผ่าน
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="px-6 py-4">
-                                    <p class="text-gray-600">ฟีเจอร์นี้กำลังพัฒนา...</p>
+
+                                <!-- User Management Section -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 border-b">
+                                        <h3 class="text-lg font-medium text-white flex items-center gap-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                                            </svg>
+                                            User Management
+                                        </h3>
+                                        <p class="text-blue-100 text-sm mt-1">จัดการผู้ใช้งานและสิทธิ์การเข้าถึง</p>
+                                    </div>
+                                    <div class="p-6">
+                                        <!-- Add New User Form -->
+                                        <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                                            <h4 class="font-medium text-gray-900 mb-4 flex items-center gap-2">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                </svg>
+                                                เพิ่มผู้ใช้งานใหม่
+                                            </h4>
+                                            
+                                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อผู้ใช้งาน</label>
+                                                    <input type="text" id="newUsername" placeholder="username" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อจริง</label>
+                                                    <input type="text" id="newDisplayName" placeholder="ชื่อ นามสกุล" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">อีเมล</label>
+                                                    <input type="email" id="newUserEmail" placeholder="user@example.com" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">สิทธิ์การเข้าถึง</label>
+                                                    <select id="newUserRole" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                        <option value="viewer">Viewer - ดูข้อมูลเท่านั้น</option>
+                                                        <option value="editor">Editor - แก้ไขเนื้อหา</option>
+                                                        <option value="admin">Admin - จัดการระบบ</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่านเริ่มต้น</label>
+                                                    <input type="password" id="newUserPassword" placeholder="password123" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                </div>
+                                            </div>
+
+                                            <div class="flex items-center space-x-4 mt-4">
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" id="requirePasswordChangeOnLogin" checked class="rounded border-gray-300 text-blue-600">
+                                                    <span class="ml-2 text-sm text-gray-700">บังคับเปลี่ยนรหัสผ่านเมื่อเข้าสู่ระบบครั้งแรก</span>
+                                                </label>
+                                            </div>
+
+                                            <div class="flex gap-3 mt-4">
+                                                <button id="createUserBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                    </svg>
+                                                    เพิ่มผู้ใช้งาน
+                                                </button>
+                                                <button id="clearUserFormBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                                    ล้างข้อมูล
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Current Users List -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4 flex items-center justify-between">
+                                                <span>ผู้ใช้งานปัจจุบัน</span>
+                                                <span id="userCount" class="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">0 ผู้ใช้</span>
+                                            </h4>
+                                            
+                                            <!-- Users Table -->
+                                            <div class="overflow-x-auto">
+                                                <table class="min-w-full divide-y divide-gray-200 bg-white rounded-lg shadow-sm border border-gray-200">
+                                                    <thead class="bg-gray-50">
+                                                        <tr>
+                                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ผู้ใช้งาน</th>
+                                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">สิทธิ์</th>
+                                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">สถานะ</th>
+                                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ล่าสุด</th>
+                                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">การจัดการ</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+                                                        <!-- Users will be populated here -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            
+                                            <!-- No Users Message -->
+                                            <div id="noUsersMessage" class="text-center py-8 text-gray-500 hidden">
+                                                <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                                                </svg>
+                                                <p class="text-lg">ยังไม่มีผู้ใช้งานเพิ่มเติม</p>
+                                                <p class="text-sm">เพิ่มผู้ใช้งานใหม่เพื่อให้ทีมของคุณเข้าถึงระบบได้</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Activity Log Section -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 bg-gradient-to-r from-green-600 to-teal-600 border-b">
+                                        <h3 class="text-lg font-medium text-white flex items-center gap-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                            Activity Log
+                                        </h3>
+                                        <p class="text-green-100 text-sm mt-1">ประวัติการใช้งานและกิจกรรมระบบ</p>
+                                    </div>
+                                    <div class="p-6">
+                                        <!-- Activity Filters -->
+                                        <div class="flex flex-wrap items-center gap-4 mb-4">
+                                            <div class="flex items-center gap-2">
+                                                <label class="text-sm font-medium text-gray-700">ประเภท:</label>
+                                                <select id="activityFilter" class="border border-gray-300 rounded-md px-3 py-1 text-sm">
+                                                    <option value="all">ทั้งหมด</option>
+                                                    <option value="login">เข้าสู่ระบบ</option>
+                                                    <option value="logout">ออกจากระบบ</option>
+                                                    <option value="user-create">สร้างผู้ใช้</option>
+                                                    <option value="user-edit">แก้ไขผู้ใช้</option>
+                                                    <option value="settings">เปลี่ยนการตั้งค่า</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="flex items-center gap-2">
+                                                <label class="text-sm font-medium text-gray-700">ผู้ใช้:</label>
+                                                <select id="userFilter" class="border border-gray-300 rounded-md px-3 py-1 text-sm">
+                                                    <option value="all">ทุกคน</option>
+                                                    <option value="admin">Admin</option>
+                                                </select>
+                                            </div>
+
+                                            <button id="clearLogBtn" class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded-md text-sm font-medium transition-colors">
+                                                ล้าง Log
+                                            </button>
+                                        </div>
+
+                                        <!-- Activity List -->
+                                        <div id="activityLog" class="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
+                                            <!-- Activity items will be populated here -->
+                                        </div>
+                                        
+                                        <!-- No Activity Message -->
+                                        <div id="noActivityMessage" class="text-center py-8 text-gray-500 hidden">
+                                            <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                            <p class="text-lg">ยังไม่มีกิจกรรม</p>
+                                            <p class="text-sm">กิจกรรมจะแสดงขึ้นเมื่อมีการใช้งานระบบ</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1453,6 +1722,631 @@
             document.addEventListener('click', function() {
                 userMenu.classList.add('hidden');
             });
+        }
+
+        // User Management System
+        let users = [];
+        let currentSession = {
+            username: 'admin',
+            displayName: 'Admin User',
+            role: 'admin',
+            loginTime: new Date(),
+            lastActivity: new Date()
+        };
+        let activityLog = [];
+        let sessionSettings = {
+            autoLogout: true,
+            sessionTimeout: 30,
+            rememberSession: false,
+            requirePasswordChange: false,
+            logSecurityEvents: true,
+            showLoginActivity: false
+        };
+
+        // Initialize User Management
+        function initializeUserManagement() {
+            console.log('👤 Initializing User Management...');
+            
+            // Load saved data
+            loadUsers();
+            loadActivityLog();
+            loadSessionSettings();
+            
+            // Initialize UI
+            updateSessionInfo();
+            updateUsersTable();
+            updateActivityLog();
+            
+            // Event listeners
+            setupUserManagementEventListeners();
+            
+            // Start session monitoring
+            startSessionMonitoring();
+            
+            // Log initial login if no existing session
+            const existingSession = localStorage.getItem('canvas39_user_session');
+            if (!existingSession) {
+                logActivity('login', `${currentSession.displayName} เข้าสู่ระบบ Admin Panel`);
+                localStorage.setItem('canvas39_user_session', JSON.stringify(currentSession));
+            }
+            
+            // Enforce role-based UI permissions
+            setTimeout(enforceUIPermissions, 100); // Delay to ensure DOM is ready
+            
+            console.log('✅ User Management initialized');
+        }
+
+        function setupUserManagementEventListeners() {
+            // Session timeout slider
+            const sessionTimeoutSlider = document.getElementById('sessionTimeout');
+            const sessionTimeoutValue = document.getElementById('sessionTimeoutValue');
+            
+            if (sessionTimeoutSlider && sessionTimeoutValue) {
+                sessionTimeoutSlider.addEventListener('input', function() {
+                    const minutes = parseInt(this.value);
+                    sessionSettings.sessionTimeout = minutes;
+                    sessionTimeoutValue.textContent = minutes + 'm';
+                    saveSessionSettings();
+                });
+            }
+
+            // Security checkboxes
+            const securityCheckboxes = [
+                'autoLogout', 'rememberSession', 'requirePasswordChange', 
+                'logSecurityEvents', 'showLoginActivity'
+            ];
+            
+            securityCheckboxes.forEach(id => {
+                const checkbox = document.getElementById(id);
+                if (checkbox) {
+                    checkbox.addEventListener('change', function() {
+                        sessionSettings[id] = this.checked;
+                        saveSessionSettings();
+                        
+                        if (id === 'showLoginActivity') {
+                            updateActivityLog();
+                        }
+                    });
+                }
+            });
+
+            // User management buttons
+            const logoutBtn = document.getElementById('logoutBtn');
+            const changePasswordBtn = document.getElementById('changePasswordBtn');
+            const createUserBtn = document.getElementById('createUserBtn');
+            const clearUserFormBtn = document.getElementById('clearUserFormBtn');
+            const clearLogBtn = document.getElementById('clearLogBtn');
+
+            if (logoutBtn) logoutBtn.addEventListener('click', performLogout);
+            if (changePasswordBtn) changePasswordBtn.addEventListener('click', changePassword);
+            if (createUserBtn) createUserBtn.addEventListener('click', createUser);
+            if (clearUserFormBtn) clearUserFormBtn.addEventListener('click', clearUserForm);
+            if (clearLogBtn) clearLogBtn.addEventListener('click', clearActivityLog);
+
+            // Activity filters
+            const activityFilter = document.getElementById('activityFilter');
+            const userFilter = document.getElementById('userFilter');
+            
+            if (activityFilter) activityFilter.addEventListener('change', updateActivityLog);
+            if (userFilter) userFilter.addEventListener('change', updateActivityLog);
+        }
+
+        function updateSessionInfo() {
+            const sessionInfoElement = document.getElementById('sessionInfo');
+            if (sessionInfoElement && currentSession) {
+                const loginTime = new Date(currentSession.loginTime);
+                sessionInfoElement.textContent = `เข้าสู่ระบบเมื่อ: ${loginTime.toLocaleString('th-TH')}`;
+            }
+        }
+
+        function performLogout() {
+            if (confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+                logActivity('logout', `${currentSession.displayName} ออกจากระบบ`);
+                
+                // Clear session data if not remembered
+                if (!sessionSettings.rememberSession) {
+                    localStorage.removeItem('canvas39_user_session');
+                }
+                
+                // In a real app, this would redirect to login page
+                alert('ออกจากระบบเรียบร้อยแล้ว');
+                console.log('🔐 User logged out');
+            }
+        }
+
+        function changePassword() {
+            const currentPassword = document.getElementById('currentPassword')?.value;
+            const newPassword = document.getElementById('newPassword')?.value;
+            
+            if (!currentPassword || !newPassword) {
+                alert('กรุณากรอกรหัสผ่านให้ครบถ้วน');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                alert('รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 6 ตัวอักษร');
+                return;
+            }
+            
+            // In a real app, this would validate current password
+            logActivity('password-change', `${currentSession.displayName} เปลี่ยนรหัสผ่าน`);
+            
+            // Clear form
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            
+            showSuccessMessage('เปลี่ยนรหัสผ่านสำเร็จ');
+            console.log('🔐 Password changed successfully');
+        }
+
+        function createUser() {
+            if (!checkPermissionAndAlert('canEditUsers', 'เพิ่มผู้ใช้งาน')) return;
+            
+            const username = document.getElementById('newUsername')?.value;
+            const displayName = document.getElementById('newDisplayName')?.value;
+            const email = document.getElementById('newUserEmail')?.value;
+            const role = document.getElementById('newUserRole')?.value;
+            const password = document.getElementById('newUserPassword')?.value;
+            const requirePasswordChange = document.getElementById('requirePasswordChangeOnLogin')?.checked;
+            
+            if (!username || !displayName || !email || !password) {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
+            
+            // Check if username already exists
+            if (users.find(u => u.username === username)) {
+                alert('ชื่อผู้ใช้งานนี้มีอยู่แล้ว');
+                return;
+            }
+            
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('รูปแบบอีเมลไม่ถูกต้อง');
+                return;
+            }
+            
+            const newUser = {
+                id: Date.now(),
+                username,
+                displayName,
+                email,
+                role,
+                password, // In real app, this would be hashed
+                requirePasswordChange,
+                createdAt: new Date(),
+                lastLogin: null,
+                isActive: true
+            };
+            
+            users.push(newUser);
+            saveUsers();
+            updateUsersTable();
+            clearUserForm();
+            
+            logActivity('user-create', `สร้างผู้ใช้งาน ${displayName} (${username})`);
+            showSuccessMessage('เพิ่มผู้ใช้งานสำเร็จ');
+            console.log('👤 User created:', newUser);
+        }
+
+        function clearUserForm() {
+            const formFields = [
+                'newUsername', 'newDisplayName', 'newUserEmail', 'newUserPassword'
+            ];
+            
+            formFields.forEach(id => {
+                const field = document.getElementById(id);
+                if (field) field.value = '';
+            });
+            
+            const roleSelect = document.getElementById('newUserRole');
+            if (roleSelect) roleSelect.value = 'viewer';
+            
+            const requirePasswordChange = document.getElementById('requirePasswordChangeOnLogin');
+            if (requirePasswordChange) requirePasswordChange.checked = true;
+        }
+
+        function updateUsersTable() {
+            const tableBody = document.getElementById('usersTableBody');
+            const userCount = document.getElementById('userCount');
+            const noUsersMessage = document.getElementById('noUsersMessage');
+            
+            if (!tableBody) return;
+            
+            if (users.length === 0) {
+                tableBody.innerHTML = '';
+                if (noUsersMessage) noUsersMessage.classList.remove('hidden');
+                if (userCount) userCount.textContent = '0 ผู้ใช้';
+                return;
+            }
+            
+            if (noUsersMessage) noUsersMessage.classList.add('hidden');
+            if (userCount) userCount.textContent = `${users.length} ผู้ใช้`;
+            
+            tableBody.innerHTML = users.map(user => {
+                const roleColor = {
+                    admin: 'bg-red-100 text-red-800',
+                    editor: 'bg-blue-100 text-blue-800',
+                    viewer: 'bg-gray-100 text-gray-800'
+                };
+                
+                const statusColor = user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleString('th-TH', {
+                    dateStyle: 'short',
+                    timeStyle: 'short'
+                }) : 'ยังไม่เคยเข้าสู่ระบบ';
+                
+                return `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <div class="text-sm font-medium text-gray-900">${user.displayName}</div>
+                                    <div class="text-sm text-gray-500">@${user.username}</div>
+                                    <div class="text-xs text-gray-400">${user.email}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs rounded-full ${roleColor[user.role] || roleColor.viewer}">
+                                ${user.role}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs rounded-full ${statusColor}">
+                                ${user.isActive ? 'Active' : 'Inactive'}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${lastLogin}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button onclick="toggleUserStatus(${user.id})" 
+                                    class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                ${user.isActive ? 'Suspend' : 'Activate'}
+                            </button>
+                            <button onclick="editUser(${user.id})" 
+                                    class="text-blue-600 hover:text-blue-900 mr-3">
+                                Edit
+                            </button>
+                            <button onclick="deleteUser(${user.id})" 
+                                    class="text-red-600 hover:text-red-900">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function toggleUserStatus(userId) {
+            if (!checkPermissionAndAlert('canEditUsers', 'แก้ไขสถานะผู้ใช้งาน')) return;
+            
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            user.isActive = !user.isActive;
+            saveUsers();
+            updateUsersTable();
+            
+            const action = user.isActive ? 'activated' : 'suspended';
+            logActivity('user-edit', `${user.displayName} (${user.username}) ${action}`);
+            showSuccessMessage(`${user.isActive ? 'เปิดใช้งาน' : 'ปิดใช้งาน'} ${user.displayName} แล้ว`);
+        }
+
+        function editUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            // In a real app, this would open an edit modal
+            const newDisplayName = prompt('แก้ไขชื่อแสดง:', user.displayName);
+            const newEmail = prompt('แก้ไขอีเมล:', user.email);
+            const newRole = prompt('แก้ไขสิทธิ์ (admin/editor/viewer):', user.role);
+            
+            if (newDisplayName && newEmail && newRole) {
+                user.displayName = newDisplayName;
+                user.email = newEmail;
+                user.role = newRole;
+                
+                saveUsers();
+                updateUsersTable();
+                
+                logActivity('user-edit', `แก้ไขข้อมูลผู้ใช้ ${user.displayName} (${user.username})`);
+                showSuccessMessage('แก้ไขข้อมูลผู้ใช้สำเร็จ');
+            }
+        }
+
+        function deleteUser(userId) {
+            if (!checkPermissionAndAlert('canDeleteUsers', 'ลบผู้ใช้งาน')) return;
+            
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            if (confirm(`คุณต้องการลบผู้ใช้งาน "${user.displayName}" ใช่หรือไม่?\nการกระทำนี้ไม่สามารถยกเลิกได้`)) {
+                users = users.filter(u => u.id !== userId);
+                saveUsers();
+                updateUsersTable();
+                
+                logActivity('user-delete', `ลบผู้ใช้งาน ${user.displayName} (${user.username})`);
+                showSuccessMessage(`ลบผู้ใช้งาน ${user.displayName} แล้ว`);
+            }
+        }
+
+        function logActivity(type, description, username = currentSession.username) {
+            if (!sessionSettings.logSecurityEvents) return;
+            
+            const activity = {
+                id: Date.now(),
+                type,
+                description,
+                username,
+                timestamp: new Date()
+            };
+            
+            activityLog.unshift(activity); // Add to beginning
+            
+            // Keep only last 100 activities
+            if (activityLog.length > 100) {
+                activityLog = activityLog.slice(0, 100);
+            }
+            
+            saveActivityLog();
+            updateActivityLog();
+        }
+
+        function updateActivityLog() {
+            const logContainer = document.getElementById('activityLog');
+            const noActivityMessage = document.getElementById('noActivityMessage');
+            const activityFilter = document.getElementById('activityFilter')?.value || 'all';
+            const userFilter = document.getElementById('userFilter')?.value || 'all';
+            
+            if (!logContainer) return;
+            
+            let filteredLog = activityLog;
+            
+            // Filter by type
+            if (activityFilter !== 'all') {
+                filteredLog = filteredLog.filter(item => item.type === activityFilter);
+            }
+            
+            // Filter by user
+            if (userFilter !== 'all') {
+                filteredLog = filteredLog.filter(item => item.username === userFilter);
+            }
+            
+            if (filteredLog.length === 0) {
+                logContainer.innerHTML = '';
+                if (noActivityMessage) noActivityMessage.classList.remove('hidden');
+                return;
+            }
+            
+            if (noActivityMessage) noActivityMessage.classList.add('hidden');
+            
+            logContainer.innerHTML = filteredLog.map(item => {
+                const typeColors = {
+                    login: 'bg-green-100 text-green-800',
+                    logout: 'bg-gray-100 text-gray-800',
+                    'user-create': 'bg-blue-100 text-blue-800',
+                    'user-edit': 'bg-yellow-100 text-yellow-800',
+                    'user-delete': 'bg-red-100 text-red-800',
+                    'password-change': 'bg-purple-100 text-purple-800',
+                    settings: 'bg-indigo-100 text-indigo-800'
+                };
+                
+                const timeAgo = getTimeAgo(new Date(item.timestamp));
+                
+                return `
+                    <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <span class="px-2 py-1 text-xs rounded-full ${typeColors[item.type] || 'bg-gray-100 text-gray-800'}">
+                                ${item.type}
+                            </span>
+                            <div>
+                                <p class="text-sm text-gray-900">${item.description}</p>
+                                <p class="text-xs text-gray-500">โดย: ${item.username}</p>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-500">${timeAgo}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearActivityLog() {
+            if (confirm('คุณต้องการล้าง Activity Log ทั้งหมดใช่หรือไม่?')) {
+                activityLog = [];
+                saveActivityLog();
+                updateActivityLog();
+                showSuccessMessage('ล้าง Activity Log แล้ว');
+            }
+        }
+
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'เมื่อสักครู่';
+            if (diffMins < 60) return `${diffMins} นาทีที่แล้ว`;
+            if (diffHours < 24) return `${diffHours} ชั่วโมงที่แล้ว`;
+            return `${diffDays} วันที่แล้ว`;
+        }
+
+        function startSessionMonitoring() {
+            if (!sessionSettings.autoLogout) return;
+            
+            let timeoutId;
+            const timeoutDuration = sessionSettings.sessionTimeout * 60000; // Convert to milliseconds
+            
+            function resetSessionTimer() {
+                clearTimeout(timeoutId);
+                currentSession.lastActivity = new Date();
+                
+                timeoutId = setTimeout(() => {
+                    if (confirm('เซสชันของคุณกำลังจะหมดอายุ คุณต้องการต่ออายุใช่หรือไม่?')) {
+                        resetSessionTimer();
+                        logActivity('session-extend', 'ต่ออายุเซสชัน');
+                    } else {
+                        performLogout();
+                    }
+                }, timeoutDuration);
+            }
+            
+            // Monitor user activity
+            ['click', 'keypress', 'scroll', 'mousemove'].forEach(event => {
+                document.addEventListener(event, resetSessionTimer);
+            });
+            
+            resetSessionTimer();
+        }
+
+        // Role-based Permission System
+        const permissions = {
+            admin: {
+                canEditUsers: true,
+                canDeleteUsers: true,
+                canEditSettings: true,
+                canViewLogs: true,
+                canEditContent: true,
+                canExportData: true
+            },
+            editor: {
+                canEditUsers: false,
+                canDeleteUsers: false,
+                canEditSettings: false,
+                canViewLogs: false,
+                canEditContent: true,
+                canExportData: false
+            },
+            viewer: {
+                canEditUsers: false,
+                canDeleteUsers: false,
+                canEditSettings: false,
+                canViewLogs: false,
+                canEditContent: false,
+                canExportData: false
+            }
+        };
+
+        function hasPermission(permission) {
+            const userRole = currentSession.role || 'viewer';
+            return permissions[userRole] && permissions[userRole][permission] === true;
+        }
+
+        function checkPermissionAndAlert(permission, action) {
+            if (!hasPermission(permission)) {
+                alert(`คุณไม่มีสิทธิ์ในการ${action}`);
+                return false;
+            }
+            return true;
+        }
+
+        function enforceUIPermissions() {
+            // Hide/disable elements based on user role
+            const elementsToRestrict = [
+                { ids: ['createUserBtn', 'clearUserFormBtn'], permission: 'canEditUsers' },
+                { ids: ['logoutBtn'], permission: 'canEditSettings' },
+                { ids: ['changePasswordBtn'], permission: 'canEditSettings' },
+                { ids: ['clearLogBtn'], permission: 'canViewLogs' }
+            ];
+
+            elementsToRestrict.forEach(({ ids, permission }) => {
+                const hasAccess = hasPermission(permission);
+                ids.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        if (!hasAccess) {
+                            element.disabled = true;
+                            element.classList.add('opacity-50', 'cursor-not-allowed');
+                            element.title = 'คุณไม่มีสิทธิ์ในการใช้งานฟีเจอร์นี้';
+                        }
+                    }
+                });
+            });
+
+            // Hide activity log for non-admin users
+            if (!hasPermission('canViewLogs')) {
+                const activityLogSection = document.querySelector('[class*="Activity Log"]')?.closest('.modern-card');
+                if (activityLogSection) {
+                    activityLogSection.style.display = 'none';
+                }
+            }
+
+            console.log(`🔒 UI permissions enforced for role: ${currentSession.role}`);
+        }
+
+        // Storage Functions
+        function saveUsers() {
+            localStorage.setItem('canvas39_users', JSON.stringify(users));
+        }
+
+        function loadUsers() {
+            try {
+                const saved = localStorage.getItem('canvas39_users');
+                if (saved) {
+                    users = JSON.parse(saved);
+                    console.log('👥 Loaded users:', users.length);
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        function saveActivityLog() {
+            localStorage.setItem('canvas39_activity_log', JSON.stringify(activityLog));
+        }
+
+        function loadActivityLog() {
+            try {
+                const saved = localStorage.getItem('canvas39_activity_log');
+                if (saved) {
+                    activityLog = JSON.parse(saved);
+                    console.log('📋 Loaded activity log:', activityLog.length);
+                }
+            } catch (error) {
+                console.error('Error loading activity log:', error);
+            }
+        }
+
+        function saveSessionSettings() {
+            localStorage.setItem('canvas39_session_settings', JSON.stringify(sessionSettings));
+        }
+
+        function loadSessionSettings() {
+            try {
+                const saved = localStorage.getItem('canvas39_session_settings');
+                if (saved) {
+                    sessionSettings = { ...sessionSettings, ...JSON.parse(saved) };
+                    
+                    // Update UI with loaded settings
+                    Object.keys(sessionSettings).forEach(key => {
+                        const element = document.getElementById(key);
+                        if (element) {
+                            if (element.type === 'checkbox') {
+                                element.checked = sessionSettings[key];
+                            } else if (element.type === 'range') {
+                                element.value = sessionSettings[key];
+                                const valueElement = document.getElementById(key + 'Value');
+                                if (valueElement) {
+                                    valueElement.textContent = sessionSettings[key] + 'm';
+                                }
+                            }
+                        }
+                    });
+                    
+                    console.log('⚙️ Loaded session settings:', sessionSettings);
+                }
+            } catch (error) {
+                console.error('Error loading session settings:', error);
+            }
         }
 
         // Initialize Font Settings
@@ -3354,6 +4248,7 @@
             initializeRealTimePreview();
             initializeExportImport();
             initializeContentManagement();
+            initializeUserManagement();
             initializeUserMenu();
             
             console.log('✅ Admin Panel initialized successfully');
