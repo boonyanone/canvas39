@@ -149,13 +149,70 @@
         <div class="w-72 bg-white border-r border-gray-200 shadow-xl transform -translate-x-full transition-all duration-300 ease-out lg:translate-x-0 lg:relative lg:transform-none sidebar" id="sidebar">            
             <!-- Simple Navigation Menu -->
             <nav class="custom-scrollbar overflow-y-auto h-full">
-                <div class="text-gray-700 border-l-4 border-blue-500 bg-blue-50 px-4 py-3 cursor-pointer" data-section="theme">Theme & Design</div>
-                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="layout">Layout Configuration</div>
-                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="media">Media & Assets</div>
-                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="settings">System Settings</div>
-                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="content">Content Management</div>
-                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="users">User Management</div>
-                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="status">System Status</div>
+                <!-- Display Settings Group -->
+                <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-200">Display Settings</div>
+                <div class="text-gray-700 border-l-4 border-blue-500 bg-blue-50 px-4 py-3 cursor-pointer" data-section="display">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        Display & Theme
+                    </div>
+                </div>
+                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="slideshow">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0V3a2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2V4"></path>
+                        </svg>
+                        Slideshow & Layout
+                    </div>
+                </div>
+                
+                <!-- Content Management Group -->
+                <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-200 mt-4">Content Management</div>
+                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="content">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 011 1l4 4v9a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Notifications & Slides
+                    </div>
+                </div>
+                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="media">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2-2v14a2 2 0 002 2z"></path>
+                        </svg>
+                        Fonts & Media
+                    </div>
+                </div>
+                
+                <!-- System Management Group -->
+                <div class="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider border-b border-gray-200 mt-4">System Management</div>
+                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="users">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        User Management
+                    </div>
+                </div>
+                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="settings">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path>
+                        </svg>
+                        API & Integrations
+                    </div>
+                </div>
+                <div class="text-gray-700 hover:bg-gray-50 px-4 py-3 cursor-pointer" data-section="status">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        System Status
+                    </div>
+                </div>
                 
                 <!-- Bottom User Info -->
                 <div class="mt-8 pt-6 border-t border-gray-200">
@@ -182,11 +239,11 @@
                 <div class="py-8">
                     <div class="max-w-6xl mx-auto px-6 sm:px-8 lg:px-10">
                         
-                        <!-- Theme & Design Section -->
-                        <div id="theme-section" class="content-section active">
+                        <!-- Display & Theme Section -->
+                        <div id="display-section" class="content-section active">
                             <div class="mb-6">
-                                <h2 class="text-2xl font-bold text-gray-900 mb-2">Theme & Design</h2>
-                                <p class="text-gray-600">ปรับแต่งสีสัน ฟอนต์ และการออกแบบของระบบ</p>
+                                <h2 class="text-2xl font-bold text-gray-900 mb-2">Display & Theme</h2>
+                                <p class="text-gray-600">ปรับแต่งสีสัน ฟอนต์ และการแสดงผลหน้าจอ</p>
                             </div>
                             
                             <div class="space-y-6">
@@ -364,11 +421,11 @@
                             </div>
                         </div>
 
-                        <!-- System Settings Section -->
+                        <!-- API & Integrations Section -->
                         <div id="settings-section" class="content-section">
                             <div class="mb-6">
-                                <h2 class="text-2xl font-bold text-gray-900 mb-2">System Settings</h2>
-                                <p class="text-gray-600">ตั้งค่าระบบ API และการทำงานต่างๆ</p>
+                                <h2 class="text-2xl font-bold text-gray-900 mb-2">API & Integrations</h2>
+                                <p class="text-gray-600">จัดการการเชื่อมต่อ API และการรวมระบบภายนอก</p>
                             </div>
                             
                             <div class="space-y-6">
@@ -544,15 +601,175 @@
                                     </div>
                                 </div>
 
-                                <!-- Real-time Display Preview -->
+                                <!-- Weather API Integration -->
                                 <div class="modern-card overflow-hidden rounded-2xl">
-                                    <div class="px-6 py-4 border-b border-gray-200">
-                                        <div class="flex items-center justify-between">
-                                            <h3 class="text-lg font-medium text-gray-900">Live Display Preview</h3>
-                                            <button id="refreshPreview" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
-                                                รีเฟรช
+                                    <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 border-b">
+                                        <h3 class="text-lg font-medium text-white flex items-center gap-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+                                            </svg>
+                                            Weather API Configuration
+                                        </h3>
+                                        <p class="text-blue-100 text-sm mt-1">จัดการการเชื่อมต่อ API สภาพอากาศ</p>
+                                    </div>
+                                    <div class="px-6 py-4 space-y-6">
+                                        <!-- Weather API Settings -->
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">Weather API Provider</label>
+                                                <select id="weatherApiProvider" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                    <option value="openweather">OpenWeatherMap</option>
+                                                    <option value="weatherapi">WeatherAPI</option>
+                                                    <option value="accuweather">AccuWeather</option>
+                                                </select>
+                                                <p class="text-xs text-gray-500 mt-1">เลือกผู้ให้บริการ API สภาพอากาศ</p>
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">API Key</label>
+                                                <input type="password" id="weatherApiKey" placeholder="กรอก API Key ของคุณ" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                <p class="text-xs text-gray-500 mt-1">คีย์สำหรับเข้าถึง Weather API</p>
+                                            </div>
+
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">Location (City)</label>
+                                                <input type="text" id="weatherLocation" placeholder="Bangkok, TH" value="Bangkok, TH" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                <p class="text-xs text-gray-500 mt-1">ตำแหน่งที่ต้องการข้อมูลสภาพอากาศ</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Air Quality API -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">Air Quality API</h4>
+                                            <div class="space-y-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">API Provider</label>
+                                                    <select id="airQualityProvider" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                        <option value="iqair">IQAir</option>
+                                                        <option value="openweather">OpenWeatherMap</option>
+                                                        <option value="waqi">World Air Quality Index</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">API Key</label>
+                                                    <input type="password" id="airQualityApiKey" placeholder="กรอก API Key" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                    <p class="text-xs text-gray-500 mt-1">คีย์สำหรับเข้าถึง Air Quality API</p>
+                                                </div>
+
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Station/Location</label>
+                                                    <input type="text" id="airQualityLocation" placeholder="Bangkok" value="Bangkok" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                    <p class="text-xs text-gray-500 mt-1">สถานีวัดคุณภาพอากาศหรือตำแหน่ง</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- API Connection Testing -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">ทดสอบการเชื่อมต่อ</h4>
+                                            <div class="space-y-4">
+                                                <div class="grid grid-cols-2 gap-3">
+                                                    <button id="testWeatherApi" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-2 rounded-lg text-sm font-medium border border-blue-300 transition-colors">
+                                                        ทดสอบ Weather API
+                                                    </button>
+                                                    <button id="testAirQualityApi" class="bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-lg text-sm font-medium border border-green-300 transition-colors">
+                                                        ทดสอบ Air Quality API
+                                                    </button>
+                                                </div>
+                                                
+                                                <div class="mt-4">
+                                                    <div class="flex items-center justify-between mb-2">
+                                                        <span class="text-sm font-medium text-gray-700">สถานะการเชื่อมต่อ:</span>
+                                                        <span id="connectionStatus" class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">ยังไม่ได้ทดสอบ</span>
+                                                    </div>
+                                                    <div id="connectionLog" class="bg-gray-50 border rounded-lg p-3 text-xs text-gray-600 min-h-[60px] max-h-32 overflow-y-auto">
+                                                        คลิกปุ่ม "ทดสอบ" เพื่อตรวจสอบการเชื่อมต่อ API
+                                                    </div>
+                                                </div>
+
+                                                <div class="mt-4">
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="autoRefreshData" class="rounded border-gray-300 text-blue-600">
+                                                        <span class="ml-2 text-sm font-medium text-gray-700">อัปเดตข้อมูลอัตโนมัติ</span>
+                                                    </label>
+                                                    <p class="text-xs text-gray-500 mt-1">อัปเดตข้อมูลจาก API ทุก 5 นาที</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Data Update Settings -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">การตั้งค่าข้อมูล</h4>
+                                            <div class="space-y-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">ความถี่การอัปเดต (นาที)</label>
+                                                    <div class="flex items-center space-x-4">
+                                                        <input type="range" id="updateInterval" min="1" max="30" value="5" class="flex-1">
+                                                        <span id="updateIntervalValue" class="text-sm text-gray-600 w-12">5 min</span>
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 mt-1">ความถี่ในการดึงข้อมูลใหม่จาก API</p>
+                                                </div>
+
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">การจัดการ Cache</label>
+                                                    <div class="flex items-center space-x-4">
+                                                        <input type="range" id="cacheExpiry" min="5" max="60" value="15" class="flex-1">
+                                                        <span id="cacheExpiryValue" class="text-sm text-gray-600 w-12">15 min</span>
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 mt-1">เวลาในการเก็บ cache ข้อมูล</p>
+                                                </div>
+
+                                                <div class="mt-4">
+                                                    <button id="clearCache" class="w-full bg-orange-100 hover:bg-orange-200 text-orange-800 px-4 py-2 rounded-lg text-sm font-medium border border-orange-300 transition-colors">
+                                                        ล้าง Cache ข้อมูล
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Export/Import Settings -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">การจัดการการตั้งค่า</h4>
+                                            <div class="space-y-4">
+                                                <div class="grid grid-cols-2 gap-3">
+                                                    <button id="exportApiSettings" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 transition-colors">
+                                                        📎 ส่งออกการตั้งค่า
+                                                    </button>
+                                                    <button id="importApiSettings" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 transition-colors">
+                                                        📋 นำเข้าการตั้งค่า
+                                                    </button>
+                                                </div>
+                                                
+                                                <input type="file" id="importApiFile" accept=".json" class="hidden">
+                                                
+                                                <div class="mt-4">
+                                                    <button id="resetApiSettings" class="w-full bg-red-100 hover:bg-red-200 text-red-800 px-4 py-2 rounded-lg text-sm font-medium border border-red-300 transition-colors">
+                                                        รีเซ็ตการตั้งค่า API ทั้งหมด
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Save Settings -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <button id="saveApiSettings" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                                💾 บันทึกการตั้งค่า API
                                             </button>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <!-- Real-time Display Preview -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 border-b">
+                                        <h3 class="text-lg font-medium text-white flex items-center gap-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                            </svg>
+                                            Live Display Preview
+                                        </h3>
+                                        <p class="text-indigo-100 text-sm mt-1">ดูตัวอย่างการแสดงผลแบบ Real-time</p>
                                     </div>
                                     <div class="px-6 py-4">
                                         <div id="liveDisplayPreview" class="relative bg-gray-100 rounded-xl overflow-hidden border border-gray-200" style="height: 400px;">
@@ -610,181 +827,13 @@
                                                 <div class="h-full bg-white bg-opacity-60 transition-all duration-300" style="width: 0%"></div>
                                             </div>
                                         </div>
-                                        <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                                            <span>ตัวอย่างการแสดงผลแบบ Real-time</span>
-                                            <span id="previewLastUpdate">Last updated: Now</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Advanced Slideshow Settings -->
-                                <div class="modern-card overflow-hidden rounded-2xl">
-                                    <div class="px-6 py-4 border-b border-gray-200">
-                                        <h3 class="text-lg font-medium text-gray-900">Advanced Slideshow Settings</h3>
-                                    </div>
-                                    <div class="px-6 py-4 space-y-6">
-                                        <!-- Basic Controls -->
-                                        <div class="space-y-4">
-                                            <div>
-                                                <label class="flex items-center">
-                                                    <input type="checkbox" id="slideshowEnabled" checked class="rounded border-gray-300 text-blue-600">
-                                                    <span class="ml-2 text-sm font-medium text-gray-700">เปิดใช้งาน Auto Slideshow</span>
-                                                </label>
-                                                <p class="text-xs text-gray-500 mt-1">สลับแสดงข้อมูลอากาศและคุณภาพน้ำอัตโนมัติ</p>
-                                            </div>
-                                            
-                                            <!-- Slideshow Interval -->
-                                            <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-2">ช่วงเวลาการสลับ (วินาที)</label>
-                                                <div class="flex items-center space-x-4">
-                                                    <input type="range" id="slideshowInterval" min="3" max="60" value="10" class="flex-1">
-                                                    <span id="slideshowIntervalValue" class="text-sm text-gray-600 w-12">10s</span>
-                                                </div>
-                                                <p class="text-xs text-gray-500 mt-1">กำหนดความเร็วการสลับ (3-60 วินาที)</p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Transition Effects -->
-                                        <div class="border-t border-gray-200 pt-6">
-                                            <h4 class="text-md font-medium text-gray-900 mb-4">เอฟเฟ็กต์การเปลี่ยนแปลง</h4>
-                                            <div class="space-y-4">
-                                                <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">ประเภทการเปลี่ยน</label>
-                                                    <select id="transitionType" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                                        <option value="fade">Fade In/Out</option>
-                                                        <option value="slide" selected>Slide Left/Right</option>
-                                                        <option value="slideUp">Slide Up/Down</option>
-                                                        <option value="zoom">Zoom In/Out</option>
-                                                        <option value="flip">3D Flip</option>
-                                                        <option value="cube">3D Cube</option>
-                                                    </select>
-                                                </div>
-                                                
-                                                <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">ความเร็วของ Transition (ms)</label>
-                                                    <div class="flex items-center space-x-4">
-                                                        <input type="range" id="transitionSpeed" min="200" max="2000" value="800" class="flex-1">
-                                                        <span id="transitionSpeedValue" class="text-sm text-gray-600 w-16">800ms</span>
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Easing Function</label>
-                                                    <select id="transitionEasing" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                                        <option value="ease">Ease</option>
-                                                        <option value="ease-in">Ease In</option>
-                                                        <option value="ease-out" selected>Ease Out</option>
-                                                        <option value="ease-in-out">Ease In Out</option>
-                                                        <option value="linear">Linear</option>
-                                                        <option value="bounce">Bounce</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Display Options -->
-                                        <div class="border-t border-gray-200 pt-6">
-                                            <h4 class="text-md font-medium text-gray-900 mb-4">ตัวเลือกการแสดงผล</h4>
-                                            <div class="space-y-4">
-                                                <!-- Pause on Hover -->
-                                                <div>
-                                                    <label class="flex items-center">
-                                                        <input type="checkbox" id="pauseOnHover" checked class="rounded border-gray-300 text-blue-600">
-                                                        <span class="ml-2 text-sm font-medium text-gray-700">หยุดชั่วคราวเมื่อวางเมาส์</span>
-                                                    </label>
-                                                    <p class="text-xs text-gray-500 mt-1">หยุด slideshow เมื่อวางเมาส์บนหน้าจอ</p>
-                                                </div>
-
-                                                <!-- Show Progress Bar -->
-                                                <div>
-                                                    <label class="flex items-center">
-                                                        <input type="checkbox" id="showProgressBar" class="rounded border-gray-300 text-blue-600">
-                                                        <span class="ml-2 text-sm font-medium text-gray-700">แสดงแถบความคืบหนา</span>
-                                                    </label>
-                                                    <p class="text-xs text-gray-500 mt-1">แสดงแถบแสดงความคืบหนา slideshow</p>
-                                                </div>
-
-                                                <!-- Show Indicators -->
-                                                <div>
-                                                    <label class="flex items-center">
-                                                        <input type="checkbox" id="showIndicators" class="rounded border-gray-300 text-blue-600">
-                                                        <span class="ml-2 text-sm font-medium text-gray-700">แสดงจุดบอกตำแหน่ง</span>
-                                                    </label>
-                                                    <p class="text-xs text-gray-500 mt-1">แสดงจุดเล็กๆ บอกว่าอยู่ slide ไหน</p>
-                                                </div>
-
-                                                <!-- Loop Forever -->
-                                                <div>
-                                                    <label class="flex items-center">
-                                                        <input type="checkbox" id="loopForever" checked class="rounded border-gray-300 text-blue-600">
-                                                        <span class="ml-2 text-sm font-medium text-gray-700">วนซ้ำไม่สิ้นสุด</span>
-                                                    </label>
-                                                    <p class="text-xs text-gray-500 mt-1">เริ่มใหม่เมื่อจบ slide สุดท้าย</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Slide Content Settings -->
-                                        <div class="border-t border-gray-200 pt-6">
-                                            <h4 class="text-md font-medium text-gray-900 mb-4">การตั้งค่าเนื้อหา Slides</h4>
-                                            <div class="space-y-4">
-                                                <!-- Weather Display Time -->
-                                                <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">เวลาแสดง Weather (%)</label>
-                                                    <div class="flex items-center space-x-4">
-                                                        <input type="range" id="weatherDisplayRatio" min="30" max="70" value="50" class="flex-1">
-                                                        <span id="weatherDisplayRatioValue" class="text-sm text-gray-600 w-10">50%</span>
-                                                    </div>
-                                                    <p class="text-xs text-gray-500 mt-1">สัดส่วนเวลาที่แสดงข้อมูลสภาพอากาศ</p>
-                                                </div>
-
-                                                <!-- Quality Display Time -->
-                                                <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">เวลาแสดง Air Quality (%)</label>
-                                                    <div class="flex items-center space-x-4">
-                                                        <input type="range" id="qualityDisplayRatio" min="30" max="70" value="50" class="flex-1">
-                                                        <span id="qualityDisplayRatioValue" class="text-sm text-gray-600 w-10">50%</span>
-                                                    </div>
-                                                    <p class="text-xs text-gray-500 mt-1">สัดส่วนเวลาที่แสดงข้อมูลคุณภาพอากาศ</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Auto Play Settings -->
-                                        <div class="border-t border-gray-200 pt-6">
-                                            <h4 class="text-md font-medium text-gray-900 mb-4">การเล่นอัตโนมัติ</h4>
-                                            <div class="space-y-4">
-                                                <!-- Auto Start -->
-                                                <div>
-                                                    <label class="flex items-center">
-                                                        <input type="checkbox" id="autoStart" checked class="rounded border-gray-300 text-blue-600">
-                                                        <span class="ml-2 text-sm font-medium text-gray-700">เริ่มต้นอัตโนมัติ</span>
-                                                    </label>
-                                                    <p class="text-xs text-gray-500 mt-1">เริ่ม slideshow ทันทีที่โหลดหน้าเว็บ</p>
-                                                </div>
-
-                                                <!-- Start Delay -->
-                                                <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">หน่วงเวลาเริ่มต้น (วินาที)</label>
-                                                    <div class="flex items-center space-x-4">
-                                                        <input type="range" id="startDelay" min="0" max="10" value="2" class="flex-1">
-                                                        <span id="startDelayValue" class="text-sm text-gray-600 w-10">2s</span>
-                                                    </div>
-                                                    <p class="text-xs text-gray-500 mt-1">หน่วงเวลาก่อนเริ่ม slideshow</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Preview and Test Controls -->
-                                        <div class="border-t border-gray-200 pt-6">
-                                            <h4 class="text-md font-medium text-gray-900 mb-4">ทดสอบและตัวอย่าง</h4>
-                                            <div class="grid grid-cols-2 gap-3">
-                                                <button id="previewTransition" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-2 rounded-lg text-sm font-medium border border-blue-300 transition-colors">
-                                                    ดูตัวอย่าง Transition
+                                        <div class="mt-4 flex items-center justify-between">
+                                            <div class="text-xs text-gray-500">ตัวอย่างการแสดงผลแบบ Real-time</div>
+                                            <div class="flex gap-2">
+                                                <button id="refreshPreview" class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md hover:bg-indigo-200 transition-colors">
+                                                    🔄 รีเฟรช
                                                 </button>
-                                                <button id="testSlideshow" class="bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-lg text-sm font-medium border border-green-300 transition-colors">
-                                                    ทดสอบ Slideshow
-                                                </button>
+                                                <span id="previewLastUpdate" class="text-xs text-gray-500">Updated: Now</span>
                                             </div>
                                         </div>
                                     </div>
@@ -792,11 +841,11 @@
                             </div>
                         </div>
 
-                        <!-- Layout Configuration Section -->
-                        <div id="layout-section" class="content-section">
+                        <!-- Slideshow & Layout Section -->
+                        <div id="slideshow-section" class="content-section">
                             <div class="mb-6">
-                                <h2 class="text-2xl font-bold text-gray-900 mb-2">Layout Configuration</h2>
-                                <p class="text-gray-600">ปรับแต่งการจัดวางและขนาดของแต่ละส่วนในหน้าจอแสดงผล</p>
+                                <h2 class="text-2xl font-bold text-gray-900 mb-2">Slideshow & Layout</h2>
+                                <p class="text-gray-600">ปรับแต่งการเลื่อนสไลด์และการจัดวางหน้าจอแสดงผล</p>
                             </div>
                             
                             <div class="space-y-6">
@@ -1030,6 +1079,137 @@
                                                 <input type="checkbox" id="livePreview" class="rounded border-gray-300 text-blue-600">
                                                 <span class="ml-2 text-sm text-gray-700">เปิดใช้งาน</span>
                                             </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Slideshow Settings -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 border-b">
+                                        <h3 class="text-lg font-medium text-white flex items-center gap-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2m0 0V3a2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2V4"></path>
+                                            </svg>
+                                            Slideshow Settings
+                                        </h3>
+                                        <p class="text-purple-100 text-sm mt-1">ปรับแต่งการเลื่อนสไลด์และเอฟเฟ็กต์</p>
+                                    </div>
+                                    <div class="px-6 py-4 space-y-6">
+                                        <!-- Basic Controls -->
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label class="flex items-center">
+                                                    <input type="checkbox" id="slideshowEnabled" checked class="rounded border-gray-300 text-blue-600">
+                                                    <span class="ml-2 text-sm font-medium text-gray-700">เปิดใช้งาน Auto Slideshow</span>
+                                                </label>
+                                                <p class="text-xs text-gray-500 mt-1">สลับแสดงข้อมูลอากาศและคุณภาพน้ำอัตโนมัติ</p>
+                                            </div>
+                                            
+                                            <!-- Slideshow Interval -->
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">ช่วงเวลาการสลับ (วินาที)</label>
+                                                <div class="flex items-center space-x-4">
+                                                    <input type="range" id="slideshowInterval" min="3" max="60" value="10" class="flex-1">
+                                                    <span id="slideshowIntervalValue" class="text-sm text-gray-600 w-12">10s</span>
+                                                </div>
+                                                <p class="text-xs text-gray-500 mt-1">กำหนดความเร็วการสลับ (3-60 วินาที)</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Transition Effects -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">เอฟเฟ็กต์การเปลี่ยนแปลง</h4>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">ประเภทการเปลี่ยน</label>
+                                                    <select id="transitionType" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                        <option value="fade">Fade In/Out</option>
+                                                        <option value="slide" selected>Slide Left/Right</option>
+                                                        <option value="slideUp">Slide Up/Down</option>
+                                                        <option value="zoom">Zoom In/Out</option>
+                                                        <option value="flip">3D Flip</option>
+                                                        <option value="cube">3D Cube</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Easing Function</label>
+                                                    <select id="transitionEasing" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                        <option value="ease">Ease</option>
+                                                        <option value="ease-in">Ease In</option>
+                                                        <option value="ease-out" selected>Ease Out</option>
+                                                        <option value="ease-in-out">Ease In Out</option>
+                                                        <option value="linear">Linear</option>
+                                                        <option value="bounce">Bounce</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-4">
+                                                <label class="block text-sm font-medium text-gray-700 mb-2">ความเร็วของ Transition</label>
+                                                <div class="flex items-center space-x-4">
+                                                    <input type="range" id="transitionSpeed" min="200" max="2000" value="800" class="flex-1">
+                                                    <span id="transitionSpeedValue" class="text-sm text-gray-600 w-16">800ms</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Display Options -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <h4 class="text-md font-medium text-gray-900 mb-4">ตัวเลือกการแสดงผล</h4>
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div class="space-y-3">
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="pauseOnHover" checked class="rounded border-gray-300 text-blue-600">
+                                                        <span class="ml-2 text-sm text-gray-700">หยุดเมื่อวางเมาส์</span>
+                                                    </label>
+                                                    
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="showProgressBar" class="rounded border-gray-300 text-blue-600">
+                                                        <span class="ml-2 text-sm text-gray-700">แสดงแถบความคืบหน้า</span>
+                                                    </label>
+                                                    
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="autoStart" checked class="rounded border-gray-300 text-blue-600">
+                                                        <span class="ml-2 text-sm text-gray-700">เริ่มต้นอัตโนมัติ</span>
+                                                    </label>
+                                                </div>
+                                                
+                                                <div class="space-y-3">
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="showIndicators" class="rounded border-gray-300 text-blue-600">
+                                                        <span class="ml-2 text-sm text-gray-700">แสดงจุดบอกตำแหน่ง</span>
+                                                    </label>
+                                                    
+                                                    <label class="flex items-center">
+                                                        <input type="checkbox" id="loopForever" checked class="rounded border-gray-300 text-blue-600">
+                                                        <span class="ml-2 text-sm text-gray-700">วนซ้ำไม่สิ้นสุด</span>
+                                                    </label>
+                                                    
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-2">หน่วงเวลาเริ่มต้น</label>
+                                                        <div class="flex items-center space-x-4">
+                                                            <input type="range" id="startDelay" min="0" max="10" value="2" class="flex-1">
+                                                            <span id="startDelayValue" class="text-sm text-gray-600 w-10">2s</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Preview and Test Controls -->
+                                        <div class="border-t border-gray-200 pt-6">
+                                            <div class="flex flex-wrap gap-3">
+                                                <button id="previewSlideshowTransition" class="bg-purple-100 hover:bg-purple-200 text-purple-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                                    👀 ดูตัวอย่าง Transition
+                                                </button>
+                                                <button id="testSlideshowSettings" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                                    🧪 ทดสอบการตั้งค่า
+                                                </button>
+                                                <button id="resetSlideshowSettings" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                                    🔄 รีเซ็ตเป็นค่าเริ่มต้น
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
