@@ -247,6 +247,92 @@
                             </div>
                             
                             <div class="space-y-6">
+                                <!-- Interactive Live Display Preview -->
+                                <div class="modern-card overflow-hidden rounded-2xl">
+                                    <div class="px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 border-b">
+                                        <h3 class="text-lg font-medium text-white flex items-center gap-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                            </svg>
+                                            Interactive Live Preview
+                                        </h3>
+                                        <p class="text-indigo-100 text-sm mt-1">คลิกที่ส่วนไหนเพื่อแก้ไขโดยตรง</p>
+                                    </div>
+                                    <div class="px-6 py-4">
+                                        <div id="interactiveLivePreview" class="relative bg-gray-100 rounded-xl overflow-hidden border border-gray-200" style="height: 450px;">
+                                            <!-- Header Section (Clickable) -->
+                                            <div id="previewHeader" class="h-16 flex items-center justify-between px-6 text-white text-sm transition-colors duration-300 cursor-pointer hover:bg-opacity-90" style="background-color: #3f2f15;" onclick="jumpToSection('display')" title="คลิกเพื่อแก้ไข Header">
+                                                <div id="previewLogo" class="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center transition-all duration-300">
+                                                    <div class="w-4 h-4 bg-white rounded"></div>
+                                                </div>
+                                                <div class="text-center">
+                                                    <div class="text-base font-medium">Canvas 39 Display</div>
+                                                    <div class="text-xs opacity-75">Wednesday, 27 November • 16:41</div>
+                                                </div>
+                                                <div class="w-6 h-6 bg-white bg-opacity-20 rounded flex items-center justify-center">
+                                                    <div class="w-3 h-3 border border-white"></div>
+                                                </div>
+                                                <div class="absolute inset-0 bg-white bg-opacity-10 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <span class="text-xs font-medium">📝 Header Settings</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Building Section (Clickable) -->
+                                            <div id="previewBuilding" class="h-20 bg-gradient-to-b from-blue-200 to-blue-300 flex items-center justify-center text-gray-700 text-sm font-medium cursor-pointer hover:bg-opacity-90 relative transition-all" onclick="jumpToSection('slideshow')" title="คลิกเพื่อแก้ไข Building Section">
+                                                Building Section
+                                                <div class="absolute inset-0 bg-black bg-opacity-10 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <span class="text-xs font-medium text-white">🏢 Building Settings</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Weather Section (Clickable) -->
+                                            <div id="previewWeather" class="h-16 bg-gradient-to-r from-yellow-100 to-yellow-200 flex items-center justify-center text-gray-700 text-sm border-t-2 border-gray-300 transition-all duration-300 cursor-pointer hover:bg-opacity-90 relative" onclick="jumpToSection('slideshow')" title="คลิกเพื่อแก้ไข Weather Section">
+                                                <div class="flex items-center gap-4">
+                                                    <div class="flex items-center gap-2">
+                                                        <div class="w-6 h-6 bg-yellow-400 rounded-full"></div>
+                                                        <span class="font-medium">26°C / 34°C</span>
+                                                    </div>
+                                                    <div class="text-xs opacity-75">Weather Section</div>
+                                                </div>
+                                                <div class="absolute inset-0 bg-black bg-opacity-10 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <span class="text-xs font-medium">☀️ Weather Settings</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Quality Section (Clickable) -->
+                                            <div id="previewQuality" class="flex-1 flex items-center justify-center text-white text-sm font-medium transition-colors duration-300 cursor-pointer hover:bg-opacity-90 relative" style="background-color: #929079;" onclick="jumpToSection('slideshow')" title="คลิกเพื่อแก้ไข Quality Slideshow">
+                                                <div class="text-center">
+                                                    <div class="text-2xl font-bold mb-1">40</div>
+                                                    <div class="text-xs opacity-90">Air Quality (Good)</div>
+                                                    <div class="text-xs opacity-75 mt-2">Quality Section (Slideshow)</div>
+                                                </div>
+                                                <div class="absolute inset-0 bg-black bg-opacity-10 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <span class="text-xs font-medium">🍃 Quality Settings</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Interactive Hints Overlay -->
+                                            <div class="absolute top-2 left-2 flex flex-col gap-1">
+                                                <div class="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
+                                                    Live Preview
+                                                </div>
+                                                <div class="bg-blue-500 bg-opacity-75 text-white px-2 py-1 rounded text-xs">
+                                                    👆 Click to Edit
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 flex items-center justify-between">
+                                            <div class="text-xs text-gray-500">ตัวอย่างแบบ Interactive - คลิกเพื่อแก้ไข</div>
+                                            <div class="flex gap-2">
+                                                <button id="refreshInteractivePreview" class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md hover:bg-indigo-200 transition-colors">
+                                                    🔄 รีเฟรช
+                                                </button>
+                                                <span id="previewLastUpdate" class="text-xs text-gray-500">Updated: Now</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                                 <!-- Color Theme Settings -->
                                 <div class="modern-card overflow-hidden rounded-2xl">
                                     <div class="px-6 py-4 border-b border-gray-200">
@@ -429,415 +515,45 @@
                             </div>
                             
                             <div class="space-y-6">
-                                <!-- API Settings -->
-                                <div class="bg-white overflow-hidden shadow rounded-lg">
-                                    <div class="px-6 py-4 border-b border-gray-200">
-                                        <h3 class="text-lg font-medium text-gray-900">การตั้งค่า API</h3>
-                                    </div>
-                                    <div class="px-6 py-4 space-y-4">
-                                        <!-- Weather API -->
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">Weather API Provider</label>
-                                            <select id="weatherApiSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                                <option value="openmeteo">OpenMeteo (ฟรี, แนะนำ)</option>
-                                                <option value="wttr">wttr.in (ฟรี, สำรอง)</option>
-                                                <option value="openweather">OpenWeatherMap</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <!-- Update Interval -->
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">ความถี่การอัปเดต (นาที)</label>
-                                            <select id="updateInterval" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                                <option value="5">ทุก 5 นาที</option>
-                                                <option value="10" selected>ทุก 10 นาที</option>
-                                                <option value="15">ทุก 15 นาที</option>
-                                                <option value="30">ทุก 30 นาที</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Font Preview -->
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">ตัวอย่าง Font</label>
-                                            <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                                                <div id="fontPreview" class="text-lg mb-2" style="font-family: system-ui, sans-serif;">
-                                                    Canvas 39 Display System
-                                                </div>
-                                                <div id="fontPreviewThai" class="text-sm text-gray-600" style="font-family: system-ui, sans-serif;">
-                                                    ระบบแสดงผลข้อมูลอากาศและคุณภาพน้ำ
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Export/Import Settings -->
-                                <div class="modern-card overflow-hidden rounded-2xl">
-                                    <div class="px-6 py-4 border-b border-gray-200">
-                                        <h3 class="text-lg font-medium text-gray-900">Export/Import Settings</h3>
-                                    </div>
-                                    <div class="px-6 py-4 space-y-6">
-                                        <!-- Export Settings -->
-                                        <div>
-                                            <h4 class="text-md font-medium text-gray-900 mb-4">ส่งออกการตั้งค่า</h4>
-                                            <div class="space-y-4">
-                                                <div class="grid grid-cols-2 gap-4">
-                                                    <button id="exportFullConfig" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                                        </svg>
-                                                        ส่งออกทุกการตั้งค่า
-                                                    </button>
-                                                    <button id="exportThemeOnly" class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"></path>
-                                                        </svg>
-                                                        ส่งออกเฉพาะธีม
-                                                    </button>
-                                                </div>
-                                                <p class="text-xs text-gray-500">ไฟล์จะถูกดาวน์โหลดในรูปแบบ JSON</p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Import Settings -->
-                                        <div class="border-t border-gray-200 pt-6">
-                                            <h4 class="text-md font-medium text-gray-900 mb-4">นำเข้าการตั้งค่า</h4>
-                                            <div class="space-y-4">
-                                                <!-- File Upload Area -->
-                                                <div class="border-2 border-gray-300 border-dashed rounded-lg p-6">
-                                                    <div class="text-center">
-                                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                                                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                                        </svg>
-                                                        <div class="mt-4">
-                                                            <label for="importConfigFile" class="cursor-pointer">
-                                                                <span class="mt-2 block text-sm font-medium text-gray-900">อัปโหลดไฟล์การตั้งค่า</span>
-                                                                <span class="mt-2 block text-xs text-gray-500">รองรับไฟล์ JSON เท่านั้น</span>
-                                                            </label>
-                                                            <input id="importConfigFile" name="importConfigFile" type="file" class="sr-only" accept=".json">
-                                                        </div>
-                                                        <div class="mt-4 flex justify-center">
-                                                            <button id="selectImportFile" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                                                                เลือกไฟล์
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Import Options -->
-                                                <div id="importOptions" class="hidden">
-                                                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                                        <h5 class="text-sm font-medium text-blue-900 mb-3">ตัวเลือกการนำเข้า</h5>
-                                                        <div class="space-y-2">
-                                                            <label class="flex items-center">
-                                                                <input type="checkbox" id="importTheme" checked class="rounded border-gray-300 text-blue-600">
-                                                                <span class="ml-2 text-sm text-blue-800">Theme & Colors</span>
-                                                            </label>
-                                                            <label class="flex items-center">
-                                                                <input type="checkbox" id="importFonts" checked class="rounded border-gray-300 text-blue-600">
-                                                                <span class="ml-2 text-sm text-blue-800">Font Settings</span>
-                                                            </label>
-                                                            <label class="flex items-center">
-                                                                <input type="checkbox" id="importLayout" checked class="rounded border-gray-300 text-blue-600">
-                                                                <span class="ml-2 text-sm text-blue-800">Layout Configuration</span>
-                                                            </label>
-                                                            <label class="flex items-center">
-                                                                <input type="checkbox" id="importSlideshow" checked class="rounded border-gray-300 text-blue-600">
-                                                                <span class="ml-2 text-sm text-blue-800">Slideshow Settings</span>
-                                                            </label>
-                                                        </div>
-                                                        <div class="mt-4 flex gap-3">
-                                                            <button id="confirmImport" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                                                                นำเข้าการตั้งค่า
-                                                            </button>
-                                                            <button id="cancelImport" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                                                                ยกเลิก
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Import Status -->
-                                                <div id="importStatus" class="hidden">
-                                                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
-                                                        <div class="flex items-center">
-                                                            <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                                            </svg>
-                                                            <span class="text-sm font-medium text-green-800" id="importStatusText">นำเข้าการตั้งค่าสำเร็จ!</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Backup & Restore -->
-                                        <div class="border-t border-gray-200 pt-6">
-                                            <h4 class="text-md font-medium text-gray-900 mb-4">สำรองข้อมูลและกู้คืน</h4>
-                                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                                                <div class="flex items-start">
-                                                    <svg class="w-5 h-5 text-yellow-500 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                                                    </svg>
-                                                    <div>
-                                                        <h5 class="text-sm font-medium text-yellow-800 mb-2">คำแนะนำ</h5>
-                                                        <ul class="text-sm text-yellow-700 space-y-1">
-                                                            <li>• สำรองการตั้งค่าก่อนทำการเปลี่ยนแปลงใหญ่</li>
-                                                            <li>• เก็บไฟล์สำรองไว้ในที่ปลอดภัย</li>
-                                                            <li>• ตรวจสอบไฟล์ก่อนนำเข้า</li>
-                                                        </ul>
-                                                        <div class="mt-3 flex gap-2">
-                                                            <button id="createBackup" class="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                                                                สร้างไฟล์สำรอง
-                                                            </button>
-                                                            <button id="resetToDefaults" class="bg-red-100 hover:bg-red-200 text-red-800 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                                                                รีเซ็ตเป็นค่าเริ่มต้น
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Weather API Integration -->
+                                <!-- Simple Weather Settings -->
                                 <div class="modern-card overflow-hidden rounded-2xl">
                                     <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 border-b">
                                         <h3 class="text-lg font-medium text-white flex items-center gap-2">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
                                             </svg>
-                                            Weather API Configuration
+                                            Weather Configuration
                                         </h3>
-                                        <p class="text-blue-100 text-sm mt-1">จัดการการเชื่อมต่อ API สภาพอากาศ</p>
+                                        <p class="text-blue-100 text-sm mt-1">การตั้งค่าข้อมูลสภาพอากาศ</p>
                                     </div>
-                                    <div class="px-6 py-4 space-y-6">
-                                        <!-- Weather API Settings -->
-                                        <div class="space-y-4">
-                                            <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-2">Weather API Provider</label>
-                                                <select id="weatherApiProvider" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                                    <option value="openweather">OpenWeatherMap</option>
-                                                    <option value="weatherapi">WeatherAPI</option>
-                                                    <option value="accuweather">AccuWeather</option>
-                                                </select>
-                                                <p class="text-xs text-gray-500 mt-1">เลือกผู้ให้บริการ API สภาพอากาศ</p>
-                                            </div>
-                                            
-                                            <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-2">API Key</label>
-                                                <input type="password" id="weatherApiKey" placeholder="กรอก API Key ของคุณ" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                                <p class="text-xs text-gray-500 mt-1">คีย์สำหรับเข้าถึง Weather API</p>
-                                            </div>
-
-                                            <div>
-                                                <label class="block text-sm font-medium text-gray-700 mb-2">Location (City)</label>
-                                                <input type="text" id="weatherLocation" placeholder="Bangkok, TH" value="Bangkok, TH" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                                <p class="text-xs text-gray-500 mt-1">ตำแหน่งที่ต้องการข้อมูลสภาพอากาศ</p>
-                                            </div>
+                                    <div class="px-6 py-4 space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ตำแหน่ง (Location)</label>
+                                            <input type="text" id="weatherLocation" value="Bangkok, TH" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                            <p class="text-xs text-gray-500 mt-1">ใช้ในการดึงข้อมูลสภาพอากาศ</p>
                                         </div>
-
-                                        <!-- Air Quality API -->
-                                        <div class="border-t border-gray-200 pt-6">
-                                            <h4 class="text-md font-medium text-gray-900 mb-4">Air Quality API</h4>
-                                            <div class="space-y-4">
-                                                <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">API Provider</label>
-                                                    <select id="airQualityProvider" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                                        <option value="iqair">IQAir</option>
-                                                        <option value="openweather">OpenWeatherMap</option>
-                                                        <option value="waqi">World Air Quality Index</option>
-                                                    </select>
-                                                </div>
-                                                
-                                                <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">API Key</label>
-                                                    <input type="password" id="airQualityApiKey" placeholder="กรอก API Key" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                                    <p class="text-xs text-gray-500 mt-1">คีย์สำหรับเข้าถึง Air Quality API</p>
-                                                </div>
-
-                                                <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">Station/Location</label>
-                                                    <input type="text" id="airQualityLocation" placeholder="Bangkok" value="Bangkok" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                                    <p class="text-xs text-gray-500 mt-1">สถานีวัดคุณภาพอากาศหรือตำแหน่ง</p>
-                                                </div>
-                                            </div>
+                                        
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">ความถี่การอัปเดต</label>
+                                            <select id="weatherUpdateInterval" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                                <option value="10" selected>ทุก 10 นาที</option>
+                                                <option value="15">ทุก 15 นาที</option>
+                                                <option value="30">ทุก 30 นาที</option>
+                                            </select>
                                         </div>
-
-                                        <!-- API Connection Testing -->
-                                        <div class="border-t border-gray-200 pt-6">
-                                            <h4 class="text-md font-medium text-gray-900 mb-4">ทดสอบการเชื่อมต่อ</h4>
-                                            <div class="space-y-4">
-                                                <div class="grid grid-cols-2 gap-3">
-                                                    <button id="testWeatherApi" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-2 rounded-lg text-sm font-medium border border-blue-300 transition-colors">
-                                                        ทดสอบ Weather API
-                                                    </button>
-                                                    <button id="testAirQualityApi" class="bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-lg text-sm font-medium border border-green-300 transition-colors">
-                                                        ทดสอบ Air Quality API
-                                                    </button>
-                                                </div>
-                                                
-                                                <div class="mt-4">
-                                                    <div class="flex items-center justify-between mb-2">
-                                                        <span class="text-sm font-medium text-gray-700">สถานะการเชื่อมต่อ:</span>
-                                                        <span id="connectionStatus" class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">ยังไม่ได้ทดสอบ</span>
-                                                    </div>
-                                                    <div id="connectionLog" class="bg-gray-50 border rounded-lg p-3 text-xs text-gray-600 min-h-[60px] max-h-32 overflow-y-auto">
-                                                        คลิกปุ่ม "ทดสอบ" เพื่อตรวจสอบการเชื่อมต่อ API
-                                                    </div>
-                                                </div>
-
-                                                <div class="mt-4">
-                                                    <label class="flex items-center">
-                                                        <input type="checkbox" id="autoRefreshData" class="rounded border-gray-300 text-blue-600">
-                                                        <span class="ml-2 text-sm font-medium text-gray-700">อัปเดตข้อมูลอัตโนมัติ</span>
-                                                    </label>
-                                                    <p class="text-xs text-gray-500 mt-1">อัปเดตข้อมูลจาก API ทุก 5 นาที</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Data Update Settings -->
-                                        <div class="border-t border-gray-200 pt-6">
-                                            <h4 class="text-md font-medium text-gray-900 mb-4">การตั้งค่าข้อมูล</h4>
-                                            <div class="space-y-4">
-                                                <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">ความถี่การอัปเดต (นาที)</label>
-                                                    <div class="flex items-center space-x-4">
-                                                        <input type="range" id="updateInterval" min="1" max="30" value="5" class="flex-1">
-                                                        <span id="updateIntervalValue" class="text-sm text-gray-600 w-12">5 min</span>
-                                                    </div>
-                                                    <p class="text-xs text-gray-500 mt-1">ความถี่ในการดึงข้อมูลใหม่จาก API</p>
-                                                </div>
-
-                                                <div>
-                                                    <label class="block text-sm font-medium text-gray-700 mb-2">การจัดการ Cache</label>
-                                                    <div class="flex items-center space-x-4">
-                                                        <input type="range" id="cacheExpiry" min="5" max="60" value="15" class="flex-1">
-                                                        <span id="cacheExpiryValue" class="text-sm text-gray-600 w-12">15 min</span>
-                                                    </div>
-                                                    <p class="text-xs text-gray-500 mt-1">เวลาในการเก็บ cache ข้อมูล</p>
-                                                </div>
-
-                                                <div class="mt-4">
-                                                    <button id="clearCache" class="w-full bg-orange-100 hover:bg-orange-200 text-orange-800 px-4 py-2 rounded-lg text-sm font-medium border border-orange-300 transition-colors">
-                                                        ล้าง Cache ข้อมูล
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Export/Import Settings -->
-                                        <div class="border-t border-gray-200 pt-6">
-                                            <h4 class="text-md font-medium text-gray-900 mb-4">การจัดการการตั้งค่า</h4>
-                                            <div class="space-y-4">
-                                                <div class="grid grid-cols-2 gap-3">
-                                                    <button id="exportApiSettings" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 transition-colors">
-                                                        📎 ส่งออกการตั้งค่า
-                                                    </button>
-                                                    <button id="importApiSettings" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium border border-gray-300 transition-colors">
-                                                        📋 นำเข้าการตั้งค่า
-                                                    </button>
-                                                </div>
-                                                
-                                                <input type="file" id="importApiFile" accept=".json" class="hidden">
-                                                
-                                                <div class="mt-4">
-                                                    <button id="resetApiSettings" class="w-full bg-red-100 hover:bg-red-200 text-red-800 px-4 py-2 rounded-lg text-sm font-medium border border-red-300 transition-colors">
-                                                        รีเซ็ตการตั้งค่า API ทั้งหมด
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Save Settings -->
-                                        <div class="border-t border-gray-200 pt-6">
-                                            <button id="saveApiSettings" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                                                💾 บันทึกการตั้งค่า API
+                                        
+                                        <div class="mt-4">
+                                            <button id="testWeatherConnection" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-2 rounded-lg text-sm font-medium border border-blue-300 transition-colors">
+                                                ทดสอบการเชื่อมต่อ
                                             </button>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Real-time Display Preview -->
-                                <div class="modern-card overflow-hidden rounded-2xl">
-                                    <div class="px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 border-b">
-                                        <h3 class="text-lg font-medium text-white flex items-center gap-2">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                            </svg>
-                                            Live Display Preview
-                                        </h3>
-                                        <p class="text-indigo-100 text-sm mt-1">ดูตัวอย่างการแสดงผลแบบ Real-time</p>
-                                    </div>
-                                    <div class="px-6 py-4">
-                                        <div id="liveDisplayPreview" class="relative bg-gray-100 rounded-xl overflow-hidden border border-gray-200" style="height: 400px;">
-                                            <!-- Mini Display Preview -->
-                                            <div id="previewHeader" class="h-16 flex items-center justify-between px-6 text-white text-sm transition-colors duration-300" style="background-color: #3f2f15;">
-                                                <div id="previewLogo" class="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center transition-all duration-300">
-                                                    <div class="w-4 h-4 bg-white rounded"></div>
-                                                </div>
-                                                <div class="text-center">
-                                                    <div class="text-base font-medium">Canvas 39 Display</div>
-                                                    <div class="text-xs opacity-75">Wednesday, 27 November • 16:41</div>
-                                                </div>
-                                                <div class="w-6 h-6 bg-white bg-opacity-20 rounded flex items-center justify-center">
-                                                    <div class="w-3 h-3 border border-white"></div>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Building Section Preview -->
-                                            <div class="h-20 bg-gradient-to-b from-blue-200 to-blue-300 flex items-center justify-center text-gray-700 text-sm font-medium">
-                                                Building Section
-                                            </div>
-                                            
-                                            <!-- Weather Section Preview -->
-                                            <div id="previewWeather" class="h-16 bg-gradient-to-r from-yellow-100 to-yellow-200 flex items-center justify-center text-gray-700 text-sm border-t-2 border-gray-300 transition-all duration-300">
-                                                <div class="flex items-center gap-4">
-                                                    <div class="flex items-center gap-2">
-                                                        <div class="w-6 h-6 bg-yellow-400 rounded-full"></div>
-                                                        <span class="font-medium">26°C / 34°C</span>
-                                                    </div>
-                                                    <div class="text-xs opacity-75">Weather Section</div>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Quality Section Preview -->
-                                            <div id="previewQuality" class="flex-1 flex items-center justify-center text-white text-sm font-medium transition-colors duration-300" style="background-color: #929079;">
-                                                <div class="text-center">
-                                                    <div class="text-2xl font-bold mb-1">40</div>
-                                                    <div class="text-xs opacity-90">Air Quality (Good)</div>
-                                                    <div class="text-xs opacity-75 mt-2">Quality Section (Slideshow)</div>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Preview Controls Overlay -->
-                                            <div class="absolute top-2 right-2 flex gap-1">
-                                                <div class="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
-                                                    Live Preview
-                                                </div>
-                                                <div id="slideshowIndicator" class="bg-blue-500 bg-opacity-75 text-white px-2 py-1 rounded text-xs hidden">
-                                                    Slideshow: <span id="slideshowSpeed">10s</span>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Slideshow Progress Bar (when enabled) -->
-                                            <div id="previewProgressBar" class="absolute bottom-0 left-0 right-0 h-1 bg-black bg-opacity-20 hidden">
-                                                <div class="h-full bg-white bg-opacity-60 transition-all duration-300" style="width: 0%"></div>
-                                            </div>
-                                        </div>
-                                        <div class="mt-4 flex items-center justify-between">
-                                            <div class="text-xs text-gray-500">ตัวอย่างการแสดงผลแบบ Real-time</div>
-                                            <div class="flex gap-2">
-                                                <button id="refreshPreview" class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-md hover:bg-indigo-200 transition-colors">
-                                                    🔄 รีเฟรช
-                                                </button>
-                                                <span id="previewLastUpdate" class="text-xs text-gray-500">Updated: Now</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <!-- Air Quality Settings -->\n                                <div class=\"modern-card overflow-hidden rounded-2xl\">\n                                    <div class=\"px-6 py-4 bg-gradient-to-r from-green-600 to-teal-600 border-b\">\n                                        <h3 class=\"text-lg font-medium text-white flex items-center gap-2\">\n                                            <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a8.949 8.949 0 008.354-5.646z\"></path>\n                                            </svg>\n                                            Air Quality Configuration\n                                        </h3>\n                                        <p class=\"text-green-100 text-sm mt-1\">\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e\u0e2d\u0e32\u0e01\u0e32\u0e28</p>\n                                    </div>\n                                    <div class=\"px-6 py-4 space-y-4\">\n                                        <div>\n                                            <label class=\"block text-sm font-medium text-gray-700 mb-2\">\u0e2a\u0e16\u0e32\u0e19\u0e35\u0e27\u0e31\u0e14 Indoor AQI</label>\n                                            <input type=\"text\" id=\"indoorAqiStation\" value=\"Canvas 39\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">\n                                            <p class=\"text-xs text-gray-500 mt-1\">\u0e0a\u0e37\u0e48\u0e2d\u0e2a\u0e16\u0e32\u0e19\u0e35\u0e27\u0e31\u0e14\u0e20\u0e32\u0e22\u0e43\u0e19\u0e2d\u0e32\u0e04\u0e32\u0e23</p>\n                                        </div>\n                                        \n                                        <div>\n                                            <label class=\"block text-sm font-medium text-gray-700 mb-2\">\u0e2a\u0e16\u0e32\u0e19\u0e35\u0e27\u0e31\u0e14 Outdoor AQI</label>\n                                            <input type=\"text\" id=\"outdoorAqiLocation\" value=\"Bangkok\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">\n                                            <p class=\"text-xs text-gray-500 mt-1\">\u0e1e\u0e37\u0e49\u0e19\u0e17\u0e35\u0e48\u0e27\u0e31\u0e14\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e\u0e2d\u0e32\u0e01\u0e32\u0e28\u0e20\u0e32\u0e22\u0e19\u0e2d\u0e01</p>\n                                        </div>\n                                        \n                                        <div class=\"mt-4\">\n                                            <button id=\"testAqiConnection\" class=\"bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-lg text-sm font-medium border border-green-300 transition-colors\">\n                                                \u0e17\u0e14\u0e2a\u0e2d\u0e1a\u0e01\u0e32\u0e23\u0e40\u0e0a\u0e37\u0e48\u0e2d\u0e21\u0e15\u0e48\u0e2d AQI\n                                            </button>\n                                        </div>\n                                    </div>\n                                </div>"
+
+                                <!-- Pool Water Settings -->\n                                <div class=\"modern-card overflow-hidden rounded-2xl\">\n                                    <div class=\"px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 border-b\">\n                                        <h3 class=\"text-lg font-medium text-white flex items-center gap-2\">\n                                            <svg class=\"w-5 h-5\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">\n                                                <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M8 16l2.879-2.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242zM21 12a9 9 0 11-18 0 9 9 0 0118 0z\"></path>\n                                            </svg>\n                                            Pool Water Quality\n                                        </h3>\n                                        <p class=\"text-purple-100 text-sm mt-1\">\u0e01\u0e32\u0e23\u0e15\u0e31\u0e49\u0e07\u0e04\u0e48\u0e32\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e04\u0e38\u0e13\u0e20\u0e32\u0e1e\u0e19\u0e49\u0e33\u0e2a\u0e23\u0e30\u0e27\u0e48\u0e32\u0e22\u0e19\u0e49\u0e33</p>\n                                    </div>\n                                    <div class=\"px-6 py-4 space-y-4\">\n                                        <div class=\"grid grid-cols-2 gap-4\">\n                                            <div>\n                                                <label class=\"block text-sm font-medium text-gray-700 mb-2\">Temperature (\u00b0C)</label>\n                                                <input type=\"number\" id=\"poolTemp\" value=\"27.5\" step=\"0.1\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">\n                                            </div>\n                                            <div>\n                                                <label class=\"block text-sm font-medium text-gray-700 mb-2\">pH Level</label>\n                                                <input type=\"number\" id=\"poolPH\" value=\"7.4\" step=\"0.1\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">\n                                            </div>\n                                            <div>\n                                                <label class=\"block text-sm font-medium text-gray-700 mb-2\">ORP (mV)</label>\n                                                <input type=\"number\" id=\"poolORP\" value=\"720\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">\n                                            </div>\n                                            <div>\n                                                <label class=\"block text-sm font-medium text-gray-700 mb-2\">TDS (ppm)</label>\n                                                <input type=\"number\" id=\"poolTDS\" value=\"450\" class=\"w-full border border-gray-300 rounded-md px-3 py-2\">\n                                            </div>\n                                        </div>\n                                        \n                                        <div class=\"mt-4\">\n                                            <button id=\"updatePoolData\" class=\"bg-purple-100 hover:bg-purple-200 text-purple-800 px-4 py-2 rounded-lg text-sm font-medium border border-purple-300 transition-colors\">\n                                                \u0e2d\u0e31\u0e1b\u0e40\u0e14\u0e15\u0e02\u0e49\u0e2d\u0e21\u0e39\u0e25\u0e2a\u0e23\u0e30\u0e27\u0e48\u0e32\u0e22\u0e19\u0e49\u0e33\n                                            </button>\n                                        </div>\n                                    </div>\n                                </div>"
+
                             </div>
                         </div>
 
@@ -4430,9 +4146,110 @@
             initializeContentManagement();
             initializeUserManagement();
             initializeUserMenu();
+            initializeInteractivePreview();
             
             console.log('✅ Admin Panel initialized successfully');
         });
+
+        // Interactive Live Preview Functions
+        function jumpToSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all menu items
+            document.querySelectorAll('[data-section]').forEach(item => {
+                item.classList.remove('text-gray-700', 'border-l-4', 'border-blue-500', 'bg-blue-50');
+                item.classList.add('text-gray-700', 'hover:bg-gray-50');
+            });
+
+            // Show target section
+            const targetSection = document.getElementById(sectionId + '-section');
+            if (targetSection) {
+                targetSection.classList.add('active');
+                
+                // Highlight corresponding menu item
+                const menuItem = document.querySelector(`[data-section="${sectionId}"]`);
+                if (menuItem) {
+                    menuItem.classList.remove('hover:bg-gray-50');
+                    menuItem.classList.add('text-gray-700', 'border-l-4', 'border-blue-500', 'bg-blue-50');
+                }
+                
+                // Smooth scroll to top
+                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // Show success feedback
+                showNotification(`📍 กำลังแก้ไขส่วน ${getSectionName(sectionId)}`, 'success');
+            }
+        }
+
+        function getSectionName(sectionId) {
+            const sectionNames = {
+                'display': 'Display & Theme',
+                'slideshow': 'Slideshow & Layout',
+                'notifications': 'Notifications & Slides',
+                'fonts': 'Fonts & Media',
+                'users': 'User Management',
+                'settings': 'API & Integrations',
+                'status': 'System Status'
+            };
+            return sectionNames[sectionId] || sectionId;
+        }
+
+        function initializeInteractivePreview() {
+            // Update preview when theme colors change
+            const headerColorInput = document.getElementById('headerColor');
+            if (headerColorInput) {
+                headerColorInput.addEventListener('input', function() {
+                    const previewHeader = document.getElementById('previewHeader');
+                    if (previewHeader) {
+                        previewHeader.style.backgroundColor = this.value;
+                    }
+                });
+            }
+
+            // Refresh interactive preview
+            const refreshBtn = document.getElementById('refreshInteractivePreview');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    // Simulate refresh with visual feedback
+                    const preview = document.getElementById('interactiveLivePreview');
+                    if (preview) {
+                        preview.style.opacity = '0.5';
+                        setTimeout(() => {
+                            preview.style.opacity = '1';
+                            document.getElementById('previewLastUpdate').textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+                            showNotification('🔄 Preview refreshed successfully!', 'success');
+                        }, 300);
+                    }
+                });
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300`;
+            
+            if (type === 'success') {
+                notification.className += ' bg-green-100 text-green-800 border border-green-200';
+            } else {
+                notification.className += ' bg-blue-100 text-blue-800 border border-blue-200';
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
     </script>
 </body>
 </html>
