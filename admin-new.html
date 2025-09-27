@@ -250,7 +250,7 @@
                             <p class="text-sm text-gray-600 mt-1">ปรับแต่งสีของส่วนต่าง ๆ ในหน้าจอแสดงผล</p>
                         </div>
                         <div class="px-6 py-4">
-                            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-5 gap-4">
                                 <!-- สี Header Bar -->
                                 <div class="bg-gray-50 rounded-lg p-3">
                                     <div class="flex items-center gap-2 mb-3">
@@ -310,17 +310,17 @@
                                             </svg>
                                         </div>
                                         <div>
-                                            <h5 class="text-sm font-semibold text-gray-900">Weather</h5>
-                                            <p class="text-xs text-gray-600">สภาพอากาศ</p>
+                                            <h5 class="text-sm font-semibold text-gray-900">Today Weather</h5>
+                                            <p class="text-xs text-gray-600">สภาพอากาศวันนี้</p>
                                         </div>
                                     </div>
                                     
                                     <div class="space-y-2">
                                         <div class="flex items-center gap-2">
-                                            <input type="color" id="weatherColor" value="#87ceeb" class="w-8 h-8 border border-gray-300 rounded cursor-pointer bg-white">
-                                            <input type="text" id="weatherColorText" value="#87ceeb" class="flex-1 border border-gray-300 rounded px-2 py-1 text-xs font-mono bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                                            <input type="color" id="todayColor" value="#87ceeb" class="w-8 h-8 border border-gray-300 rounded cursor-pointer bg-white">
+                                            <input type="text" id="todayColorText" value="#87ceeb" class="flex-1 border border-gray-300 rounded px-2 py-1 text-xs font-mono bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
                                         </div>
-                                        <button id="resetWeatherColor" class="w-full px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">
+                                        <button id="resetTodayColor" class="w-full px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">
                                             รีเซ็ต
                                         </button>
                                     </div>
@@ -345,6 +345,30 @@
                                             <input type="text" id="poolColorText" value="#4a5568" class="flex-1 border border-gray-300 rounded px-2 py-1 text-xs font-mono bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
                                         </div>
                                         <button id="resetPoolColor" class="w-full px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">
+                                            รีเซ็ต
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- สี Outlook Weather Section -->
+                                <div class="bg-gray-50 rounded-lg p-3">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <div class="p-1.5 bg-gray-100 rounded-lg">
+                                            <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h5 class="text-sm font-semibold text-gray-900">Outlook Weather</h5>
+                                            <p class="text-xs text-gray-600">พยากรณ์อากาศ</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="space-y-2">
+                                        <div class="flex items-center gap-2">
+                                            <input type="color" id="outlookColor" value="#ddd6cc" class="w-8 h-8 border border-gray-300 rounded cursor-pointer bg-white">
+                                            <input type="text" id="outlookColorText" value="#ddd6cc" class="flex-1 border border-gray-300 rounded px-2 py-1 text-xs font-mono bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                                        </div>
+                                        <button id="resetOutlookColor" class="w-full px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">
                                             รีเซ็ต
                                         </button>
                                     </div>
@@ -1153,8 +1177,9 @@
                 config.theme = {
                     headerColor: '#3f2f15',
                     backgroundColor: '#929079',
-                    weatherColor: '#87ceeb',
-                    poolColor: '#4a5568'
+                    todayColor: '#87ceeb',
+                    poolColor: '#4a5568',
+                    outlookColor: '#ddd6cc'
                 };
             }
 
@@ -1162,8 +1187,9 @@
             const colorSync = [
                 ['headerColor', 'headerColorText'],
                 ['backgroundColor', 'backgroundColorText'],
-                ['weatherColor', 'weatherColorText'],
-                ['poolColor', 'poolColorText']
+                ['todayColor', 'todayColorText'],
+                ['poolColor', 'poolColorText'],
+                ['outlookColor', 'outlookColorText']
             ];
 
             colorSync.forEach(([colorId, textId]) => {
@@ -1196,27 +1222,27 @@
             const themes = {
                 'themeDefault': { 
                     headerColor: '#3f2f15', backgroundColor: '#929079',
-                    weatherColor: '#87ceeb', poolColor: '#4a5568'
+                    todayColor: '#87ceeb', poolColor: '#4a5568', outlookColor: '#ddd6cc'
                 },
                 'themeBlue': { 
                     headerColor: '#1e3a8a', backgroundColor: '#60a5fa',
-                    weatherColor: '#3b82f6', poolColor: '#1d4ed8'
+                    todayColor: '#3b82f6', poolColor: '#1d4ed8', outlookColor: '#bfdbfe'
                 },
                 'themeGreen': { 
                     headerColor: '#166534', backgroundColor: '#4ade80',
-                    weatherColor: '#10b981', poolColor: '#059669'
+                    todayColor: '#10b981', poolColor: '#059669', outlookColor: '#bbf7d0'
                 },
                 'themeDark': { 
                     headerColor: '#111827', backgroundColor: '#374151',
-                    weatherColor: '#6b7280', poolColor: '#4b5563'
+                    todayColor: '#6b7280', poolColor: '#4b5563', outlookColor: '#9ca3af'
                 },
                 'themeModern': { 
                     headerColor: '#581c87', backgroundColor: '#a855f7',
-                    weatherColor: '#8b5cf6', poolColor: '#7c3aed'
+                    todayColor: '#8b5cf6', poolColor: '#7c3aed', outlookColor: '#e9d5ff'
                 },
                 'themeWarm': { 
                     headerColor: '#c2410c', backgroundColor: '#fb923c',
-                    weatherColor: '#f97316', poolColor: '#ea580c'
+                    todayColor: '#f97316', poolColor: '#ea580c', outlookColor: '#fdba74'
                 }
             };
 
@@ -1244,7 +1270,7 @@
             });
 
             // Reset buttons
-            ['resetHeaderColor', 'resetBackgroundColor', 'resetWeatherColor', 'resetPoolColor'].forEach(resetId => {
+            ['resetHeaderColor', 'resetBackgroundColor', 'resetTodayColor', 'resetPoolColor', 'resetOutlookColor'].forEach(resetId => {
                 const button = document.getElementById(resetId);
                 if (button) {
                     button.addEventListener('click', function() {
