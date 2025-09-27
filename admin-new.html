@@ -582,90 +582,38 @@
                                 </div>
                             </div>
 
-                            <!-- เนื้อหาประกาศ -->
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <h4 class="text-md font-medium text-gray-900 mb-4 flex items-center gap-2">
-                                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
-                                    </svg>
-                                    เนื้อหาข่าวสาร
-                                </h4>
-                                
-                                <div class="space-y-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">หัวข้อข่าวสาร</label>
-                                        <input type="text" id="notificationTitle" value="ข่าวสารจากโรงแรม" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                        <p class="text-xs text-gray-500 mt-1">หัวข้อจะแสดงเป็นตัวหนา (ฝ่ายนิติจัดการ)</p>
-                                    </div>
-                                    
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">ข้อความข่าวสาร</label>
-                                        <textarea id="notificationMessage" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="กรุณาใส่ข้อความข่าวสาร...">สระว่ายน้ำจะปิดบริการชั่วคราว เพื่อบำรุงรักษา วันที่ 28-29 พฤศจิกายน 2567</textarea>
-                                        <p class="text-xs text-gray-500 mt-1">สำหรับข่าวสารโรงแรมและประกาศจากฝ่ายนิติ รองรับข้อความหลายบรรทัด</p>
-                                    </div>
-                                    
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">ประเภทข่าวสาร</label>
-                                            <select id="notificationType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                <option value="info">ข้อมูลทั่วไป (น้ำเงิน)</option>
-                                                <option value="warning" selected>เตือน (เหลือง)</option>
-                                                <option value="success">สำเร็จ (เขียว)</option>
-                                                <option value="error">สำคัญ (แดง)</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">ความเร็วการเลื่อน</label>
-                                            <select id="notificationSpeed" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                                <option value="slow">ช้า</option>
-                                                <option value="normal" selected>ปกติ</option>
-                                                <option value="fast">เร็ว</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <!-- ตัวอย่างแสดงผล -->
-                            <div class="bg-white border-2 border-dashed border-gray-300 rounded-lg p-4">
-                                <h4 class="text-md font-medium text-gray-900 mb-3">ตัวอย่างการแสดงผล</h4>
-                                <div id="notificationPreview" class="bg-yellow-100 border border-yellow-300 rounded-lg p-3 text-sm">
-                                    <div class="font-medium text-yellow-800 mb-1">ข่าวสารจากโรงแรม</div>
-                                    <div class="text-yellow-700">สระว่ายน้ำจะปิดบริการชั่วคราว เพื่อบำรุงรักษา วันที่ 28-29 พฤศจิกายน 2567</div>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-2">ตัวอย่างการแสดงผลจริงบนหน้าจอ</p>
-                            </div>
-
-                            <!-- การจัดการประกาศหลายรายการ -->
+                            <!-- จัดการข่าวสารและประกาศ -->
                             <div class="bg-green-50 rounded-lg p-4">
                                 <h4 class="text-md font-medium text-gray-900 mb-4 flex items-center gap-2">
                                     <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"/>
                                     </svg>
-                                    จัดการประกาศหลายรายการ
+                                    จัดการข่าวสารและประกาศ
                                 </h4>
                                 
                                 <div class="space-y-4">
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700">โหมดหลายประกาศ</label>
-                                            <p class="text-xs text-gray-500">แสดงประกาศหลายๆ รายการแบบสลับกัน</p>
+                                    <div class="bg-white rounded-lg p-3 border border-green-200">
+                                        <div class="text-sm text-green-800 mb-2">
+                                            <strong>วิธีใช้งาน:</strong>
                                         </div>
-                                        <label class="relative inline-flex items-center cursor-pointer">
-                                            <input type="checkbox" id="multipleNoticesEnabled" class="sr-only peer">
-                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-                                        </label>
+                                        <ol class="text-xs text-green-700 space-y-1">
+                                            <li>1. กดปุ่ม "เพิ่ม" เพื่อสร้างประกาศใหม่</li>
+                                            <li>2. ใส่หัวข้อและเนื้อหาประกาศ</li>
+                                            <li>3. เลือกสีและความสำคัญ</li>
+                                            <li>4. กด "บันทึก" เพื่อเก็บประกาศ</li>
+                                            <li>5. กดปุ่ม "บันทึกการตั้งค่า" ด้านล่างเพื่อ sync ไปยังหน้าจอ</li>
+                                        </ol>
                                     </div>
                                     
                                     <div>
                                         <div class="flex justify-between items-center mb-3">
                                             <label class="block text-sm font-medium text-gray-700">รายการประกาศ</label>
-                                            <button id="addNoticeBtn" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md text-xs font-medium flex items-center">
-                                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                            <button id="addNoticeBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center shadow-md hover:shadow-lg transition-all">
+                                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                                     <path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"/>
                                                 </svg>
-                                                เพิ่ม
+                                                เพิ่มประกาศใหม่
                                             </button>
                                         </div>
                                         
