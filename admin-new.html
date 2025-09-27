@@ -277,77 +277,78 @@
                                 <p class="text-xs text-gray-500 mt-1">สีพื้นหลังส่วนข้อมูลอากาศ</p>
                             </div>
                             
-                            <!-- โลโก้และรูป -->
+                            <!-- โลโก้และรูปภาพ -->
                             <div>
-                                <h4 class="text-md font-medium text-gray-900 mb-3">โลโก้และรูปภาพ</h4>
-                                
-                                <!-- โลโก้ -->
-                                <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">โลโก้ (Canvas 39)</label>
-                                    <div class="flex items-center space-x-4">
-                                        <div class="flex-shrink-0">
-                                            <img id="logoPreview" src="img/CANVAS 39 LOGO BOLD.png" alt="Canvas 39 Logo" class="h-12 w-auto object-contain bg-gray-100 rounded p-2">
-                                        </div>
-                                        <div class="flex-1">
-                                            <input type="file" id="logoUpload" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                                            <p class="text-xs text-gray-500 mt-1">PNG, JPG, GIF สูงสุด 2MB</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- รูปอาคาร -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">รูปอาคาร (พื้นหลัง)</label>
-                                    <div class="flex items-center space-x-4">
-                                        <div class="flex-shrink-0">
-                                            <img id="buildingPreview" src="img/FRONT FULL.jpg" alt="Building Image" class="h-20 w-32 object-cover rounded border">
-                                        </div>
-                                        <div class="flex-1">
-                                            <input type="file" id="buildingUpload" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
-                                            <p class="text-xs text-gray-500 mt-1">แนะนำ 1920x1080px, JPG หรือ PNG</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- จัดการไฟล์ Media -->
-                            <div class="border-t pt-4 mt-4">
-                                <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center gap-2">
-                                    <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clip-rule="evenodd"/>
+                                <h4 class="text-md font-medium text-gray-900 mb-4 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
                                     </svg>
-                                    จัดการไฟล์ Media
+                                    โลโก้และรูปภาพ
                                 </h4>
                                 
-                                <div class="grid grid-cols-2 gap-4">
-                                    <!-- ข้อมูลโลโก้ -->
-                                    <div class="bg-blue-50 rounded-lg p-3">
-                                        <div class="text-sm font-medium text-blue-900 mb-2">โลโก้ปัจจุบัน</div>
-                                        <div class="text-xs text-blue-700" id="logoInfo">
-                                            <div>ขนาด: <span id="logoSize">-</span></div>
-                                            <div>ประเภท: <span id="logoType">-</span></div>
+                                <div class="grid grid-cols-1 gap-6">
+                                    <!-- โลโก้ -->
+                                    <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                                        <div class="flex items-center gap-3 mb-3">
+                                            <div class="p-2 bg-blue-100 rounded-lg">
+                                                <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h5 class="text-sm font-semibold text-blue-900">โลโก้ Canvas 39</h5>
+                                                <p class="text-xs text-blue-700">แสดงที่มุมซ้ายบนของหน้าจอ</p>
+                                            </div>
                                         </div>
-                                        <button id="deleteLogo" class="mt-2 text-xs bg-red-100 text-red-700 px-3 py-1 rounded hover:bg-red-200">
-                                            ลบโลโก้
-                                        </button>
-                                    </div>
-                                    
-                                    <!-- ข้อมูลรูปอาคาร -->
-                                    <div class="bg-green-50 rounded-lg p-3">
-                                        <div class="text-sm font-medium text-green-900 mb-2">รูปอาคารปัจจุบัน</div>
-                                        <div class="text-xs text-green-700" id="buildingInfo">
-                                            <div>ขนาด: <span id="buildingSize">-</span></div>
-                                            <div>ประเภท: <span id="buildingType">-</span></div>
+                                        
+                                        <div class="flex items-center gap-4">
+                                            <div class="flex-shrink-0">
+                                                <div class="relative">
+                                                    <img id="logoPreview" src="img/CANVAS 39 LOGO BOLD.png" alt="Canvas 39 Logo" class="h-16 w-auto object-contain bg-white rounded-lg border border-blue-300 p-2">
+                                                    <div class="absolute -top-1 -right-1 bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full text-[10px]">LOGO</div>
+                                                </div>
+                                            </div>
+                                            <div class="flex-1">
+                                                <input type="file" id="logoUpload" accept="image/*" class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer cursor-pointer border border-blue-300 rounded-lg bg-white hover:bg-blue-50 transition-colors">
+                                                <div class="flex items-center gap-4 mt-2 text-xs">
+                                                    <span class="text-blue-600">✓ PNG, JPG, GIF</span>
+                                                    <span class="text-blue-600">📏 สูงสุด 500KB</span>
+                                                    <span class="text-blue-600">🎨 รองรับความโปร่งใส</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <button id="deleteBuilding" class="mt-2 text-xs bg-red-100 text-red-700 px-3 py-1 rounded hover:bg-red-200">
-                                            ลบรูปอาคาร
-                                        </button>
                                     </div>
-                                </div>
-                                
-                                <div class="mt-3 p-3 bg-gray-50 rounded-lg">
-                                    <div class="text-xs text-gray-600">
-                                        <strong>หมายเหตุ:</strong> ไฟล์จะถูกแปลงเป็น Base64 และเก็บในระบบ config ไม่ได้เก็บเป็นไฟล์แยกบน server
+
+                                    <!-- รูปอาคาร -->
+                                    <div class="bg-green-50 rounded-lg p-4 border border-green-200">
+                                        <div class="flex items-center gap-3 mb-3">
+                                            <div class="p-2 bg-green-100 rounded-lg">
+                                                <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clip-rule="evenodd"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h5 class="text-sm font-semibold text-green-900">รูปพื้นหลังอาคาร</h5>
+                                                <p class="text-xs text-green-700">แสดงเป็นพื้นหลังส่วนกลางของหน้าจอ</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex items-center gap-4">
+                                            <div class="flex-shrink-0">
+                                                <div class="relative">
+                                                    <img id="buildingPreview" src="img/FRONT FULL.jpg" alt="Building Image" class="h-20 w-32 object-cover rounded-lg border border-green-300">
+                                                    <div class="absolute -top-1 -right-1 bg-green-500 text-white text-xs px-1.5 py-0.5 rounded-full text-[10px]">BG</div>
+                                                </div>
+                                            </div>
+                                            <div class="flex-1">
+                                                <input type="file" id="buildingUpload" accept="image/*" class="block w-full text-sm text-gray-600 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-600 file:text-white hover:file:bg-green-700 file:cursor-pointer cursor-pointer border border-green-300 rounded-lg bg-white hover:bg-green-50 transition-colors">
+                                                <div class="flex items-center gap-4 mt-2 text-xs">
+                                                    <span class="text-green-600">✓ JPG, PNG</span>
+                                                    <span class="text-green-600">📐 แนะนำ 1920x1080px</span>
+                                                    <span class="text-green-600">💾 สูงสุด 800KB</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1477,9 +1478,6 @@
                 }
             }
             
-            // Update media file info
-            updateMediaInfo();
-            
             // Load notices
             loadNoticesList();
             
@@ -2025,16 +2023,6 @@
                 });
             }
             
-            // Media Management
-            const deleteLogo_btn = document.getElementById('deleteLogo');
-            if (deleteLogo_btn) {
-                deleteLogo_btn.addEventListener('click', deleteLogo);
-            }
-            const deleteBuilding_btn = document.getElementById('deleteBuilding');
-            if (deleteBuilding_btn) {
-                deleteBuilding_btn.addEventListener('click', deleteBuilding);
-            }
-            
             // User Management Modal
             const closeUserModal_btn = document.getElementById('closeUserModal');
             if (closeUserModal_btn) {
@@ -2267,53 +2255,6 @@
                     img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
-            }
-        }
-
-        // Update media file info
-        function updateMediaInfo() {
-            // Update logo info
-            if (config.images && config.images.logo) {
-                const logoSize = Math.round(config.images.logo.length * 0.75 / 1024); // Base64 to KB approximation
-                const logoType = config.images.logo.includes('data:image/png') ? 'PNG' : 'JPEG';
-                document.getElementById('logoSize').textContent = logoSize + ' KB';
-                document.getElementById('logoType').textContent = logoType;
-            }
-            
-            // Update building info
-            if (config.images && config.images.building) {
-                const buildingSize = Math.round(config.images.building.length * 0.75 / 1024);
-                const buildingType = config.images.building.includes('data:image/png') ? 'PNG' : 'JPEG';
-                document.getElementById('buildingSize').textContent = buildingSize + ' KB';
-                document.getElementById('buildingType').textContent = buildingType;
-            }
-        }
-
-        // Delete logo
-        function deleteLogo() {
-            if (confirm('ต้องการลบโลโก้ปัจจุบันหรือไม่?')) {
-                config.images.logo = 'img/logo.png'; // Reset to default
-                const logoPreview = document.getElementById('logoPreview');
-                if (logoPreview) logoPreview.src = 'img/logo.png';
-                
-                document.getElementById('logoSize').textContent = '-';
-                document.getElementById('logoType').textContent = '-';
-                
-                showNotification('ลบโลโก้เรียบร้อยแล้ว (รีเซ็ตเป็นค่าเริ่มต้น) - กรุณากดบันทึกการตั้งค่า', 'success');
-            }
-        }
-
-        // Delete building image
-        function deleteBuilding() {
-            if (confirm('ต้องการลบรูปอาคารปัจจุบันหรือไม่?')) {
-                config.images.building = 'img/FRONT FULL.jpg'; // Reset to default
-                const buildingPreview = document.getElementById('buildingPreview');
-                if (buildingPreview) buildingPreview.src = 'img/FRONT FULL.jpg';
-                
-                document.getElementById('buildingSize').textContent = '-';
-                document.getElementById('buildingType').textContent = '-';
-                
-                showNotification('ลบรูปอาคารเรียบร้อยแล้ว (รีเซ็ตเป็นค่าเริ่มต้น) - กรุณากดบันทึกการตั้งค่า', 'success');
             }
         }
 
