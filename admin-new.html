@@ -241,41 +241,98 @@
                     <!-- การตั้งค่าสี Theme -->
                     <div id="theme-section" class="bg-white overflow-hidden shadow rounded-lg">
                         <div class="px-6 py-4 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่าสี Theme</h3>
+                            <h3 class="text-lg font-medium text-gray-900 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 2a2 2 0 00-2 2v11a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H4zm0 2v2h12V4H4zm0 4v6h12V8H4z" clip-rule="evenodd"/>
+                                </svg>
+                                การตั้งค่าสี Theme
+                            </h3>
+                            <p class="text-sm text-gray-600 mt-1">ปรับแต่งสีของส่วนต่าง ๆ ในหน้าจอแสดงผล</p>
                         </div>
-                        <div class="px-6 py-4 space-y-4">
-                            <!-- สี Header/Navigation Bar -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">สี Header Bar</label>
-                                <div class="flex items-center space-x-3">
-                                    <input type="color" id="headerColor" value="#3f2f15" class="w-12 h-10 border border-gray-300 rounded cursor-pointer">
-                                    <input type="text" id="headerColorText" value="#3f2f15" class="border border-gray-300 rounded px-3 py-2 text-sm font-mono w-24">
-                                    <button id="resetHeaderColor" class="text-xs text-gray-500 hover:text-gray-700">รีเซ็ต</button>
+                        <div class="px-6 py-4">
+                            <div class="grid grid-cols-1 gap-6">
+                                <!-- สี Header Bar -->
+                                <div class="bg-amber-50 rounded-lg p-4 border border-amber-200">
+                                    <div class="flex items-center gap-3 mb-3">
+                                        <div class="p-2 bg-amber-100 rounded-lg">
+                                            <svg class="w-5 h-5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h5 class="text-sm font-semibold text-amber-900">สี Header Bar</h5>
+                                            <p class="text-xs text-amber-700">แถบด้านบนที่มีโลโก้และเวลา</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-3">
+                                        <div class="relative">
+                                            <input type="color" id="headerColor" value="#3f2f15" class="w-12 h-12 border-2 border-amber-300 rounded-lg cursor-pointer bg-white shadow-sm">
+                                        </div>
+                                        <div class="flex-1">
+                                            <input type="text" id="headerColorText" value="#3f2f15" class="w-full border border-amber-300 rounded-lg px-3 py-2 text-sm font-mono bg-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
+                                        </div>
+                                        <button id="resetHeaderColor" class="px-3 py-2 text-xs bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-colors">
+                                            รีเซ็ต
+                                        </button>
+                                    </div>
                                 </div>
-                                <p class="text-xs text-gray-500 mt-1">สีพื้นหลังของแถบด้านบน</p>
-                            </div>
 
-                            <!-- สีพื้นหลังหลัก -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">สีพื้นหลังหลัก</label>
-                                <div class="flex items-center space-x-3">
-                                    <input type="color" id="backgroundColor" value="#929079" class="w-12 h-10 border border-gray-300 rounded cursor-pointer">
-                                    <input type="text" id="backgroundColorText" value="#929079" class="border border-gray-300 rounded px-3 py-2 text-sm font-mono w-24">
-                                    <button id="resetBackgroundColor" class="text-xs text-gray-500 hover:text-gray-700">รีเซ็ต</button>
+                                <!-- สีพื้นหลังหลัก -->
+                                <div class="bg-purple-50 rounded-lg p-4 border border-purple-200">
+                                    <div class="flex items-center gap-3 mb-3">
+                                        <div class="p-2 bg-purple-100 rounded-lg">
+                                            <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clip-rule="evenodd"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h5 class="text-sm font-semibold text-purple-900">สีพื้นหลัง Slideshow</h5>
+                                            <p class="text-xs text-purple-700">ส่วนแสดงข้อมูล Air Quality และ Pool Water</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-3">
+                                        <div class="relative">
+                                            <input type="color" id="backgroundColor" value="#929079" class="w-12 h-12 border-2 border-purple-300 rounded-lg cursor-pointer bg-white shadow-sm">
+                                        </div>
+                                        <div class="flex-1">
+                                            <input type="text" id="backgroundColorText" value="#929079" class="w-full border border-purple-300 rounded-lg px-3 py-2 text-sm font-mono bg-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                        </div>
+                                        <button id="resetBackgroundColor" class="px-3 py-2 text-xs bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors">
+                                            รีเซ็ต
+                                        </button>
+                                    </div>
                                 </div>
-                                <p class="text-xs text-gray-500 mt-1">สีพื้นหลังส่วนของ slideshow</p>
-                            </div>
 
-                            <!-- สี Weather Section -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">สี Weather Section</label>
-                                <div class="flex items-center space-x-3">
-                                    <input type="color" id="weatherColor" value="#87ceeb" class="w-12 h-10 border border-gray-300 rounded cursor-pointer">
-                                    <input type="text" id="weatherColorText" value="#87ceeb" class="border border-gray-300 rounded px-3 py-2 text-sm font-mono w-24">
-                                    <button id="resetWeatherColor" class="text-xs text-gray-500 hover:text-gray-700">รีเซ็ต</button>
+                                <!-- สี Weather Section -->
+                                <div class="bg-sky-50 rounded-lg p-4 border border-sky-200">
+                                    <div class="flex items-center gap-3 mb-3">
+                                        <div class="p-2 bg-sky-100 rounded-lg">
+                                            <svg class="w-5 h-5 text-sky-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M5.5 16a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 16h-8z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h5 class="text-sm font-semibold text-sky-900">สี Weather Section</h5>
+                                            <p class="text-xs text-sky-700">ส่วนแสดงข้อมูลสภาพอากาศและพยากรณ์</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-3">
+                                        <div class="relative">
+                                            <input type="color" id="weatherColor" value="#87ceeb" class="w-12 h-12 border-2 border-sky-300 rounded-lg cursor-pointer bg-white shadow-sm">
+                                        </div>
+                                        <div class="flex-1">
+                                            <input type="text" id="weatherColorText" value="#87ceeb" class="w-full border border-sky-300 rounded-lg px-3 py-2 text-sm font-mono bg-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500">
+                                        </div>
+                                        <button id="resetWeatherColor" class="px-3 py-2 text-xs bg-sky-100 text-sky-700 rounded-lg hover:bg-sky-200 transition-colors">
+                                            รีเซ็ต
+                                        </button>
+                                    </div>
                                 </div>
-                                <p class="text-xs text-gray-500 mt-1">สีพื้นหลังส่วนข้อมูลอากาศ</p>
                             </div>
+                        </div>
                             
                             <!-- โลโก้และรูปภาพ -->
                             <div>
