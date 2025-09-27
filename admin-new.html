@@ -352,7 +352,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">รูปอาคาร</label>
                                 <div class="flex items-center space-x-4">
                                     <div class="w-24 h-16 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden border-2 border-gray-300">
-                                        <img id="buildingPreview" src="img/FRONT FULL.jpg" alt="Building Preview" class="w-full h-full object-cover">
+                                        <img id="buildingPreview2" src="img/FRONT FULL.jpg" alt="Building Preview" class="w-full h-full object-cover">
                                     </div>
                                     <div class="flex-1">
                                         <input type="file" id="buildingUpload" accept="image/*" class="hidden">
@@ -559,22 +559,11 @@
                                         <p class="text-xs text-gray-500 mt-1">ชื่อสถานีวัดภายในอาคาร</p>
                                     </div>
                                     <div>
-                                        <label class="block text-xs text-gray-600 mb-1">Today</label>
-                                        <div class="flex items-center space-x-2">
-                                            <input type="color" id="weatherTodayColor" value="#f3efe6" class="w-8 h-8 border border-gray-300 rounded cursor-pointer">
-                                            <input type="text" id="weatherTodayColorText" value="#f3efe6" class="border border-gray-300 rounded px-2 py-1 text-xs font-mono w-20">
-                                        </div>
-                                    </div>
-                                    <!-- Outlook Section -->
-                                    <div>
-                                        <label class="block text-xs text-gray-600 mb-1">Outlook</label>
-                                        <div class="flex items-center space-x-2">
-                                            <input type="color" id="weatherOutlookColor" value="#ddd6cc" class="w-8 h-8 border border-gray-300 rounded cursor-pointer">
-                                            <input type="text" id="weatherOutlookColorText" value="#ddd6cc" class="border border-gray-300 rounded px-2 py-1 text-xs font-mono w-20">
-                                        </div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">สถานีวัด Outdoor AQI</label>
+                                        <input type="text" id="outdoorAqiLocation" value="Bangkok" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                        <p class="text-xs text-gray-500 mt-1">พื้นที่วัดคุณภาพอากาศภายนอก</p>
                                     </div>
                                 </div>
-                                <p class="text-xs text-gray-500 mt-1">สีพื้นหลังส่วนข้อมูลสภาพอากาศ</p>
                             </div>
 
                             <!-- Theme Presets -->
@@ -605,87 +594,6 @@
                         </div>
                     </div>
 
-                    <!-- Quality Data Settings -->
-                    <div id="quality-section" class="bg-white overflow-hidden shadow rounded-lg">
-                        <div class="px-6 py-4 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่าข้อมูลและ API</h3>
-                            <p class="text-sm text-gray-600 mt-1">ตั้งค่า Weather API และข้อมูลคุณภาพอากาศ</p>
-                        </div>
-                        <div class="px-6 py-4 space-y-6">
-                            <!-- Weather API Settings -->
-                            <div>
-                                <h4 class="text-md font-medium text-gray-900 mb-3">🌤️ Weather API</h4>
-                                <div class="space-y-3">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Weather API Provider</label>
-                                        <select id="weatherApiSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                            <option value="openmeteo">OpenMeteo (ฟรี, แนะนำ)</option>
-                                            <option value="wttr">wttr.in (ฟรี, สำรอง)</option>
-                                            <option value="openweather">OpenWeatherMap</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <!-- OpenWeatherMap API Key -->
-                                    <div id="openweatherKeyDiv" class="hidden">
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">OpenWeatherMap API Key</label>
-                                        <input type="text" id="openweatherKey" value="db61b712294c46506059042663feeac6" class="w-full border border-gray-300 rounded-md px-3 py-2 font-mono text-sm">
-                                        <p class="text-xs text-gray-500 mt-1">ใส่ API Key สำหรับ OpenWeatherMap</p>
-                                    </div>
-                                    
-                                    <!-- Update Interval -->
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">ความถี่การอัปเดต (นาที)</label>
-                                        <select id="updateInterval" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                            <option value="5">ทุก 5 นาที</option>
-                                            <option value="10" selected>ทุก 10 นาที</option>
-                                            <option value="15">ทุก 15 นาที</option>
-                                            <option value="30">ทุก 30 นาที</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- AQI Settings -->
-                            <div>
-                                <h4 class="text-md font-medium text-gray-900 mb-3">🌬️ Air Quality Index (AQI)</h4>
-                                <div class="space-y-3">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">สถานีวัด Indoor AQI</label>
-                                        <input type="text" id="indoorAqiStation" value="Canvas 39" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                        <p class="text-xs text-gray-500 mt-1">ชื่อสถานีวัดภายในอาคาร</p>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">สถานีวัด Outdoor AQI</label>
-                                        <input type="text" id="outdoorAqiLocation" value="Bangkok" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                        <p class="text-xs text-gray-500 mt-1">พื้นที่วัดคุณภาพอากาศภายนอก</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Pool Water Settings -->
-                            <div>
-                                <h4 class="text-md font-medium text-gray-900 mb-3">🏊 Pool Water Quality</h4>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">Temperature (°C)</label>
-                                        <input type="number" id="poolTemp" value="27.5" step="0.1" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">pH Level</label>
-                                        <input type="number" id="poolPH" value="7.4" step="0.1" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">ORP (mV)</label>
-                                        <input type="number" id="poolORP" value="720" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-2">TDS (ppm)</label>
-                                        <input type="number" id="poolTDS" value="450" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- ข่าวสารและประกาศ -->
                     <div id="notification-section" class="bg-white overflow-hidden shadow rounded-lg">
@@ -1933,90 +1841,154 @@
             setTimeout(initQuillEditor, 500);
             
             // Font selection
-            document.getElementById('fontSelect').addEventListener('change', function() {
-                config.font = this.value;
-            });
+            const fontSelect = document.getElementById('fontSelect');
+            if (fontSelect) {
+                fontSelect.addEventListener('change', function() {
+                    config.font = this.value;
+                });
+            }
             
             // Theme Color Controls (เบาและง่าย)
             initializeColorTheme();
             
             // Weather API selection
-            document.getElementById('weatherApiSelect').addEventListener('change', function() {
-                config.weatherApi = this.value;
-                toggleOpenWeatherKey();
-            });
+            const weatherApiSelect = document.getElementById('weatherApiSelect');
+            if (weatherApiSelect) {
+                weatherApiSelect.addEventListener('change', function() {
+                    config.weatherApi = this.value;
+                    toggleOpenWeatherKey();
+                });
+            }
             
             // OpenWeather API key
-            document.getElementById('openweatherKey').addEventListener('input', function() {
-                config.openweatherKey = this.value;
-            });
+            const openweatherKey = document.getElementById('openweatherKey');
+            if (openweatherKey) {
+                openweatherKey.addEventListener('input', function() {
+                    config.openweatherKey = this.value;
+                });
+            }
             
             // AQI source selection
-            document.getElementById('aqiSourceSelect').addEventListener('change', function() {
-                config.aqiSource = this.value;
-                updateAQIStatus();
-            });
+            const aqiSourceSelect = document.getElementById('aqiSourceSelect');
+            if (aqiSourceSelect) {
+                aqiSourceSelect.addEventListener('change', function() {
+                    config.aqiSource = this.value;
+                    updateAQIStatus();
+                });
+            }
             
             // Update interval
-            document.getElementById('updateInterval').addEventListener('change', function() {
-                config.updateInterval = parseInt(this.value);
-            });
+            const updateInterval = document.getElementById('updateInterval');
+            if (updateInterval) {
+                updateInterval.addEventListener('change', function() {
+                    config.updateInterval = parseInt(this.value);
+                });
+            }
             
             // Slideshow settings
-            document.getElementById('slideshowEnabled').addEventListener('change', function() {
-                config.slideshow.enabled = this.checked;
-            });
+            const slideshowEnabled = document.getElementById('slideshowEnabled');
+            if (slideshowEnabled) {
+                slideshowEnabled.addEventListener('change', function() {
+                    config.slideshow.enabled = this.checked;
+                });
+            }
             
-            document.getElementById('slideshowInterval').addEventListener('change', function() {
-                config.slideshow.interval = parseInt(this.value);
-            });
+            const slideshowInterval = document.getElementById('slideshowInterval');
+            if (slideshowInterval) {
+                slideshowInterval.addEventListener('change', function() {
+                    config.slideshow.interval = parseInt(this.value);
+                });
+            }
             
-            document.getElementById('showAirQuality').addEventListener('change', function() {
-                config.slideshow.showAirQuality = this.checked;
-            });
+            const showAirQuality = document.getElementById('showAirQuality');
+            if (showAirQuality) {
+                showAirQuality.addEventListener('change', function() {
+                    config.slideshow.showAirQuality = this.checked;
+                });
+            }
             
-            document.getElementById('showPoolWater').addEventListener('change', function() {
-                config.slideshow.showPoolWater = this.checked;
-            });
+            const showPoolWater = document.getElementById('showPoolWater');
+            if (showPoolWater) {
+                showPoolWater.addEventListener('change', function() {
+                    config.slideshow.showPoolWater = this.checked;
+                });
+            }
             
             // File uploads
-            document.getElementById('logoUpload').addEventListener('change', handleLogoUpload);
-            document.getElementById('buildingUpload').addEventListener('change', handleBuildingUpload);
+            const logoUpload = document.getElementById('logoUpload');
+            if (logoUpload) {
+                logoUpload.addEventListener('change', handleLogoUpload);
+            }
+            const buildingUpload = document.getElementById('buildingUpload');
+            if (buildingUpload) {
+                buildingUpload.addEventListener('change', handleBuildingUpload);
+            }
             
             // Buttons
-            document.getElementById('saveBtn').addEventListener('click', function(e) {
-                console.log('💾 Save button clicked!');
-                e.preventDefault();
-                saveConfig();
-            });
+            const saveBtn = document.getElementById('saveBtn');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', function(e) {
+                    console.log('💾 Save button clicked!');
+                    e.preventDefault();
+                    saveConfig();
+                });
+            }
             
             // User Menu
-            document.getElementById('userMenuBtn').addEventListener('click', function() {
-                const menu = document.getElementById('userMenu');
-                menu.classList.toggle('hidden');
-            });
+            const userMenuBtn = document.getElementById('userMenuBtn');
+            if (userMenuBtn) {
+                userMenuBtn.addEventListener('click', function() {
+                    const menu = document.getElementById('userMenu');
+                    if (menu) {
+                        menu.classList.toggle('hidden');
+                    }
+                });
+            }
             
             // User Management
-            document.getElementById('userManagementBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                document.getElementById('userMenu').classList.add('hidden');
-                openUserModal();
-            });
+            const userManagementBtn = document.getElementById('userManagementBtn');
+            if (userManagementBtn) {
+                userManagementBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const userMenu = document.getElementById('userMenu');
+                    if (userMenu) {
+                        userMenu.classList.add('hidden');
+                    }
+                    openUserModal();
+                });
+            }
             
-            document.getElementById('logoutBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                logout();
-            });
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    logout();
+                });
+            }
             
             // User Management Modal
-            document.getElementById('closeUserModal').addEventListener('click', closeUserModal);
-            document.getElementById('addUserBtn').addEventListener('click', () => openUserForm());
+            const closeUserModal_btn = document.getElementById('closeUserModal');
+            if (closeUserModal_btn) {
+                closeUserModal_btn.addEventListener('click', closeUserModal);
+            }
+            const addUserBtn = document.getElementById('addUserBtn');
+            if (addUserBtn) {
+                addUserBtn.addEventListener('click', () => openUserForm());
+            }
             
             // User Form Modal
-            document.getElementById('closeUserFormModal').addEventListener('click', closeUserForm);
-            document.getElementById('cancelUserForm').addEventListener('click', closeUserForm);
+            const closeUserFormModal = document.getElementById('closeUserFormModal');
+            if (closeUserFormModal) {
+                closeUserFormModal.addEventListener('click', closeUserForm);
+            }
+            const cancelUserForm = document.getElementById('cancelUserForm');
+            if (cancelUserForm) {
+                cancelUserForm.addEventListener('click', closeUserForm);
+            }
             
-            document.getElementById('userForm').addEventListener('submit', function(e) {
+            const userForm = document.getElementById('userForm');
+            if (userForm) {
+                userForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const formData = new FormData(this);
                 
@@ -2032,31 +2004,53 @@
                 }
                 
                 saveUser(formData);
-            });
+                });
+            }
             
             // Close modals when clicking outside
-            document.getElementById('userManagementModal').addEventListener('click', function(e) {
-                if (e.target === this) closeUserModal();
-            });
+            const userManagementModal = document.getElementById('userManagementModal');
+            if (userManagementModal) {
+                userManagementModal.addEventListener('click', function(e) {
+                    if (e.target === this) closeUserModal();
+                });
+            }
             
-            document.getElementById('userFormModal').addEventListener('click', function(e) {
-                if (e.target === this) closeUserForm();
-            });
+            const userFormModal = document.getElementById('userFormModal');
+            if (userFormModal) {
+                userFormModal.addEventListener('click', function(e) {
+                    if (e.target === this) closeUserForm();
+                });
+            }
             
             // Notice Management
-            document.getElementById('addNoticeBtn').addEventListener('click', () => openNoticeForm());
-            document.getElementById('closeNoticeFormModal').addEventListener('click', closeNoticeForm);
-            document.getElementById('cancelNoticeForm').addEventListener('click', closeNoticeForm);
+            const addNoticeBtn = document.getElementById('addNoticeBtn');
+            if (addNoticeBtn) {
+                addNoticeBtn.addEventListener('click', () => openNoticeForm());
+            }
+            const closeNoticeFormModal = document.getElementById('closeNoticeFormModal');
+            if (closeNoticeFormModal) {
+                closeNoticeFormModal.addEventListener('click', closeNoticeForm);
+            }
+            const cancelNoticeForm = document.getElementById('cancelNoticeForm');
+            if (cancelNoticeForm) {
+                cancelNoticeForm.addEventListener('click', closeNoticeForm);
+            }
             
-            document.getElementById('noticeForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                saveNotice(formData);
-            });
+            const noticeForm = document.getElementById('noticeForm');
+            if (noticeForm) {
+                noticeForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    saveNotice(formData);
+                });
+            }
             
-            document.getElementById('noticeFormModal').addEventListener('click', function(e) {
-                if (e.target === this) closeNoticeForm();
-            });
+            const noticeFormModal = document.getElementById('noticeFormModal');
+            if (noticeFormModal) {
+                noticeFormModal.addEventListener('click', function(e) {
+                    if (e.target === this) closeNoticeForm();
+                });
+            }
             
             // Close user menu when clicking outside
             document.addEventListener('click', function(e) {
