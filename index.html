@@ -613,6 +613,11 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Footer Notifications -->
+        <div id="footerNotifications" class="hidden fixed bottom-0 left-0 right-0 z-40">
+            <!-- Footer notifications will be inserted here -->
+        </div>
     </div>
 
     <script>
@@ -1002,8 +1007,13 @@
             
             const typeColor = typeColors[notice.type] || 'bg-blue-500 border-blue-600';
             const isHeader = position === 'header';
+            const isFooter = position === 'footer';
             
-            element.className = `${typeColor} text-white px-6 py-3 ${isHeader ? 'border-b-2' : 'border-t-2'} transition-all duration-300`;
+            let className = `${typeColor} text-white px-6 py-3 transition-all duration-300`;
+            if (isHeader) className += ' border-b-2';
+            else if (isFooter) className += ' border-t-2';
+            
+            element.className = className;
             
             // Create notice content
             element.innerHTML = `
@@ -2733,10 +2743,5 @@
             feather.replace();
         });
     </script>
-    
-    <!-- Footer Notifications -->
-    <div id="footerNotifications" class="hidden">
-        <!-- Footer notifications will be inserted here -->
-    </div>
 </body>
 </html>
