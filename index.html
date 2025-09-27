@@ -1020,10 +1020,42 @@
                 `;
             }
             
-            // Render overlay notices (original behavior)
+            // Render overlay notices with color coding
             if (noticesByPosition.overlay.length > 0 && overlayContainer && overlayContent) {
                 console.log('📺 Showing overlay notice:', noticesByPosition.overlay[0].title);
-                overlayContent.innerHTML = noticesByPosition.overlay[0].content;
+                const notice = noticesByPosition.overlay[0];
+                
+                // Create overlay with type-based styling
+                const typeColors = {
+                    'info': 'border-blue-500 bg-blue-50',
+                    'warning': 'border-yellow-500 bg-yellow-50',
+                    'success': 'border-green-500 bg-green-50',
+                    'error': 'border-red-500 bg-red-50'
+                };
+                
+                const typeIcons = {
+                    'info': 'ℹ️',
+                    'warning': '⚠️',
+                    'success': '✅',
+                    'error': '❌'
+                };
+                
+                const colorClass = typeColors[notice.type] || typeColors['info'];
+                const icon = typeIcons[notice.type] || typeIcons['info'];
+                
+                // Update overlay styling
+                const overlayBox = overlayContainer.querySelector('.bg-white');
+                if (overlayBox) {
+                    overlayBox.className = `${colorClass} rounded-lg p-6 max-w-md mx-4 text-center shadow-2xl border-l-4`;
+                }
+                
+                overlayContent.innerHTML = `
+                    <div class="flex flex-col items-center gap-3">
+                        <div class="text-3xl">${icon}</div>
+                        <h3 class="text-lg font-semibold text-gray-800">${notice.title || 'ประกาศ'}</h3>
+                        <div class="text-gray-700">${notice.content}</div>
+                    </div>
+                `;
                 overlayContainer.classList.remove('hidden');
             }
         }

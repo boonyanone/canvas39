@@ -968,8 +968,7 @@
                             <label for="noticePosition" class="block text-sm font-medium text-gray-700 mb-2">ตำแหน่งแสดงผล</label>
                             <select id="noticePosition" name="position" 
                                 class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                <option value="top">ด้านบน (Header)</option>
-                                <option value="bottom" selected>ด้านล่าง (Footer)</option>
+                                <option value="bottom" selected>แถบวิ่งด้านล่าง (Footer)</option>
                                 <option value="overlay">ป็อบอัพกลางจอ (Overlay)</option>
                             </select>
                         </div>
@@ -1614,8 +1613,14 @@
         }
 
         function saveNotice(formData) {
-            const noticeId = formData.get('noticeId');
+            console.log('📝 Saving notice...');
+            const noticeId = document.getElementById('noticeId').value;
             const content = quillEditor.root.innerHTML;
+            
+            console.log('📋 Notice ID:', noticeId);
+            console.log('📋 Title:', formData.get('title'));
+            console.log('📋 Position:', formData.get('position'));
+            console.log('📋 Type:', formData.get('type'));
             
             if (noticeId) {
                 // Edit existing notice
