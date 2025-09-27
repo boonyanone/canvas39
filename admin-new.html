@@ -1348,6 +1348,8 @@
             config.sectionTitles.outlookText = safeGetValue('outlookText', config.sectionTitles.outlookText || 'OUTLOOK');
             config.sectionTitles.airQualityText = safeGetValue('airQualityText', config.sectionTitles.airQualityText || 'AIR QUALITY');
             config.sectionTitles.poolWaterText = safeGetValue('poolWaterText', config.sectionTitles.poolWaterText || 'POOL WATER');
+            config.sectionTitles.indoorText = safeGetValue('indoorText', config.sectionTitles.indoorText || 'INDOOR');
+            config.sectionTitles.outdoorText = safeGetValue('outdoorText', config.sectionTitles.outdoorText || 'OUTDOOR');
             
             console.log('✅ Config values updated from form:', config);
 
@@ -1491,6 +1493,8 @@
                 safeUpdate('outlookText', config.sectionTitles.outlookText || 'OUTLOOK');
                 safeUpdate('airQualityText', config.sectionTitles.airQualityText || 'AIR QUALITY');
                 safeUpdate('poolWaterText', config.sectionTitles.poolWaterText || 'POOL WATER');
+                safeUpdate('indoorText', config.sectionTitles.indoorText || 'INDOOR');
+                safeUpdate('outdoorText', config.sectionTitles.outdoorText || 'OUTDOOR');
             }
             
             // Update slideshow settings
@@ -1957,7 +1961,7 @@
             }
             
             // Section title inputs
-            const sectionTitleInputs = ['todayText', 'outlookText', 'airQualityText', 'poolWaterText'];
+            const sectionTitleInputs = ['todayText', 'outlookText', 'airQualityText', 'poolWaterText', 'indoorText', 'outdoorText'];
             sectionTitleInputs.forEach(inputId => {
                 const input = document.getElementById(inputId);
                 if (input) {
