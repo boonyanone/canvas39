@@ -204,19 +204,6 @@
                                 </div>
                             </div>
 
-                            <!-- Weather Card -->
-                            <div id="card-weather" data-target="weather" onclick="scrollToSection('weather')" class="nav-card group cursor-pointer bg-white rounded-lg border border-gray-200 p-2 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
-                                <div class="flex flex-col items-center text-center">
-                                    <div class="w-6 h-6 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-gray-200 transition-colors mb-1.5">
-                                        <svg class="w-3 h-3 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 711.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"/>
-                                        </svg>
-                                    </div>
-                                    <h4 class="font-medium text-xs text-gray-900 group-hover:text-gray-700 mb-1">Weather API</h4>
-                                    <p class="text-xs text-gray-500 text-center leading-tight">ข้อมูลอากาศ</p>
-                                </div>
-                            </div>
-
                             <!-- Text & Typography Card -->
                             <div id="card-text" data-target="text" onclick="scrollToSection('text')" class="nav-card group cursor-pointer bg-white rounded-lg border border-gray-200 p-2 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
                                 <div class="flex flex-col items-center text-center">
@@ -238,8 +225,8 @@
                                             <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.30z" clip-rule="evenodd"/>
                                         </svg>
                                     </div>
-                                    <h4 class="font-medium text-xs text-gray-900 group-hover:text-gray-700 mb-1">Quality Data</h4>
-                                    <p class="text-xs text-gray-500 text-center leading-tight">AQI คุณภาพน้ำ</p>
+                                    <h4 class="font-medium text-xs text-gray-900 group-hover:text-gray-700 mb-1">Data & API</h4>
+                                    <p class="text-xs text-gray-500 text-center leading-tight">Weather AQI</p>
                                 </div>
                             </div>
 
@@ -375,52 +362,6 @@
                                         <p class="text-xs text-gray-500 mt-1">รองรับ: PNG, JPG (แนะนำ 1920x1080px)</p>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- การตั้งค่า Weather API -->
-                    <div id="weather-section" class="bg-white overflow-hidden shadow rounded-lg">
-                        <div class="px-6 py-4 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่า Weather API</h3>
-                        </div>
-                        <div class="px-6 py-4 space-y-4">
-                            <!-- Weather API -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Weather API Provider</label>
-                                <select id="weatherApiSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                    <option value="openmeteo">OpenMeteo (ฟรี, แนะนำ)</option>
-                                    <option value="wttr">wttr.in (ฟรี, สำรอง)</option>
-                                    <option value="openweather">OpenWeatherMap</option>
-                                </select>
-                            </div>
-                            
-                            <!-- OpenWeatherMap API Key -->
-                            <div id="openweatherKeyDiv" class="hidden">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">OpenWeatherMap API Key</label>
-                                <input type="text" id="openweatherKey" value="db61b712294c46506059042663feeac6" class="w-full border border-gray-300 rounded-md px-3 py-2 font-mono text-sm">
-                                <p class="text-xs text-gray-500 mt-1">ใส่ API Key สำหรับ OpenWeatherMap</p>
-                            </div>
-                            
-                            <!-- AQI Data Source -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">AQI Data Source</label>
-                                <select id="aqiSourceSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                    <option value="mock">Mock Data (เร็ว, สำหรับทดสอบ)</option>
-                                    <option value="scraping">Canvas 39 Scraping (ข้อมูลจริง)</option>
-                                    <option value="iqair">IQAir API</option>
-                                </select>
-                            </div>
-                            
-                            <!-- Update Interval -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">ความถี่การอัปเดต (นาที)</label>
-                                <select id="updateInterval" class="w-full border border-gray-300 rounded-md px-3 py-2">
-                                    <option value="5">ทุก 5 นาที</option>
-                                    <option value="10" selected>ทุก 10 นาที</option>
-                                    <option value="15">ทุก 15 นาที</option>
-                                    <option value="30">ทุก 30 นาที</option>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -651,9 +592,43 @@
                     <!-- Quality Data Settings -->
                     <div id="quality-section" class="bg-white overflow-hidden shadow rounded-lg">
                         <div class="px-6 py-4 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่าข้อมูลคุณภาพ (AQI & Pool)</h3>
+                            <h3 class="text-lg font-medium text-gray-900">การตั้งค่าข้อมูลและ API</h3>
+                            <p class="text-sm text-gray-600 mt-1">ตั้งค่า Weather API และข้อมูลคุณภาพอากาศ</p>
                         </div>
                         <div class="px-6 py-4 space-y-6">
+                            <!-- Weather API Settings -->
+                            <div>
+                                <h4 class="text-md font-medium text-gray-900 mb-3">🌤️ Weather API</h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Weather API Provider</label>
+                                        <select id="weatherApiSelect" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                            <option value="openmeteo">OpenMeteo (ฟรี, แนะนำ)</option>
+                                            <option value="wttr">wttr.in (ฟรี, สำรอง)</option>
+                                            <option value="openweather">OpenWeatherMap</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- OpenWeatherMap API Key -->
+                                    <div id="openweatherKeyDiv" class="hidden">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">OpenWeatherMap API Key</label>
+                                        <input type="text" id="openweatherKey" value="db61b712294c46506059042663feeac6" class="w-full border border-gray-300 rounded-md px-3 py-2 font-mono text-sm">
+                                        <p class="text-xs text-gray-500 mt-1">ใส่ API Key สำหรับ OpenWeatherMap</p>
+                                    </div>
+                                    
+                                    <!-- Update Interval -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">ความถี่การอัปเดต (นาที)</label>
+                                        <select id="updateInterval" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                            <option value="5">ทุก 5 นาที</option>
+                                            <option value="10" selected>ทุก 10 นาที</option>
+                                            <option value="15">ทุก 15 นาที</option>
+                                            <option value="30">ทุก 30 นาที</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- AQI Settings -->
                             <div>
                                 <h4 class="text-md font-medium text-gray-900 mb-3">🌬️ Air Quality Index (AQI)</h4>
