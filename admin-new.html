@@ -1317,6 +1317,33 @@
             const saveBtn = document.getElementById('saveBtn');
             const originalText = saveBtn.innerHTML;
             
+            // อ่านค่าล่าสุดจากฟอร์มก่อนบันทึก
+            console.log('📋 Reading latest values from form...');
+            const safeGetValue = (id, defaultValue = '') => {
+                const element = document.getElementById(id);
+                return element ? (element.type === 'checkbox' ? element.checked : element.value) : defaultValue;
+            };
+
+            // อัปเดตค่าใน config object จากฟอร์ม
+            config.font = safeGetValue('fontSelect', config.font);
+            config.weatherApi = safeGetValue('weatherApiSelect', config.weatherApi);
+            config.openweatherKey = safeGetValue('openweatherKey', config.openweatherKey);
+            config.updateInterval = parseInt(safeGetValue('updateInterval', config.updateInterval));
+            config.aqiSource = safeGetValue('aqiSourceSelect', config.aqiSource);
+            
+            // อัปเดต slideshow settings
+            if (!config.slideshow) config.slideshow = {};
+            config.slideshow.enabled = safeGetValue('slideshowEnabled', config.slideshow.enabled);
+            config.slideshow.interval = parseInt(safeGetValue('slideshowInterval', config.slideshow.interval));
+            config.slideshow.showAirQuality = safeGetValue('showAirQuality', config.slideshow.showAirQuality);
+            config.slideshow.showPoolWater = safeGetValue('showPoolWater', config.slideshow.showPoolWater);
+            
+            // อัปเดต AQI settings
+            config.indoorAqiStation = safeGetValue('indoorAqiStation', config.indoorAqiStation);
+            config.outdoorAqiLocation = safeGetValue('outdoorAqiLocation', config.outdoorAqiLocation);
+            
+            console.log('✅ Config values updated from form:', config);
+
             // แสดง loading state
             saveBtn.disabled = true;
             saveBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 mr-2 animate-spin"></i>กำลังบันทึก...';
