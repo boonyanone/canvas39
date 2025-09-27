@@ -1509,10 +1509,12 @@
             if (config.images) {
                 if (config.images.logo) {
                     safeUpdate('logoPreview', config.images.logo, 'src');
+                    safeUpdate('logoPreview2', config.images.logo, 'src');
                     console.log('🖼️ Logo preview updated from config');
                 }
                 if (config.images.building) {
                     safeUpdate('buildingPreview', config.images.building, 'src');
+                    safeUpdate('buildingPreview2', config.images.building, 'src');
                     console.log('🏢 Building preview updated from config');
                 }
             }
@@ -2185,7 +2187,12 @@
                         const compressedDataUrl = canvas.toDataURL('image/png', 0.5);
                         console.log('🗜️ Logo compressed from', file.size, 'to', compressedDataUrl.length);
                         
-                        document.getElementById('logoPreview').src = compressedDataUrl;
+                        // อัปเดตทั้งสอง preview
+                        const logoPreview1 = document.getElementById('logoPreview');
+                        const logoPreview2 = document.getElementById('logoPreview2');
+                        if (logoPreview1) logoPreview1.src = compressedDataUrl;
+                        if (logoPreview2) logoPreview2.src = compressedDataUrl;
+                        
                         config.images.logo = compressedDataUrl;
                         const originalFormat = file.type === 'image/png' ? 'PNG' : 'JPEG→PNG';
                         showNotification(`🖼️ อัปโหลดโลโก้เรียบร้อยแล้ว (${originalFormat} โปร่งใส) - กรุณากดบันทึกการตั้งค่า`, 'success');
@@ -2251,7 +2258,12 @@
                         const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
                         console.log('🗜️ Building image compressed from', file.size, 'to', compressedDataUrl.length);
                         
-                        document.getElementById('buildingPreview').src = compressedDataUrl;
+                        // อัปเดตทั้งสอง preview
+                        const buildingPreview1 = document.getElementById('buildingPreview');
+                        const buildingPreview2 = document.getElementById('buildingPreview2');
+                        if (buildingPreview1) buildingPreview1.src = compressedDataUrl;
+                        if (buildingPreview2) buildingPreview2.src = compressedDataUrl;
+                        
                         config.images.building = compressedDataUrl;
                         showNotification('🏢 อัปโหลดรูปอาคารเรียบร้อยแล้ว (ถูกลดขนาดแล้ว) - กรุณากดบันทึกการตั้งค่า', 'success');
                     };
