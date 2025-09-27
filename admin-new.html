@@ -335,7 +335,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">โลโก้องค์กร</label>
                                 <div class="flex items-center space-x-4">
                                     <div class="w-16 h-16 bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden border-2 border-gray-600">
-                                        <img id="logoPreview" src="img/logo.png" alt="Logo Preview" class="w-full h-full object-contain">
+                                        <img id="logoPreview2" src="img/logo.png" alt="Logo Preview" class="w-full h-full object-contain">
                                     </div>
                                     <div class="flex-1">
                                         <input type="file" id="logoUpload" accept="image/*" class="hidden">
@@ -1523,28 +1523,42 @@
 
         // Update UI with current config
         function updateUI() {
-            document.getElementById('fontSelect').value = config.font;
-            document.getElementById('weatherApiSelect').value = config.weatherApi;
-            document.getElementById('openweatherKey').value = config.openweatherKey;
-            document.getElementById('aqiSourceSelect').value = config.aqiSource;
-            document.getElementById('updateInterval').value = config.updateInterval;
+            // Safely update elements only if they exist
+            const safeUpdate = (id, value, property = 'value') => {
+                const element = document.getElementById(id);
+                if (element) {
+                    if (property === 'checked') {
+                        element.checked = value;
+                    } else if (property === 'src') {
+                        element.src = value;
+                    } else {
+                        element.value = value;
+                    }
+                }
+            };
+
+            safeUpdate('fontSelect', config.font);
+            safeUpdate('weatherApiSelect', config.weatherApi);
+            safeUpdate('openweatherKey', config.openweatherKey);
+            safeUpdate('aqiSourceSelect', config.aqiSource);
+            safeUpdate('updateInterval', config.updateInterval);
             
             // Update slideshow settings
             if (config.slideshow) {
-                document.getElementById('slideshowEnabled').checked = config.slideshow.enabled;
-                document.getElementById('slideshowInterval').value = config.slideshow.interval;
-                document.getElementById('showAirQuality').checked = config.slideshow.showAirQuality;
-                document.getElementById('showPoolWater').checked = config.slideshow.showPoolWater;
+                safeUpdate('slideshowEnabled', config.slideshow.enabled, 'checked');
+                safeUpdate('slideshowInterval', config.slideshow.interval);
+                safeUpdate('showAirQuality', config.slideshow.showAirQuality, 'checked');
+                safeUpdate('showPoolWater', config.slideshow.showPoolWater, 'checked');
             }
             
             // Update image previews
             if (config.images) {
                 if (config.images.logo) {
-                    document.getElementById('logoPreview').src = config.images.logo;
+                    safeUpdate('logoPreview', config.images.logo, 'src');
                     console.log('🖼️ Logo preview updated from config');
                 }
                 if (config.images.building) {
-                    document.getElementById('buildingPreview').src = config.images.building;
+                    safeUpdate('buildingPreview', config.images.building, 'src');
                     console.log('🏢 Building preview updated from config');
                 }
             }
@@ -1558,9 +1572,12 @@
 
         // Toggle OpenWeather API key field
         function toggleOpenWeatherKey() {
-            const weatherApi = document.getElementById('weatherApiSelect').value;
+            const weatherApiElement = document.getElementById('weatherApiSelect');
             const keyDiv = document.getElementById('openweatherKeyDiv');
-            keyDiv.classList.toggle('hidden', weatherApi !== 'openweather');
+            if (weatherApiElement && keyDiv) {
+                const weatherApi = weatherApiElement.value;
+                keyDiv.classList.toggle('hidden', weatherApi !== 'openweather');
+            }
         }
 
         // Show notification
