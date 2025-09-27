@@ -309,6 +309,48 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- จัดการไฟล์ Media -->
+                            <div class="border-t pt-4 mt-4">
+                                <h4 class="text-md font-medium text-gray-900 mb-3 flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clip-rule="evenodd"/>
+                                    </svg>
+                                    จัดการไฟล์ Media
+                                </h4>
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <!-- ข้อมูลโลโก้ -->
+                                    <div class="bg-blue-50 rounded-lg p-3">
+                                        <div class="text-sm font-medium text-blue-900 mb-2">โลโก้ปัจจุบัน</div>
+                                        <div class="text-xs text-blue-700" id="logoInfo">
+                                            <div>ขนาด: <span id="logoSize">-</span></div>
+                                            <div>ประเภท: <span id="logoType">-</span></div>
+                                        </div>
+                                        <button id="deleteLogo" class="mt-2 text-xs bg-red-100 text-red-700 px-3 py-1 rounded hover:bg-red-200">
+                                            ลบโลโก้
+                                        </button>
+                                    </div>
+                                    
+                                    <!-- ข้อมูลรูปอาคาร -->
+                                    <div class="bg-green-50 rounded-lg p-3">
+                                        <div class="text-sm font-medium text-green-900 mb-2">รูปอาคารปัจจุบัน</div>
+                                        <div class="text-xs text-green-700" id="buildingInfo">
+                                            <div>ขนาด: <span id="buildingSize">-</span></div>
+                                            <div>ประเภท: <span id="buildingType">-</span></div>
+                                        </div>
+                                        <button id="deleteBuilding" class="mt-2 text-xs bg-red-100 text-red-700 px-3 py-1 rounded hover:bg-red-200">
+                                            ลบรูปอาคาร
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3 p-3 bg-gray-50 rounded-lg">
+                                    <div class="text-xs text-gray-600">
+                                        <strong>หมายเหตุ:</strong> ไฟล์จะถูกแปลงเป็น Base64 และเก็บในระบบ config ไม่ได้เก็บเป็นไฟล์แยกบน server
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -1435,6 +1477,9 @@
                 }
             }
             
+            // Update media file info
+            updateMediaInfo();
+            
             // Load notices
             loadNoticesList();
             
@@ -1980,6 +2025,16 @@
                 });
             }
             
+            // Media Management
+            const deleteLogo_btn = document.getElementById('deleteLogo');
+            if (deleteLogo_btn) {
+                deleteLogo_btn.addEventListener('click', deleteLogo);
+            }
+            const deleteBuilding_btn = document.getElementById('deleteBuilding');
+            if (deleteBuilding_btn) {
+                deleteBuilding_btn.addEventListener('click', deleteBuilding);
+            }
+            
             // User Management Modal
             const closeUserModal_btn = document.getElementById('closeUserModal');
             if (closeUserModal_btn) {
@@ -2212,6 +2267,53 @@
                     img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
+            }
+        }
+
+        // Update media file info
+        function updateMediaInfo() {
+            // Update logo info
+            if (config.images && config.images.logo) {
+                const logoSize = Math.round(config.images.logo.length * 0.75 / 1024); // Base64 to KB approximation
+                const logoType = config.images.logo.includes('data:image/png') ? 'PNG' : 'JPEG';
+                document.getElementById('logoSize').textContent = logoSize + ' KB';
+                document.getElementById('logoType').textContent = logoType;
+            }
+            
+            // Update building info
+            if (config.images && config.images.building) {
+                const buildingSize = Math.round(config.images.building.length * 0.75 / 1024);
+                const buildingType = config.images.building.includes('data:image/png') ? 'PNG' : 'JPEG';
+                document.getElementById('buildingSize').textContent = buildingSize + ' KB';
+                document.getElementById('buildingType').textContent = buildingType;
+            }
+        }
+
+        // Delete logo
+        function deleteLogo() {
+            if (confirm('ต้องการลบโลโก้ปัจจุบันหรือไม่?')) {
+                config.images.logo = 'img/logo.png'; // Reset to default
+                const logoPreview = document.getElementById('logoPreview');
+                if (logoPreview) logoPreview.src = 'img/logo.png';
+                
+                document.getElementById('logoSize').textContent = '-';
+                document.getElementById('logoType').textContent = '-';
+                
+                showNotification('ลบโลโก้เรียบร้อยแล้ว (รีเซ็ตเป็นค่าเริ่มต้น) - กรุณากดบันทึกการตั้งค่า', 'success');
+            }
+        }
+
+        // Delete building image
+        function deleteBuilding() {
+            if (confirm('ต้องการลบรูปอาคารปัจจุบันหรือไม่?')) {
+                config.images.building = 'img/FRONT FULL.jpg'; // Reset to default
+                const buildingPreview = document.getElementById('buildingPreview');
+                if (buildingPreview) buildingPreview.src = 'img/FRONT FULL.jpg';
+                
+                document.getElementById('buildingSize').textContent = '-';
+                document.getElementById('buildingType').textContent = '-';
+                
+                showNotification('ลบรูปอาคารเรียบร้อยแล้ว (รีเซ็ตเป็นค่าเริ่มต้น) - กรุณากดบันทึกการตั้งค่า', 'success');
             }
         }
 
