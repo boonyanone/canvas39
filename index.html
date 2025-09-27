@@ -1033,15 +1033,7 @@
                     'error': 'border-red-500 bg-red-50'
                 };
                 
-                const typeIcons = {
-                    'info': 'ℹ️',
-                    'warning': '⚠️',
-                    'success': '✅',
-                    'error': '❌'
-                };
-                
                 const colorClass = typeColors[notice.type] || typeColors['info'];
-                const icon = typeIcons[notice.type] || typeIcons['info'];
                 
                 // Update overlay styling
                 const overlayBox = overlayContainer.querySelector('.bg-white');
@@ -1050,8 +1042,7 @@
                 }
                 
                 overlayContent.innerHTML = `
-                    <div class="flex flex-col items-center gap-3">
-                        <div class="text-3xl">${icon}</div>
+                    <div class="space-y-2">
                         <h3 class="text-lg font-semibold text-gray-800">${notice.title || 'ประกาศ'}</h3>
                         <div class="text-gray-700">${notice.content}</div>
                     </div>
