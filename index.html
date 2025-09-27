@@ -2417,6 +2417,178 @@
             }
         }
 
+        // Update pool data from Ondilo API
+        async function updatePoolData() {
+            console.log('🏊 Fetching pool data from Ondilo API...');
+            
+            try {
+                const response = await fetch('api/ondilo-data.php?action=pool_data');
+                const data = await response.json();
+                
+                if (!data.success) {
+                    console.error('❌ Pool API error:', data.error);
+                    return;
+                }
+                
+                console.log('✅ Pool data received:', data);
+                
+                // Update pool measurements
+                if (data.measurements) {
+                    updatePoolMeasurements(data.measurements);
+                }
+                
+                // Update water index
+                if (data.water_index) {
+                    updateWaterIndex(data.water_index, data.pool_name);
+                }
+                
+                // Update recommendations
+                if (data.recommendations) {
+                    updatePoolRecommendations(data.recommendations);
+                }
+                
+                console.log('🏊 Pool display updated successfully');
+                
+            } catch (error) {
+                console.error('❌ Error fetching pool data:', error);
+            }
+        }
+        
+        // Update pool measurements display
+        function updatePoolMeasurements(measurements) {
+            console.log('📊 Updating pool measurements...');
+            
+            // Temperature
+            if (measurements.temperature) {
+                const tempElement = document.getElementById('poolTemperature');
+                if (tempElement) {
+                    tempElement.textContent = measurements.temperature.value;
+                }
+                const tempStatus = tempElement?.parentElement?.querySelector('.text-xs');
+                if (tempStatus) {
+                    tempStatus.textContent = measurements.temperature.status;
+                }
+            }
+            
+            // pH
+            if (measurements.ph) {
+                const phElement = document.getElementById('poolPH');
+                if (phElement) {
+                    phElement.textContent = measurements.ph.value;
+                }
+                const phStatus = phElement?.parentElement?.querySelector('.text-xs');
+                if (phStatus) {
+                    phStatus.textContent = measurements.ph.status;
+                }
+            }
+            
+            // ORP
+            if (measurements.orp) {
+                const orpElement = document.getElementById('poolORP');
+                if (orpElement) {
+                    orpElement.textContent = measurements.orp.value;
+                }
+                const orpStatus = orpElement?.parentElement?.querySelector('.text-xs');
+                if (orpStatus) {
+                    orpStatus.textContent = measurements.orp.status;
+                }
+            }
+            
+            // Salt/TDS
+            if (measurements.salt) {
+                const saltElement = document.getElementById('poolTDS');
+                if (saltElement) {
+                    saltElement.textContent = measurements.salt.value;
+                }
+                const saltStatus = saltElement?.parentElement?.querySelector('.text-xs');
+                if (saltStatus) {
+                    saltStatus.textContent = measurements.salt.status;
+                }
+            }
+        }
+        
+        // Update water index display
+        function updateWaterIndex(waterIndex, poolName) {
+            console.log('💧 Updating water index...');
+            
+            const waterIndexElement = document.querySelector('.text-2xl.font-bold[class*="text-"]');
+            if (waterIndexElement) {
+                waterIndexElement.textContent = waterIndex;
+                
+                // Update color based on status
+                waterIndexElement.className = 'text-2xl font-bold';
+                if (waterIndex === 'CRITICAL') {
+                    waterIndexElement.classList.add('text-red-600');
+                } else if (waterIndex === 'NEEDS ATTENTION') {
+                    waterIndexElement.classList.add('text-orange-600');
+                } else {
+                    waterIndexElement.classList.add('text-green-600');
+                }
+            }
+            
+            // Update pool name
+            const poolNameElement = waterIndexElement?.parentElement?.querySelector('.text-sm.opacity-80');
+            if (poolNameElement && poolName) {
+                poolNameElement.textContent = `Pool: ${poolName}`;
+            }
+        }
+        
+        // Update pool recommendations
+        function updatePoolRecommendations(recommendations) {
+            console.log('💡 Updating pool recommendations...');
+            
+            const recommendationsContainer = document.querySelector('.space-y-2');
+            if (!recommendationsContainer) return;
+            
+            // Clear existing recommendations
+            recommendationsContainer.innerHTML = '';
+            
+            // Add new recommendations
+            recommendations.forEach(rec => {
+                const recElement = document.createElement('div');
+                
+                let bgColor = 'bg-yellow-100';
+                let dotColor = 'bg-yellow-500';
+                let textColor = 'text-yellow-700';
+                let subTextColor = 'text-yellow-600';
+                
+                if (rec.severity === 'high') {
+                    bgColor = 'bg-red-100';
+                    dotColor = 'bg-red-500';
+                    textColor = 'text-red-700';
+                    subTextColor = 'text-red-600';
+                } else if (rec.severity === 'medium') {
+                    bgColor = 'bg-orange-100';
+                    dotColor = 'bg-orange-500';
+                    textColor = 'text-orange-700';
+                    subTextColor = 'text-orange-600';
+                }
+                
+                recElement.className = `flex items-start gap-3 p-3 ${bgColor} rounded-lg`;
+                recElement.innerHTML = `
+                    <div class="w-2 h-2 rounded-full ${dotColor} mt-2 flex-shrink-0"></div>
+                    <div>
+                        <div class="font-medium ${textColor} text-sm">${rec.title}</div>
+                        <div class="text-xs ${subTextColor} opacity-80">${rec.message.substring(0, 100)}...</div>
+                    </div>
+                `;
+                
+                recommendationsContainer.appendChild(recElement);
+            });
+            
+            if (recommendations.length === 0) {
+                recommendationsContainer.innerHTML = `
+                    <div class="flex items-start gap-3 p-3 bg-green-100 rounded-lg">
+                        <div class="w-2 h-2 rounded-full bg-green-500 mt-2 flex-shrink-0"></div>
+                        <div>
+                            <div class="font-medium text-green-700 text-sm">No active recommendations</div>
+                            <div class="text-xs text-green-600 opacity-80">Pool water quality is optimal</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
         // Apply layout configuration
         function applyLayoutConfig(layout) {
             console.log('📐 Applying layout configuration...');
@@ -2574,6 +2746,25 @@
                 console.log('✅ Display update completed');
             } catch (error) {
                 console.error('❌ Error in updateDisplay:', error);
+            }
+            
+            // Start pool data updates
+            try {
+                await updatePoolData();
+                console.log('✅ Pool data update completed');
+                
+                // Update pool data every 5 minutes
+                setInterval(async () => {
+                    try {
+                        await updatePoolData();
+                        console.log('✅ Pool data refreshed');
+                    } catch (error) {
+                        console.error('❌ Error refreshing pool data:', error);
+                    }
+                }, 5 * 60 * 1000); // 5 minutes
+                
+            } catch (error) {
+                console.error('❌ Error updating pool data:', error);
             }
             
             // Initialize Swiper.js slideshow
