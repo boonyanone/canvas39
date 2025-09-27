@@ -2295,11 +2295,35 @@
                 }
             }
 
-            // Update main background
+            // Update main background (Air Quality)
             if (theme.backgroundColor) {
                 const mainBackground = document.querySelector('div[style*="background-color: #929079"]');
                 if (mainBackground) {
                     mainBackground.style.backgroundColor = theme.backgroundColor;
+                }
+            }
+
+            // Update Today Weather background
+            if (theme.todayColor) {
+                const todaySection = document.querySelector('div[style*="background-color: #f3efe6"]');
+                if (todaySection) {
+                    todaySection.style.backgroundColor = theme.todayColor;
+                }
+            }
+
+            // Update Outlook Weather background
+            if (theme.outlookColor) {
+                const outlookSection = document.querySelector('div[style*="background-color: #ddd6cc"]');
+                if (outlookSection) {
+                    outlookSection.style.backgroundColor = theme.outlookColor;
+                }
+            }
+
+            // Update Pool Water background
+            if (theme.poolColor) {
+                const poolSection = document.querySelector('div[style*="background-color: #87ceeb"]');
+                if (poolSection) {
+                    poolSection.style.backgroundColor = theme.poolColor;
                 }
             }
 
