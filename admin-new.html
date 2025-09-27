@@ -191,18 +191,6 @@
                                 </div>
                             </div>
 
-                            <!-- Media Card -->
-                            <div id="card-media" data-target="media" onclick="scrollToSection('media')" class="nav-card group cursor-pointer bg-white rounded-lg border border-gray-200 p-2 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
-                                <div class="flex flex-col items-center text-center">
-                                    <div class="w-6 h-6 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-gray-200 transition-colors mb-1.5">
-                                        <svg class="w-3 h-3 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
-                                        </svg>
-                                    </div>
-                                    <h4 class="font-medium text-xs text-gray-900 group-hover:text-gray-700 mb-1">รูปภาพ & ฟอนต์</h4>
-                                    <p class="text-xs text-gray-500 text-center leading-tight">รูปอาคาร</p>
-                                </div>
-                            </div>
 
                             <!-- Text & Typography Card -->
                             <div id="card-text" data-target="text" onclick="scrollToSection('text')" class="nav-card group cursor-pointer bg-white rounded-lg border border-gray-200 p-2 hover:shadow-md transition-all duration-200 hover:border-gray-300 hover:-translate-y-0.5">
@@ -324,47 +312,6 @@
                         </div>
                     </div>
                     
-                    <!-- รูปภาพและโลโก้ -->
-                    <div id="media-section" class="bg-white overflow-hidden shadow rounded-lg">
-                        <div class="px-6 py-4 border-b border-gray-200">
-                            <h3 class="text-lg font-medium text-gray-900">รูปภาพและโลโก้ (เสริม)</h3>
-                        </div>
-                        <div class="px-6 py-4 space-y-4">
-                            <!-- โลโก้ -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">โลโก้องค์กร</label>
-                                <div class="flex items-center space-x-4">
-                                    <div class="w-16 h-16 bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden border-2 border-gray-600">
-                                        <img id="logoPreview2" src="img/logo.png" alt="Logo Preview" class="w-full h-full object-contain">
-                                    </div>
-                                    <div class="flex-1">
-                                        <input type="file" id="logoUpload2" accept="image/*" class="hidden">
-                                        <button onclick="document.getElementById('logoUpload2').click()" class="bg-white border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                            เลือกไฟล์ใหม่
-                                        </button>
-                                        <p class="text-xs text-gray-500 mt-1">รองรับ: PNG, JPG, SVG (แนะนำ 64x64px)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- รูปอาคาร -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">รูปอาคาร</label>
-                                <div class="flex items-center space-x-4">
-                                    <div class="w-24 h-16 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden border-2 border-gray-300">
-                                        <img id="buildingPreview2" src="img/FRONT FULL.jpg" alt="Building Preview" class="w-full h-full object-cover">
-                                    </div>
-                                    <div class="flex-1">
-                                        <input type="file" id="buildingUpload2" accept="image/*" class="hidden">
-                                        <button onclick="document.getElementById('buildingUpload2').click()" class="bg-white border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                            เลือกไฟล์ใหม่
-                                        </button>
-                                        <p class="text-xs text-gray-500 mt-1">รองรับ: PNG, JPG (แนะนำ 1920x1080px)</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- การตั้งค่า Font -->
                     <div id="font-section" class="bg-white overflow-hidden shadow rounded-lg">
@@ -1509,12 +1456,10 @@
             if (config.images) {
                 if (config.images.logo) {
                     safeUpdate('logoPreview', config.images.logo, 'src');
-                    safeUpdate('logoPreview2', config.images.logo, 'src');
                     console.log('🖼️ Logo preview updated from config');
                 }
                 if (config.images.building) {
                     safeUpdate('buildingPreview', config.images.building, 'src');
-                    safeUpdate('buildingPreview2', config.images.building, 'src');
                     console.log('🏢 Building preview updated from config');
                 }
             }
@@ -1979,17 +1924,9 @@
             if (logoUpload) {
                 logoUpload.addEventListener('change', handleLogoUpload);
             }
-            const logoUpload2 = document.getElementById('logoUpload2');
-            if (logoUpload2) {
-                logoUpload2.addEventListener('change', handleLogoUpload);
-            }
             const buildingUpload = document.getElementById('buildingUpload');
             if (buildingUpload) {
                 buildingUpload.addEventListener('change', handleBuildingUpload);
-            }
-            const buildingUpload2 = document.getElementById('buildingUpload2');
-            if (buildingUpload2) {
-                buildingUpload2.addEventListener('change', handleBuildingUpload);
             }
             
             // Buttons
@@ -2187,11 +2124,9 @@
                         const compressedDataUrl = canvas.toDataURL('image/png', 0.5);
                         console.log('🗜️ Logo compressed from', file.size, 'to', compressedDataUrl.length);
                         
-                        // อัปเดตทั้งสอง preview
-                        const logoPreview1 = document.getElementById('logoPreview');
-                        const logoPreview2 = document.getElementById('logoPreview2');
-                        if (logoPreview1) logoPreview1.src = compressedDataUrl;
-                        if (logoPreview2) logoPreview2.src = compressedDataUrl;
+                        // อัปเดต preview
+                        const logoPreview = document.getElementById('logoPreview');
+                        if (logoPreview) logoPreview.src = compressedDataUrl;
                         
                         config.images.logo = compressedDataUrl;
                         const originalFormat = file.type === 'image/png' ? 'PNG' : 'JPEG→PNG';
@@ -2258,11 +2193,9 @@
                         const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
                         console.log('🗜️ Building image compressed from', file.size, 'to', compressedDataUrl.length);
                         
-                        // อัปเดตทั้งสอง preview
-                        const buildingPreview1 = document.getElementById('buildingPreview');
-                        const buildingPreview2 = document.getElementById('buildingPreview2');
-                        if (buildingPreview1) buildingPreview1.src = compressedDataUrl;
-                        if (buildingPreview2) buildingPreview2.src = compressedDataUrl;
+                        // อัปเดต preview
+                        const buildingPreview = document.getElementById('buildingPreview');
+                        if (buildingPreview) buildingPreview.src = compressedDataUrl;
                         
                         config.images.building = compressedDataUrl;
                         showNotification('🏢 อัปโหลดรูปอาคารเรียบร้อยแล้ว (ถูกลดขนาดแล้ว) - กรุณากดบันทึกการตั้งค่า', 'success');
