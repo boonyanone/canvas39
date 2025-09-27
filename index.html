@@ -347,6 +347,15 @@
             5%, 15% { opacity: 0.8; }
             10% { opacity: 1.2; filter: brightness(1.2); }
         }
+        
+        @keyframes marquee {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .animate-marquee {
+            animation: marquee 15s linear infinite;
+        }
     </style>
 </head>
 <body>
@@ -614,8 +623,8 @@
             </div>
         </div>
         
-        <!-- Footer Notifications -->
-        <div id="footerNotifications" class="hidden fixed bottom-0 left-0 right-0 z-40">
+        <!-- Footer Notifications (Marquee) -->
+        <div id="footerNotifications" class="hidden fixed bottom-0 left-0 right-0 z-40 h-8 overflow-hidden">
             <!-- Footer notifications will be inserted here -->
         </div>
     </div>
@@ -975,14 +984,40 @@
                 });
             }
             
-            // Render footer notices
+            // Render footer notices as single marquee
             if (noticesByPosition.bottom.length > 0 && footerContainer) {
                 console.log('📺 Showing footer notices:', noticesByPosition.bottom.length);
                 footerContainer.classList.remove('hidden');
-                noticesByPosition.bottom.forEach(notice => {
-                    const noticeElement = createNoticeElement(notice, 'footer');
-                    footerContainer.appendChild(noticeElement);
-                });
+                
+                // Combine all footer notices into one marquee
+                const combinedText = noticesByPosition.bottom.map(notice => {
+                    const cleanContent = stripHtml(notice.content || '');
+                    return `${notice.title || 'ประกาศ'}: ${cleanContent}`;
+                }).join(' • ');
+                
+                // Get the first notice type for color
+                const firstNoticeType = noticesByPosition.bottom[0].type || 'warning';
+                const typeColors = {
+                    'info': 'bg-blue-500',
+                    'warning': 'bg-yellow-500', 
+                    'success': 'bg-green-500',
+                    'error': 'bg-red-500'
+                };
+                const bgColor = typeColors[firstNoticeType] || 'bg-yellow-500';
+                
+                footerContainer.innerHTML = `
+                    <div class="${bgColor} text-white h-8 flex items-center">
+                        <div class="flex items-center gap-2 animate-marquee whitespace-nowrap">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                ${getNoticeIcon(firstNoticeType)}
+                            </svg>
+                            <span class="font-medium text-sm">${combinedText}</span>
+                            <span class="mx-8">•</span>
+                            <span class="font-medium text-sm">${combinedText}</span>
+                            <span class="mx-8">•</span>
+                        </div>
+                    </div>
+                `;
             }
             
             // Render overlay notices (original behavior)
@@ -993,7 +1028,7 @@
             }
         }
         
-        // Create notice element for header/footer positioning
+        // Create notice element for header positioning
         function createNoticeElement(notice, position) {
             const element = document.createElement('div');
             
@@ -1006,16 +1041,10 @@
             };
             
             const typeColor = typeColors[notice.type] || 'bg-blue-500 border-blue-600';
-            const isHeader = position === 'header';
-            const isFooter = position === 'footer';
             
-            let className = `${typeColor} text-white px-6 py-3 transition-all duration-300`;
-            if (isHeader) className += ' border-b-2';
-            else if (isFooter) className += ' border-t-2';
-            
+            // Header style only (footer is handled separately as marquee)
+            let className = `${typeColor} text-white px-6 py-3 transition-all duration-300 border-b-2`;
             element.className = className;
-            
-            // Create notice content
             element.innerHTML = `
                 <div class="flex items-center justify-between max-w-7xl mx-auto">
                     <div class="flex items-center gap-3">
@@ -1026,7 +1055,7 @@
                         </div>
                         <div>
                             <div class="font-semibold text-sm">${notice.title || 'ประกาศ'}</div>
-                            <div class="text-xs opacity-90">${notice.content || ''}</div>
+                            <div class="text-xs opacity-90">${stripHtml(notice.content || '')}</div>
                         </div>
                     </div>
                     <button onclick="dismissNotice('${notice.id}')" class="text-white hover:text-gray-200 transition-colors">
@@ -1038,6 +1067,12 @@
             `;
             
             return element;
+        }
+        
+        // Strip HTML tags for clean text display
+        function stripHtml(html) {
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            return doc.body.textContent || "";
         }
         
         // Get icon SVG for notice type
