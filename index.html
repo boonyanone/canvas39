@@ -359,7 +359,7 @@
     </style>
 </head>
 <body>
-    <div class="w-full h-screen bg-stone-400 flex flex-col pb-8">
+    <div class="w-full h-screen bg-stone-400 flex flex-col">
         <!-- Header Notifications -->
         <div id="headerNotifications" class="hidden">
             <!-- Header notifications will be inserted here -->
@@ -387,6 +387,11 @@
                     <div id="notificationContent" class="text-gray-700"></div>
                 </div>
             </div>
+        </div>
+
+        <!-- Footer Notifications (Marquee) -->
+        <div id="footerNotifications" class="hidden h-8 overflow-hidden flex-shrink-0">
+            <!-- Footer notifications will be inserted here -->
         </div>
 
         <!-- Weather Section -->
@@ -622,11 +627,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Footer Notifications (Marquee) - Fixed at bottom -->
-    <div id="footerNotifications" class="hidden fixed bottom-0 left-0 right-0 h-8 overflow-hidden z-50">
-        <!-- Footer notifications will be inserted here -->
     </div>
 
     <script>
