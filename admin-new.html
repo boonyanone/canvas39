@@ -338,8 +338,8 @@
                                         <img id="logoPreview2" src="img/logo.png" alt="Logo Preview" class="w-full h-full object-contain">
                                     </div>
                                     <div class="flex-1">
-                                        <input type="file" id="logoUpload" accept="image/*" class="hidden">
-                                        <button onclick="document.getElementById('logoUpload').click()" class="bg-white border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                        <input type="file" id="logoUpload2" accept="image/*" class="hidden">
+                                        <button onclick="document.getElementById('logoUpload2').click()" class="bg-white border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                                             เลือกไฟล์ใหม่
                                         </button>
                                         <p class="text-xs text-gray-500 mt-1">รองรับ: PNG, JPG, SVG (แนะนำ 64x64px)</p>
@@ -355,8 +355,8 @@
                                         <img id="buildingPreview2" src="img/FRONT FULL.jpg" alt="Building Preview" class="w-full h-full object-cover">
                                     </div>
                                     <div class="flex-1">
-                                        <input type="file" id="buildingUpload" accept="image/*" class="hidden">
-                                        <button onclick="document.getElementById('buildingUpload').click()" class="bg-white border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                        <input type="file" id="buildingUpload2" accept="image/*" class="hidden">
+                                        <button onclick="document.getElementById('buildingUpload2').click()" class="bg-white border border-gray-300 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                                             เลือกไฟล์ใหม่
                                         </button>
                                         <p class="text-xs text-gray-500 mt-1">รองรับ: PNG, JPG (แนะนำ 1920x1080px)</p>
@@ -1946,9 +1946,17 @@
             if (logoUpload) {
                 logoUpload.addEventListener('change', handleLogoUpload);
             }
+            const logoUpload2 = document.getElementById('logoUpload2');
+            if (logoUpload2) {
+                logoUpload2.addEventListener('change', handleLogoUpload);
+            }
             const buildingUpload = document.getElementById('buildingUpload');
             if (buildingUpload) {
                 buildingUpload.addEventListener('change', handleBuildingUpload);
+            }
+            const buildingUpload2 = document.getElementById('buildingUpload2');
+            if (buildingUpload2) {
+                buildingUpload2.addEventListener('change', handleBuildingUpload);
             }
             
             // Buttons
