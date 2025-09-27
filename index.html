@@ -2269,21 +2269,24 @@
                 }
             });
 
-            // Periodic check for updates (fallback for same-tab updates)
+            // Periodic check for updates (for cross-device sync)
+            let lastConfigHash = '';
             setInterval(async () => {
-                const currentConfig = await loadAdminConfig();
-                
-                // Check if config has changed
-                const currentConfigStr = JSON.stringify(currentConfig);
-                const lastConfigStr = JSON.stringify({ adminConfig, layoutConfig });
-                
-                if (currentConfigStr !== lastConfigStr) {
-                    console.log('🔄 Config change detected, applying updates...');
-                    adminConfig = currentConfig.adminConfig || {};
-                    layoutConfig = currentConfig.layoutConfig || {};
-                    applyAdminConfig(adminConfig);
+                try {
+                    const currentConfig = await loadAdminConfig();
+                    const currentConfigHash = JSON.stringify(currentConfig.adminConfig || {});
+                    
+                    if (lastConfigHash && currentConfigHash !== lastConfigHash) {
+                        console.log('🔄 Config change detected from external source, applying updates...');
+                        adminConfig = currentConfig.adminConfig || {};
+                        layoutConfig = currentConfig.layoutConfig || {};
+                        applyAdminConfig(adminConfig);
+                    }
+                    lastConfigHash = currentConfigHash;
+                } catch (error) {
+                    console.error('❌ Error checking config updates:', error);
                 }
-            }, 5000); // Check every 5 seconds
+            }, 10000); // Check every 10 seconds
         }
 
         document.addEventListener('DOMContentLoaded', async function() {
