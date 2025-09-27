@@ -1342,6 +1342,13 @@
             config.indoorAqiStation = safeGetValue('indoorAqiStation', config.indoorAqiStation);
             config.outdoorAqiLocation = safeGetValue('outdoorAqiLocation', config.outdoorAqiLocation);
             
+            // อัปเดต section titles
+            if (!config.sectionTitles) config.sectionTitles = {};
+            config.sectionTitles.todayText = safeGetValue('todayText', config.sectionTitles.todayText || 'TODAY');
+            config.sectionTitles.outlookText = safeGetValue('outlookText', config.sectionTitles.outlookText || 'OUTLOOK');
+            config.sectionTitles.airQualityText = safeGetValue('airQualityText', config.sectionTitles.airQualityText || 'AIR QUALITY');
+            config.sectionTitles.poolWaterText = safeGetValue('poolWaterText', config.sectionTitles.poolWaterText || 'POOL WATER');
+            
             console.log('✅ Config values updated from form:', config);
 
             // แสดง loading state
@@ -1477,6 +1484,14 @@
             safeUpdate('openweatherKey', config.openweatherKey);
             safeUpdate('aqiSourceSelect', config.aqiSource);
             safeUpdate('updateInterval', config.updateInterval);
+            
+            // Update section titles
+            if (config.sectionTitles) {
+                safeUpdate('todayText', config.sectionTitles.todayText || 'TODAY');
+                safeUpdate('outlookText', config.sectionTitles.outlookText || 'OUTLOOK');
+                safeUpdate('airQualityText', config.sectionTitles.airQualityText || 'AIR QUALITY');
+                safeUpdate('poolWaterText', config.sectionTitles.poolWaterText || 'POOL WATER');
+            }
             
             // Update slideshow settings
             if (config.slideshow) {
@@ -1940,6 +1955,18 @@
                     config.slideshow.showPoolWater = this.checked;
                 });
             }
+            
+            // Section title inputs
+            const sectionTitleInputs = ['todayText', 'outlookText', 'airQualityText', 'poolWaterText'];
+            sectionTitleInputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    input.addEventListener('input', function() {
+                        if (!config.sectionTitles) config.sectionTitles = {};
+                        config.sectionTitles[inputId] = this.value;
+                    });
+                }
+            });
             
             // File uploads
             const logoUpload = document.getElementById('logoUpload');
