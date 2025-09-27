@@ -250,7 +250,7 @@
                             <p class="text-sm text-gray-600 mt-1">ปรับแต่งสีของส่วนต่าง ๆ ในหน้าจอแสดงผล</p>
                         </div>
                         <div class="px-6 py-4">
-                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
                                 <!-- สี Header Bar -->
                                 <div class="bg-gray-50 rounded-lg p-3">
                                     <div class="flex items-center gap-2 mb-3">
@@ -301,6 +301,30 @@
                                     </div>
                                 </div>
 
+                                <!-- สี Pool Water Section -->
+                                <div class="bg-gray-50 rounded-lg p-3">
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <div class="p-1.5 bg-gray-100 rounded-lg">
+                                            <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M2 10a8 8 0 118 8 8 8 0 01-8-8zm8-6a6 6 0 00-6 6c0 1.098.296 2.127.814 3.011L9.5 8.326a.5.5 0 01.707 0l4.686 4.686A5.966 5.966 0 0016 10a6 6 0 00-6-6z"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h5 class="text-sm font-semibold text-gray-900">Pool Water</h5>
+                                            <p class="text-xs text-gray-600">น้ำในสระ</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="space-y-2">
+                                        <div class="flex items-center gap-2">
+                                            <input type="color" id="poolColor" value="#87ceeb" class="w-8 h-8 border border-gray-300 rounded cursor-pointer bg-white">
+                                            <input type="text" id="poolColorText" value="#87ceeb" class="flex-1 border border-gray-300 rounded px-2 py-1 text-xs font-mono bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                                        </div>
+                                        <button id="resetPoolColor" class="w-full px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">
+                                            รีเซ็ต
+                                        </button>
+                                    </div>
+                                </div>
                                 <!-- สี Weather Section -->
                                 <div class="bg-gray-50 rounded-lg p-3">
                                     <div class="flex items-center gap-2 mb-3">
@@ -317,8 +341,8 @@
                                     
                                     <div class="space-y-2">
                                         <div class="flex items-center gap-2">
-                                            <input type="color" id="weatherColor" value="#87ceeb" class="w-8 h-8 border border-gray-300 rounded cursor-pointer bg-white">
-                                            <input type="text" id="weatherColorText" value="#87ceeb" class="flex-1 border border-gray-300 rounded px-2 py-1 text-xs font-mono bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                                            <input type="color" id="weatherColor" value="#4a5568" class="w-8 h-8 border border-gray-300 rounded cursor-pointer bg-white">
+                                            <input type="text" id="weatherColorText" value="#4a5568" class="flex-1 border border-gray-300 rounded px-2 py-1 text-xs font-mono bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
                                         </div>
                                         <button id="resetWeatherColor" class="w-full px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">
                                             รีเซ็ต
@@ -1129,8 +1153,8 @@
                 config.theme = {
                     headerColor: '#3f2f15',
                     backgroundColor: '#929079',
-                    weatherTodayColor: '#f3efe6',
-                    weatherOutlookColor: '#ddd6cc'
+                    poolColor: '#87ceeb',
+                    weatherColor: '#4a5568'
                 };
             }
 
@@ -1138,8 +1162,8 @@
             const colorSync = [
                 ['headerColor', 'headerColorText'],
                 ['backgroundColor', 'backgroundColorText'],
-                ['weatherTodayColor', 'weatherTodayColorText'],
-                ['weatherOutlookColor', 'weatherOutlookColorText']
+                ['poolColor', 'poolColorText'],
+                ['weatherColor', 'weatherColorText']
             ];
 
             colorSync.forEach(([colorId, textId]) => {
@@ -1172,27 +1196,27 @@
             const themes = {
                 'themeDefault': { 
                     headerColor: '#3f2f15', backgroundColor: '#929079',
-                    weatherTodayColor: '#f3efe6', weatherOutlookColor: '#ddd6cc'
+                    poolColor: '#87ceeb', weatherColor: '#4a5568'
                 },
                 'themeBlue': { 
                     headerColor: '#1e3a8a', backgroundColor: '#60a5fa',
-                    weatherTodayColor: '#dbeafe', weatherOutlookColor: '#bfdbfe'
+                    poolColor: '#3b82f6', weatherColor: '#1d4ed8'
                 },
                 'themeGreen': { 
                     headerColor: '#166534', backgroundColor: '#4ade80',
-                    weatherTodayColor: '#dcfce7', weatherOutlookColor: '#bbf7d0'
+                    poolColor: '#10b981', weatherColor: '#059669'
                 },
                 'themeDark': { 
                     headerColor: '#111827', backgroundColor: '#374151',
-                    weatherTodayColor: '#4b5563', weatherOutlookColor: '#6b7280'
+                    poolColor: '#6b7280', weatherColor: '#4b5563'
                 },
                 'themeModern': { 
                     headerColor: '#581c87', backgroundColor: '#a855f7',
-                    weatherTodayColor: '#f3e8ff', weatherOutlookColor: '#e9d5ff'
+                    poolColor: '#8b5cf6', weatherColor: '#7c3aed'
                 },
                 'themeWarm': { 
                     headerColor: '#c2410c', backgroundColor: '#fb923c',
-                    weatherTodayColor: '#fed7aa', weatherOutlookColor: '#fdba74'
+                    poolColor: '#f97316', weatherColor: '#ea580c'
                 }
             };
 
@@ -1220,7 +1244,7 @@
             });
 
             // Reset buttons
-            ['resetHeaderColor', 'resetBackgroundColor'].forEach(resetId => {
+            ['resetHeaderColor', 'resetBackgroundColor', 'resetPoolColor', 'resetWeatherColor'].forEach(resetId => {
                 const button = document.getElementById(resetId);
                 if (button) {
                     button.addEventListener('click', function() {
