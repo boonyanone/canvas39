@@ -351,6 +351,11 @@
 </head>
 <body>
     <div class="w-full h-screen bg-stone-400 flex flex-col">
+        <!-- Header Notifications -->
+        <div id="headerNotifications" class="hidden">
+            <!-- Header notifications will be inserted here -->
+        </div>
+
         <!-- Header -->
         <div class="bg-amber-900 flex items-center justify-between px-8 py-4 flex-shrink-0 h-[10.53vh]" style="background-color: #3f2f15;">
             <div class="w-16 h-16 flex items-center justify-center">
@@ -924,31 +929,130 @@
             console.log('✅ Configuration applied successfully');
         }
 
-        // Show notice in building section (permanent display)
+        // Show notice with position-based rendering
         function showNotice(notices) {
             console.log('📢 showNotice called with:', notices);
-            const overlay = document.getElementById('notificationOverlay');
-            const content = document.getElementById('notificationContent');
             
-            if (!overlay || !content) {
-                console.log('❌ Overlay or content element not found');
-                return;
-            }
+            // Get containers
+            const headerContainer = document.getElementById('headerNotifications');
+            const footerContainer = document.getElementById('footerNotifications');
+            const overlayContainer = document.getElementById('notificationOverlay');
+            const overlayContent = document.getElementById('notificationContent');
+            
+            // Clear existing notices
+            if (headerContainer) headerContainer.innerHTML = '';
+            if (footerContainer) footerContainer.innerHTML = '';
+            if (overlayContainer) overlayContainer.classList.add('hidden');
             
             // Find active notices
             const activeNotices = notices.filter(notice => notice.active);
             console.log('✅ Active notices found:', activeNotices.length);
             
-            if (activeNotices.length > 0) {
-                // Show the first active notice
-                console.log('📺 Showing notice:', activeNotices[0].title);
-                content.innerHTML = activeNotices[0].content;
-                overlay.classList.remove('hidden');
-            } else {
-                console.log('⚠️ No active notices, hiding overlay');
-                // Hide overlay if no active notices
-                overlay.classList.add('hidden');
+            if (activeNotices.length === 0) {
+                console.log('⚠️ No active notices');
+                return;
             }
+            
+            // Group notices by position
+            const noticesByPosition = {
+                top: activeNotices.filter(notice => notice.position === 'top'),
+                bottom: activeNotices.filter(notice => notice.position === 'bottom'),
+                overlay: activeNotices.filter(notice => notice.position === 'overlay' || !notice.position)
+            };
+            
+            // Render header notices
+            if (noticesByPosition.top.length > 0 && headerContainer) {
+                console.log('📺 Showing header notices:', noticesByPosition.top.length);
+                headerContainer.classList.remove('hidden');
+                noticesByPosition.top.forEach(notice => {
+                    const noticeElement = createNoticeElement(notice, 'header');
+                    headerContainer.appendChild(noticeElement);
+                });
+            }
+            
+            // Render footer notices
+            if (noticesByPosition.bottom.length > 0 && footerContainer) {
+                console.log('📺 Showing footer notices:', noticesByPosition.bottom.length);
+                footerContainer.classList.remove('hidden');
+                noticesByPosition.bottom.forEach(notice => {
+                    const noticeElement = createNoticeElement(notice, 'footer');
+                    footerContainer.appendChild(noticeElement);
+                });
+            }
+            
+            // Render overlay notices (original behavior)
+            if (noticesByPosition.overlay.length > 0 && overlayContainer && overlayContent) {
+                console.log('📺 Showing overlay notice:', noticesByPosition.overlay[0].title);
+                overlayContent.innerHTML = noticesByPosition.overlay[0].content;
+                overlayContainer.classList.remove('hidden');
+            }
+        }
+        
+        // Create notice element for header/footer positioning
+        function createNoticeElement(notice, position) {
+            const element = document.createElement('div');
+            
+            // Get type colors
+            const typeColors = {
+                'info': 'bg-blue-500 border-blue-600',
+                'warning': 'bg-yellow-500 border-yellow-600',
+                'success': 'bg-green-500 border-green-600',
+                'error': 'bg-red-500 border-red-600'
+            };
+            
+            const typeColor = typeColors[notice.type] || 'bg-blue-500 border-blue-600';
+            const isHeader = position === 'header';
+            
+            element.className = `${typeColor} text-white px-6 py-3 ${isHeader ? 'border-b-2' : 'border-t-2'} transition-all duration-300`;
+            
+            // Create notice content
+            element.innerHTML = `
+                <div class="flex items-center justify-between max-w-7xl mx-auto">
+                    <div class="flex items-center gap-3">
+                        <div class="flex-shrink-0">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                ${getNoticeIcon(notice.type)}
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-sm">${notice.title || 'ประกาศ'}</div>
+                            <div class="text-xs opacity-90">${notice.content || ''}</div>
+                        </div>
+                    </div>
+                    <button onclick="dismissNotice('${notice.id}')" class="text-white hover:text-gray-200 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            `;
+            
+            return element;
+        }
+        
+        // Get icon SVG for notice type
+        function getNoticeIcon(type) {
+            const icons = {
+                'info': '<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>',
+                'warning': '<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>',
+                'success': '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>',
+                'error': '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>'
+            };
+            return icons[type] || icons['info'];
+        }
+        
+        // Dismiss notice function
+        function dismissNotice(noticeId) {
+            console.log('🗑️ Dismissing notice:', noticeId);
+            // You can implement notice dismissal logic here
+            // For now, just hide the notice element
+            const noticeElements = document.querySelectorAll(`[onclick="dismissNotice('${noticeId}')"]`);
+            noticeElements.forEach(element => {
+                const noticeDiv = element.closest('div[class*="bg-"]');
+                if (noticeDiv) {
+                    noticeDiv.style.display = 'none';
+                }
+            });
         }
 
         // Initialize Lucide icons
@@ -2629,5 +2733,10 @@
             feather.replace();
         });
     </script>
+    
+    <!-- Footer Notifications -->
+    <div id="footerNotifications" class="hidden">
+        <!-- Footer notifications will be inserted here -->
+    </div>
 </body>
 </html>
